@@ -15,6 +15,7 @@ We want create system for handling various tasks on systems automatically. As a 
 * authorize with server based on token
 * sending basic information about system (os, ips, interfaces, uptime...)
 ----
+
 # Server side:
 ## Core:
 * Care about authentication
