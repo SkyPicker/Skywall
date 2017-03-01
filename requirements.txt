@@ -1,1 +1,1 @@
-autobahn==0.17.2
+autobahn[asyncio]==0.17.2

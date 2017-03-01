@@ -42,12 +42,11 @@ $ ./env/bin/pip install -r requirements.txt
 ## Running server
 
 ```
-$ ./env/bin/python server.py
+$ ./env/bin/python skywall.py server
 ```
 
 ## Running client
 
 ```
-$ ./env/bin/python client.py
+$ ./env/bin/python skywall.py client
 ```
-
