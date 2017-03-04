@@ -39,6 +39,29 @@ $ virtualenv --python=/usr/bin/python3 env
 $ ./env/bin/pip install -r requirements.txt
 ```
 
+## Configuration
+
+By default the server listens just on localhost on port 9000. To configure custom server host and
+port run:
+
+```
+$ ./env/bin/python skywall.py set --server.host HOST --server.port PORT
+```
+
+If the server is behind a proxy or the public websocket url of the server is different than just
+the server host and port for some other reason, you may need to configure public websocket url as
+well:
+
+```
+$ ./env/bin/python skywall.py set --server.publicUrl URL
+```
+
+To see the current configuration run:
+
+```
+$ ./env/bin/python skywall.py get
+```
+
 ## Running server
 
 ```
