@@ -9,8 +9,8 @@ class AbstractCommand:
     name = None
     help = None
 
-    @classmethod
-    def arguments(cls, parser):
+    @staticmethod
+    def arguments(parser):
         pass
 
     def run(self):

@@ -13,4 +13,4 @@ def run():
 
     args = parser.parse_args()
     command = commands[args.command]
-    command().run()
+    command().run(args)

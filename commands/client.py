@@ -1,5 +1,6 @@
 import asyncio
 from autobahn.asyncio.websocket import WebSocketClientProtocol, WebSocketClientFactory
+from core.config import config
 from core.commands import AbstractCommand, registerCommand
 
 
@@ -29,11 +30,15 @@ class ClientCommand(AbstractCommand):
     name = 'client'
     help = 'Run skywall client'
 
-    def run(self):
-        factory = WebSocketClientFactory('ws://127.0.0.1:8080')
+    def run(self, args):
+        host = config.get('server.host')
+        port = config.get('server.port')
+        publicUrl = config.get('server.publicUrl')
+
+        factory = WebSocketClientFactory(publicUrl)
         factory.protocol = SkywallClientProtocol
         loop = asyncio.get_event_loop()
-        coro = loop.create_connection(factory, '127.0.0.1', 8080)
+        coro = loop.create_connection(factory, host, port)
         loop.run_until_complete(coro)
 
         try:
