@@ -1,5 +1,6 @@
 /env
 /config.yaml
 
+*.db
 *.swp
 __pycache__

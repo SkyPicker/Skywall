@@ -2,6 +2,7 @@ import asyncio
 from autobahn.asyncio.websocket import WebSocketServerProtocol, WebSocketServerFactory
 from core.config import config
 from core.commands import AbstractCommand, registerCommand
+from core.database import connectDatabase
 
 
 class SkywallServerProtocol(WebSocketServerProtocol):
@@ -26,6 +27,8 @@ class ServerCommand(AbstractCommand):
     help = 'Run skywall server'
 
     def run(self, args):
+        connectDatabase()
+
         host = config.get('server.host')
         port = config.get('server.port')
         publicUrl = config.get('server.publicUrl')

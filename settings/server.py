@@ -27,7 +27,7 @@ class ServerPortSetting(AbstractSetting):
 @registerSetting
 class ServerPublicUrl(AbstractSetting):
     name = 'server.publicUrl'
-    help = 'Server public url (default: ws://{host}:{port}/)'
+    help = 'Server public url (default: "ws://HOST:PORT/")'
 
     @staticmethod
     def default():

@@ -41,25 +41,41 @@ $ ./env/bin/pip install -r requirements.txt
 
 ## Configuration
 
-By default the server listens just on localhost on port 9000. To configure custom server host and
-port run:
+To see the current configuration run:
+
+```
+$ ./env/bin/python skywall.py get
+```
+
+To see available settings run:
+
+```
+$ ./env/bin/python skywall.py set --help
+```
+
+### Server host and port
+
+By default the server listens on localhost on port 9000. To configure custom server host and port
+run:
 
 ```
 $ ./env/bin/python skywall.py set --server.host HOST --server.port PORT
 ```
 
-If the server is behind a proxy or the public websocket url of the server is different than just
-the server host and port for some other reason, you may need to configure public websocket url as
-well:
+If the server is behind a proxy or the public websocket url of the server is different than the
+server host and port for some reason, you may need to configure public websocket url as well:
 
 ```
 $ ./env/bin/python skywall.py set --server.publicUrl URL
 ```
 
-To see the current configuration run:
+### Database
+
+By default the server uses sqlite database stored in local file `data.db`. To use another database
+you need to configure its connection string. For instance to use PostgreSQL run:
 
 ```
-$ ./env/bin/python skywall.py get
+$ ./env/bin/python skywall.py set --server.database 'postgresql://USER:PASS@HOST/DATABASE'
 ```
 
 ## Running server

@@ -1,2 +1,4 @@
 autobahn[asyncio]==0.17.2
 ruamel.yaml==0.13.14
+psycopg2==2.7
+SQLAlchemy==1.1.6
