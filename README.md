@@ -105,4 +105,4 @@ $ ./env/bin/python skywall.py client
 
 To see the frontend API documentation run the server and open `http://HOST:PORT/api` in your
 browser, where HOST and PORT are webserver host and port you configured.
-[http://localhost:8080/api] by default.
+[http://localhost:8080/api](http://localhost:8080/api) by default.
