@@ -53,6 +53,15 @@ To see available settings run:
 $ ./env/bin/python skywall.py set --help
 ```
 
+### Database
+
+By default the server uses sqlite database stored in local file `data.db`. To use another database
+you need to configure its connection string. For instance to use PostgreSQL run:
+
+```
+$ ./env/bin/python skywall.py set --server.database 'postgresql://USER:PASS@HOST/DATABASE'
+```
+
 ### Server host and port
 
 By default the server listens on localhost on port 9000. To configure custom server host and port
@@ -69,13 +78,15 @@ server host and port for some reason, you may need to configure public websocket
 $ ./env/bin/python skywall.py set --server.publicUrl URL
 ```
 
-### Database
+### Webserver host and port
 
-By default the server uses sqlite database stored in local file `data.db`. To use another database
-you need to configure its connection string. For instance to use PostgreSQL run:
+Webserver and websocket servers for client systems are running on different ports. This way the
+system admin can better configure who may access the webserver and who the websocket server. By
+default the webserver listens on localhost on port 8080. To configure custom webserver host and
+port set:
 
 ```
-$ ./env/bin/python skywall.py set --server.database 'postgresql://USER:PASS@HOST/DATABASE'
+$ ./env/bin/python skywall.py set --webserver.host HOST --sebserver.port PORT
 ```
 
 ## Running server
@@ -89,3 +100,9 @@ $ ./env/bin/python skywall.py server
 ```
 $ ./env/bin/python skywall.py client
 ```
+
+## Frontend API documentation
+
+To see the frontend API documentation run the server and open `http://HOST:PORT/api` in your
+browser, where HOST and PORT are webserver host and port you configured.
+[http://localhost:8080/api] by default.

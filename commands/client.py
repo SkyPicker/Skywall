@@ -1,28 +1,7 @@
 import asyncio
-from autobahn.asyncio.websocket import WebSocketClientProtocol, WebSocketClientFactory
+import aiohttp
 from core.config import config
 from core.commands import AbstractCommand, registerCommand
-
-
-class SkywallClientProtocol(WebSocketClientProtocol):
-
-    def onConnect(self, response):
-        print('Server connected: {0}'.format(response.peer))
-
-    def onOpen(self):
-        print('WebSocket connection open.')
-
-        def hello():
-            self.sendMessage('Hello, world!'.encode('utf8'))
-            self.factory.loop.call_later(1, hello)
-
-        hello()
-
-    def onMessage(self, payload, isBinary):
-        print('Text message received: {0}'.format(payload.decode('utf8')))
-
-    def onClose(self, wasClean, code, reason):
-        print('WebSocket connection closed: {0}'.format(reason))
 
 
 @registerCommand
@@ -30,20 +9,32 @@ class ClientCommand(AbstractCommand):
     name = 'client'
     help = 'Run skywall client'
 
+    session = None
+    connection = None
+
+    def hello(self):
+        self.connection.send_str('Hello, world!')
+        self.session.loop.call_later(1, self.hello)
+
+    async def connect(self, loop):
+        url = config.get('server.publicUrl')
+        self.session = aiohttp.ClientSession(loop=loop)
+        self.connection = await self.session.ws_connect(url)
+
+        self.hello()
+        async for msg in self.connection:
+            if msg.type == aiohttp.WSMsgType.TEXT:
+                print('Text message received: {0}'.format(msg.data))
+
     def run(self, args):
-        host = config.get('server.host')
-        port = config.get('server.port')
-        publicUrl = config.get('server.publicUrl')
-
-        factory = WebSocketClientFactory(publicUrl)
-        factory.protocol = SkywallClientProtocol
         loop = asyncio.get_event_loop()
-        coro = loop.create_connection(factory, host, port)
-        loop.run_until_complete(coro)
-
         try:
-            loop.run_forever()
+            loop.run_until_complete(self.connect(loop))
         except KeyboardInterrupt:
             pass
         finally:
-            loop.close()
+            if self.connection:
+                loop.run_until_complete(self.connection.close(code=aiohttp.WSCloseCode.GOING_AWAY))
+            if self.session:
+                loop.run_until_complete(self.session.close())
+        loop.close()

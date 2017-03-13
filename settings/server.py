@@ -5,7 +5,7 @@ from core.settings import AbstractSetting, registerSetting
 @registerSetting
 class ServerHostSetting(AbstractSetting):
     name = 'server.host'
-    help = 'Host name the server listens on (default: localhost)'
+    help = 'Host name the websocket server listens on (default: localhost)'
 
     @staticmethod
     def default():
@@ -14,7 +14,7 @@ class ServerHostSetting(AbstractSetting):
 @registerSetting
 class ServerPortSetting(AbstractSetting):
     name = 'server.port'
-    help = 'Port number the server listens on (default: 9000)'
+    help = 'Port number the websocket server listens on (default: 9000)'
 
     @staticmethod
     def default():
@@ -27,10 +27,10 @@ class ServerPortSetting(AbstractSetting):
 @registerSetting
 class ServerPublicUrl(AbstractSetting):
     name = 'server.publicUrl'
-    help = 'Server public url (default: "ws://HOST:PORT/")'
+    help = 'Websocket server public url (default: "http://HOST:PORT/")'
 
     @staticmethod
     def default():
         host = config.get('server.host')
         port = config.get('server.port')
-        return 'ws://{}:{}/'.format(host, port)
+        return 'http://{}:{}/'.format(host, port)
