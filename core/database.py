@@ -6,11 +6,14 @@ from core.config import config
 
 Model = declarative_base()
 engine = None
-Session = None
+session = None
 
 def connectDatabase():
-    global engine, Session
+    global engine, session
     database = config.get('server.database')
     engine = create_engine(database, echo=True)
-    Session = sessionmaker(bind=engine)
+    session = sessionmaker(bind=engine)
     Model.metadata.create_all(engine)
+
+def Session():
+    return session()
