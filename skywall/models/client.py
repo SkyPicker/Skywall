@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from core.database import Model
+from skywall.core.database import Model
 
 
 class Client(Model):

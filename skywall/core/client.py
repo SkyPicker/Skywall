@@ -1,8 +1,8 @@
 import json
 import asyncio
 from aiohttp import ClientSession, WSCloseCode, WSMsgType
-from core.config import config
-from core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER
+from skywall.core.config import config
+from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER
 
 
 class WebsocketClient:

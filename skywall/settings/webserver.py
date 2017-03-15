@@ -1,4 +1,4 @@
-from core.settings import AbstractSetting, register_setting
+from skywall.core.settings import AbstractSetting, register_setting
 
 
 @register_setting

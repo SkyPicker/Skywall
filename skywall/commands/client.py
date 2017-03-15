@@ -1,5 +1,5 @@
-from core.commands import AbstractCommand, register_command
-from core.client import run_client
+from skywall.core.commands import AbstractCommand, register_command
+from skywall.core.client import run_client
 
 
 @register_command

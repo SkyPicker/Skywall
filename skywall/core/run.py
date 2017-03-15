@@ -1,5 +1,5 @@
 import argparse
-from core.commands import commands
+from skywall.core.commands import commands
 
 
 def run():

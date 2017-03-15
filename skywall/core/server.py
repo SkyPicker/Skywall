@@ -3,12 +3,12 @@ import asyncio
 from aiohttp import WSMsgType, WSCloseCode
 from aiohttp.web import Application, WebSocketResponse, HTTPBadRequest, HTTPForbidden
 from aiohttp_swagger import setup_swagger
-from core.config import config
-from core.routes import routes
-from core.database import Session
-from core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER
-from core.utils import randomstring
-from models.client import Client
+from skywall.core.config import config
+from skywall.core.routes import routes
+from skywall.core.database import Session
+from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER
+from skywall.core.utils import randomstring
+from skywall.models.client import Client
 
 
 class WebsocketServer:

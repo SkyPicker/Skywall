@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from core.config import config
+from skywall.core.config import config
 
 
 Model = declarative_base()

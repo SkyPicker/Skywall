@@ -1,6 +1,6 @@
-from core.config import config
-from core.settings import settings
-from core.commands import AbstractCommand, register_command
+from skywall.core.config import config
+from skywall.core.settings import settings
+from skywall.core.commands import AbstractCommand, register_command
 
 
 def _setting_matches_args(name, args):

@@ -1,5 +1,5 @@
 import aiohttp.web
-from core.routes import register_route
+from skywall.core.routes import register_route
 
 
 @register_route('GET', '/hello/{name}')

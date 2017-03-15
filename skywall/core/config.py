@@ -1,5 +1,5 @@
 from ruamel import yaml
-from core.settings import settings
+from skywall.core.settings import settings
 
 
 class Config:

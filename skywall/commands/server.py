@@ -1,6 +1,6 @@
-from core.commands import AbstractCommand, register_command
-from core.database import connect_database
-from core.server import run_server
+from skywall.core.commands import AbstractCommand, register_command
+from skywall.core.database import connect_database
+from skywall.core.server import run_server
 
 
 @register_command

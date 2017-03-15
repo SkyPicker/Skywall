@@ -1,5 +1,5 @@
-from core.config import config
-from core.settings import AbstractSetting, register_setting
+from skywall.core.config import config
+from skywall.core.settings import AbstractSetting, register_setting
 
 
 @register_setting
