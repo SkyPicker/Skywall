@@ -1,0 +1,16 @@
+
+[MESSAGES CONTROL]
+disable=missing-docstring,bad-continuation,too-few-public-methods,no-self-use
+
+[REPORTS]
+reports=no
+
+[VARIABLES]
+callbacks=cb_,_cb,on_
+
+[BASIC]
+good-names=i,j,k,f,id
+const-rgx=[A-Za-z_][A-Za-z0-9_]*$
+
+[FORMAT]
+max-line-length=115

@@ -1,6 +1,7 @@
 commands = {}
 
-def registerCommand(command):
+
+def register_command(command):
     commands[command.name] = command
     return command
 
@@ -13,5 +14,5 @@ class AbstractCommand:
     def arguments(parser):
         pass
 
-    def run(self):
+    def run(self, args):
         pass

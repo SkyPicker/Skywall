@@ -1,9 +1,9 @@
 from core.config import config
 from core.settings import settings
-from core.commands import AbstractCommand, registerCommand
+from core.commands import AbstractCommand, register_command
 
 
-def _settingMatchesArgs(name, args):
+def _setting_matches_args(name, args):
     if not args:
         return True
     name = '{}.'.format(name)
@@ -13,7 +13,7 @@ def _settingMatchesArgs(name, args):
             return True
     return False
 
-@registerCommand
+@register_command
 class GetCommand(AbstractCommand):
     name = 'get'
     help = 'Get config settings'
@@ -25,12 +25,12 @@ class GetCommand(AbstractCommand):
 
     def run(self, args):
         for name in sorted(settings):
-            if _settingMatchesArgs(name, args.names):
+            if _setting_matches_args(name, args.names):
                 value = config.get(name)
                 print('{}: {}'.format(name, value))
 
 
-@registerCommand
+@register_command
 class SetCommand(AbstractCommand):
     name = 'set'
     help = 'Set config settings'
@@ -56,7 +56,7 @@ class SetCommand(AbstractCommand):
             print('{}: {}'.format(name, value))
 
 
-@registerCommand
+@register_command
 class UnsetCommand(AbstractCommand):
     name = 'unset'
     help = 'Unset config settings'
@@ -71,6 +71,6 @@ class UnsetCommand(AbstractCommand):
             config.unset(name)
         config.save()
         for name in sorted(settings):
-            if _settingMatchesArgs(name, args.names):
+            if _setting_matches_args(name, args.names):
                 value = config.get(name)
                 print('{}: {}'.format(name, value))

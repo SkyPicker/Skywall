@@ -8,7 +8,7 @@ Model = declarative_base()
 engine = None
 session = None
 
-def connectDatabase():
+def connect_database():
     global engine, session
     database = config.get('server.database')
     engine = create_engine(database, echo=True)

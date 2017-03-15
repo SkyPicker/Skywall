@@ -1,13 +1,13 @@
-from core.commands import AbstractCommand, registerCommand
-from core.database import connectDatabase
-from core.server import runServer
+from core.commands import AbstractCommand, register_command
+from core.database import connect_database
+from core.server import run_server
 
 
-@registerCommand
+@register_command
 class ServerCommand(AbstractCommand):
     name = 'server'
     help = 'Run skywall server'
 
     def run(self, args):
-        connectDatabase()
-        runServer()
+        connect_database()
+        run_server()

@@ -9,9 +9,11 @@ class WebsocketClient:
 
     def __init__(self, loop):
         self.url = config.get('server.publicUrl')
-        self.clientId = config.get('client.id')
-        self.clientToken = config.get('client.token')
+        self.client_id = config.get('client.id')
+        self.client_token = config.get('client.token')
         self.loop = loop
+        self.session = None
+        self.connection = None
 
     def __enter__(self):
         headers = self.headers()
@@ -19,7 +21,7 @@ class WebsocketClient:
         self.connection = self.loop.run_until_complete(self.session.ws_connect(self.url, headers=headers))
         return self
 
-    def __exit__(self, type, value, tb):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         if self.connection:
             self.loop.run_until_complete(self.connection.close(code=WSCloseCode.GOING_AWAY))
         if self.session:
@@ -27,8 +29,8 @@ class WebsocketClient:
 
     def headers(self):
         headers = {}
-        headers[CLIENT_ID_HEADER] = str(self.clientId)
-        headers[CLIENT_TOKEN_HEADER] = str(self.clientToken)
+        headers[CLIENT_ID_HEADER] = str(self.client_id)
+        headers[CLIENT_TOKEN_HEADER] = str(self.client_token)
         return headers
 
     def hello(self):
@@ -46,17 +48,17 @@ class WebsocketClient:
                     print('Invalid message received: {}'.format(msg.data))
                 else:
                     if action == 'setClientId':
-                        config.set('client.id', data['clientId'])
-                        config.set('client.token', data['clientToken'])
+                        config.set('client.id', data['client_id'])
+                        config.set('client.token', data['client_token'])
                         config.save()
-                        print('clientId: {clientId} {clientToken}'.format(**data))
+                        print('client_id: {client_id} {client_token}'.format(**data))
                     elif action == 'hello':
                         print('Hello: {text}'.format(**data))
                     else:
                         print('Invalid message received: {}'.format(msg.data))
 
 
-def runClient():
+def run_client():
     loop = asyncio.get_event_loop()
     with WebsocketClient(loop) as client:
         try:

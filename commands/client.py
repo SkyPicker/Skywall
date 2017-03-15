@@ -1,11 +1,11 @@
-from core.commands import AbstractCommand, registerCommand
-from core.client import runClient
+from core.commands import AbstractCommand, register_command
+from core.client import run_client
 
 
-@registerCommand
+@register_command
 class ClientCommand(AbstractCommand):
     name = 'client'
     help = 'Run skywall client'
 
     def run(self, args):
-        runClient()
+        run_client()

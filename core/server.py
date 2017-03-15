@@ -17,12 +17,15 @@ class WebsocketServer:
         self.host = config.get('server.host')
         self.port = config.get('server.port')
         self.loop = loop
+        self.app = None
+        self.handler = None
+        self.server = None
         self.connections = []
 
     def __enter__(self):
         self.app = Application(loop=self.loop)
         self.app.router.add_get('/', self.connect)
-        self.app.on_shutdown.append(self.shutdown)
+        self.app.on_shutdown.append(self.on_shutdown)
 
         self.handler = self.app.make_handler()
         self.loop.run_until_complete(self.app.startup())
@@ -31,21 +34,21 @@ class WebsocketServer:
         print('Websocket server listening on http://{}:{}'.format(self.host, self.port))
         return self
 
-    def __exit__(self, type, value, tb):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.server.close()
         self.loop.run_until_complete(self.server.wait_closed())
         self.loop.run_until_complete(self.app.shutdown())
         self.loop.run_until_complete(self.handler.shutdown(60))
         self.loop.run_until_complete(self.app.cleanup())
 
-    def getClient(self, request):
+    def get_client(self, request):
         try:
-            clientId = request.headers[CLIENT_ID_HEADER]
-            clientToken = request.headers[CLIENT_TOKEN_HEADER]
+            client_id = request.headers[CLIENT_ID_HEADER]
+            client_token = request.headers[CLIENT_TOKEN_HEADER]
         except KeyError:
             raise HTTPBadRequest(reason='Missing Client ID or Token Header')
 
-        if clientId == 'None':
+        if client_id == 'None':
             session = Session()
             client = Client(token=randomstring(32))
             session.add(client)
@@ -53,18 +56,18 @@ class WebsocketServer:
             return client
 
         session = Session()
-        client = session.query(Client).filter(Client.id == clientId).first()
-        if not client or client.token != clientToken:
+        client = session.query(Client).filter(Client.id == client_id).first()
+        if not client or client.token != client_token:
             raise HTTPForbidden(reason='Invalid Client ID or Token')
         return client
 
     async def connect(self, request):
-        client = self.getClient(request)
+        client = self.get_client(request)
         connection = WebSocketResponse()
         await connection.prepare(request)
         self.connections.append(connection)
         try:
-            connection.send_json(dict(action='setClientId', clientId=client.id, clientToken=client.token))
+            connection.send_json(dict(action='setClientId', client_id=client.id, client_token=client.token))
             async for msg in connection:
                 if msg.type == WSMsgType.TEXT:
                     try:
@@ -82,7 +85,7 @@ class WebsocketServer:
             self.connections.remove(connection)
         return connection
 
-    async def shutdown(self, app):
+    async def on_shutdown(self, app):
         for connection in self.connections:
             await connection.close(code=WSCloseCode.GOING_AWAY)
 
@@ -93,6 +96,9 @@ class WebServer:
         self.host = config.get('webserver.host')
         self.port = config.get('webserver.port')
         self.loop = loop
+        self.app = None
+        self.handler = None
+        self.server = None
 
     def __enter__(self):
         self.app = Application(loop=self.loop)
@@ -107,7 +113,7 @@ class WebServer:
         print('Web server listening on http://{}:{}'.format(self.host, self.port))
         return self
 
-    def __exit__(self, type, value, tb):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.server.close()
         self.loop.run_until_complete(self.server.wait_closed())
         self.loop.run_until_complete(self.app.shutdown())
@@ -115,7 +121,7 @@ class WebServer:
         self.loop.run_until_complete(self.app.cleanup())
 
 
-def runServer():
+def run_server():
     loop = asyncio.get_event_loop()
     with WebsocketServer(loop), WebServer(loop):
         try:

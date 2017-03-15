@@ -1,11 +1,11 @@
-from core.config import config
-from core.settings import AbstractSetting, registerSetting
+from core.settings import AbstractSetting, register_setting
 
 
-@registerSetting
+@register_setting
 class DatabaseSetting(AbstractSetting):
     name = 'server.database'
-    help = 'Database conection string, e.g. "postgresql://user:password@localhost/database" (default: "sqlite:///data.db")'
+    help = ('Database conection string, e.g. "postgresql://user:password@localhost/database" '
+            '(default: "sqlite:///data.db")')
 
     @staticmethod
     def default():

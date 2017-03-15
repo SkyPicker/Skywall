@@ -1,7 +1,7 @@
-from core.settings import AbstractSetting, registerSetting
+from core.settings import AbstractSetting, register_setting
 
 
-@registerSetting
+@register_setting
 class ClientIdSetting(AbstractSetting):
     name = 'client.id'
     help = 'ID issued by the server to the client (default: None)'
@@ -10,7 +10,7 @@ class ClientIdSetting(AbstractSetting):
     def default():
         return None
 
-@registerSetting
+@register_setting
 class ClientTokenSetting(AbstractSetting):
     name = 'client.token'
     help = 'Token issued by the server to the client (default: None)'

@@ -1,8 +1,8 @@
 from core.config import config
-from core.settings import AbstractSetting, registerSetting
+from core.settings import AbstractSetting, register_setting
 
 
-@registerSetting
+@register_setting
 class ServerHostSetting(AbstractSetting):
     name = 'server.host'
     help = 'Host name the websocket server listens on (default: localhost)'
@@ -11,7 +11,7 @@ class ServerHostSetting(AbstractSetting):
     def default():
         return 'localhost'
 
-@registerSetting
+@register_setting
 class ServerPortSetting(AbstractSetting):
     name = 'server.port'
     help = 'Port number the websocket server listens on (default: 9000)'
@@ -24,7 +24,7 @@ class ServerPortSetting(AbstractSetting):
     def coerce(value):
         return int(value)
 
-@registerSetting
+@register_setting
 class ServerPublicUrl(AbstractSetting):
     name = 'server.publicUrl'
     help = 'Websocket server public url (default: "http://HOST:PORT/")'

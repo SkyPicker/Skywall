@@ -1,6 +1,6 @@
 settings = {}
 
-def registerSetting(setting):
+def register_setting(setting):
     settings[setting.name] = setting
     return setting
 

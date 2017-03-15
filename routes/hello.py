@@ -1,8 +1,8 @@
 import aiohttp.web
-from core.routes import registerRoute
+from core.routes import register_route
 
 
-@registerRoute('GET', '/hello/{name}')
+@register_route('GET', '/hello/{name}')
 async def hello(request):
     """
     ---

@@ -1,8 +1,7 @@
-from core.config import config
-from core.settings import AbstractSetting, registerSetting
+from core.settings import AbstractSetting, register_setting
 
 
-@registerSetting
+@register_setting
 class WebserverHostSetting(AbstractSetting):
     name = 'webserver.host'
     help = 'Host name the web server listens on (default: localhost)'
@@ -11,7 +10,7 @@ class WebserverHostSetting(AbstractSetting):
     def default():
         return 'localhost'
 
-@registerSetting
+@register_setting
 class WebserverPortSetting(AbstractSetting):
     name = 'webserver.port'
     help = 'Port number the web server listens on (default: 8080)'
