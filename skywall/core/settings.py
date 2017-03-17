@@ -1,6 +1,7 @@
 settings = {}
 
 def register_setting(setting):
+    assert setting.name not in settings
     settings[setting.name] = setting
     return setting
 

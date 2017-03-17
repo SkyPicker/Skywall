@@ -1,6 +1,6 @@
 
 [MESSAGES CONTROL]
-disable=missing-docstring,bad-continuation,too-few-public-methods,no-self-use
+disable=missing-docstring,bad-continuation,too-few-public-methods,no-self-use,broad-except
 
 [REPORTS]
 reports=no
@@ -9,7 +9,7 @@ reports=no
 callbacks=cb_,_cb,on_
 
 [BASIC]
-good-names=i,j,k,f,id
+good-names=i,j,k,e,f,id
 const-rgx=[A-Za-z_][A-Za-z0-9_]*$
 
 [FORMAT]

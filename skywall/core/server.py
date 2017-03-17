@@ -1,4 +1,3 @@
-import json
 import asyncio
 from aiohttp import WSMsgType, WSCloseCode
 from aiohttp.web import Application, WebSocketResponse, HTTPBadRequest, HTTPForbidden
@@ -6,9 +5,11 @@ from aiohttp_swagger import setup_swagger
 from skywall.core.config import config
 from skywall.core.routes import routes
 from skywall.core.database import Session
+from skywall.core.actions import send_action, parse_server_action
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER
 from skywall.core.utils import randomstring
 from skywall.models.client import Client
+from skywall.actions.clientid import SetIdClientAction
 
 
 class WebsocketServer:
@@ -67,20 +68,20 @@ class WebsocketServer:
         await connection.prepare(request)
         self.connections.append(connection)
         try:
-            connection.send_json(dict(action='setClientId', client_id=client.id, client_token=client.token))
+            send_action(connection, SetIdClientAction(client_id=client.id, client_token=client.token))
             async for msg in connection:
-                if msg.type == WSMsgType.TEXT:
-                    try:
-                        data = json.loads(msg.data)
-                        action = data['action']
-                    except (ValueError, KeyError):
-                        print('Invalid message received: {}'.format(msg.data))
-                    else:
-                        if action == 'hello':
-                            print('Hello: {text}'.format(**data))
-                            connection.send_str(msg.data)
-                        else:
-                            print('Invalid message received: {}'.format(msg.data))
+                if msg.type != WSMsgType.TEXT:
+                    continue
+                try:
+                    action = parse_server_action(msg.data)
+                except Exception:
+                    print('Invalid message received: {}'.format(msg.data))
+                    continue
+                try:
+                    print('Received action "{}" with payload: {}'.format(action.name, action.payload))
+                    action.execute(connection)
+                except Exception as e:
+                    print('Executing action "{}" failed: {}'.format(action.name, e))
         finally:
             self.connections.remove(connection)
         return connection

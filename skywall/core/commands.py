@@ -2,6 +2,7 @@ commands = {}
 
 
 def register_command(command):
+    assert command.name not in commands
     commands[command.name] = command
     return command
 
