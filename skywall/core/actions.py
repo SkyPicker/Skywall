@@ -29,11 +29,20 @@ def parse_server_action(data):
     action = klass(**data['payload'])
     return action
 
-class AbstractAction:
+class AbstractClientAction:
     name = None
 
     def __init__(self, **payload):
         self.payload = payload
 
     def execute(self, connection):
+        pass
+
+class AbstractServerAction:
+    name = None
+
+    def __init__(self, **payload):
+        self.payload = payload
+
+    def execute(self, connection, client):
         pass

@@ -2,8 +2,9 @@ import asyncio
 from aiohttp import ClientSession, WSCloseCode, WSMsgType
 from skywall.core.config import config
 from skywall.core.actions import send_action, parse_client_action
+from skywall.core.reports import collect_report
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER
-from skywall.actions.hello import HelloServerAction
+from skywall.actions.reports import SaveReportServerAction
 
 
 class WebsocketClient:
@@ -12,6 +13,7 @@ class WebsocketClient:
         self.url = config.get('server.publicUrl')
         self.client_id = config.get('client.id')
         self.client_token = config.get('client.token')
+        self.reports_frequency = config.get('client.reports.frequency')
         self.loop = loop
         self.session = None
         self.connection = None
@@ -34,12 +36,13 @@ class WebsocketClient:
         headers[CLIENT_TOKEN_HEADER] = str(self.client_token)
         return headers
 
-    def hello(self):
-        send_action(self.connection, HelloServerAction(text='Hello, world!'))
-        self.loop.call_later(1, self.hello)
+    def reports(self):
+        report = collect_report()
+        send_action(self.connection, SaveReportServerAction(report=report))
+        self.loop.call_later(self.reports_frequency, self.reports)
 
     async def connect(self):
-        self.hello()
+        self.reports()
         async for msg in self.connection:
             if msg.type != WSMsgType.TEXT:
                 continue

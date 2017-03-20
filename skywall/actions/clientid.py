@@ -1,10 +1,10 @@
 from skywall.core.config import config
-from skywall.core.actions import AbstractAction, register_client_action
+from skywall.core.actions import AbstractClientAction, register_client_action
 
 
 @register_client_action
-class SetIdClientAction(AbstractAction):
-    name = 'set_id'
+class SetIdClientAction(AbstractClientAction):
+    name = 'set-id'
 
     def execute(self, connection):
         config.set('client.id', self.payload['client_id'])

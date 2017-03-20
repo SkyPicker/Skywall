@@ -28,9 +28,14 @@ We want create system for handling various tasks on systems automatically. As a 
 * Dynamic rules (connecting together servers based on their IP's and groups
 
 # Instructions for developers
-## Installation
+## Requirements
 
-To run Skywall you need Python 3 (tested on 3.5.2) and [python virtualenv](https://pypi.python.org/pypi/virtualenv) (Ubuntu package `virtualenv`).
+To install Skywall you need:
+* Python 3 (tested on 3.5.2)
+* Python 3 header files (Ubuntu package `python3-dev`)
+* [python virtualenv](https://pypi.python.org/pypi/virtualenv) (Ubuntu package `virtualenv`)
+
+## Installation
 
 ```
 $ git clone git@github.com:SkyPicker/Skywall.git skywall
@@ -55,11 +60,10 @@ $ ./env/bin/python skywall.py set --help
 
 ### Database
 
-By default the server uses sqlite database stored in local file `data.db`. To use another database
-you need to configure its connection string. For instance to use PostgreSQL run:
+To run skywall server you need to configure your database connection string:
 
 ```
-$ ./env/bin/python skywall.py set --server.database 'postgresql://USER:PASS@HOST/DATABASE'
+$ ./env/bin/python skywall.py set --server.database 'postgres://USER:PASSWORD@HOST/DATABASE'
 ```
 
 ### Server host and port

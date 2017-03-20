@@ -54,10 +54,12 @@ class WebsocketServer:
             client = Client(token=randomstring(32))
             session.add(client)
             session.commit()
+            session.close()
             return client
 
         session = Session()
         client = session.query(Client).filter(Client.id == client_id).first()
+        session.close()
         if not client or client.token != client_token:
             raise HTTPForbidden(reason='Invalid Client ID or Token')
         return client
@@ -68,7 +70,10 @@ class WebsocketServer:
         await connection.prepare(request)
         self.connections.append(connection)
         try:
+            session = Session()
+            session.add(client)
             send_action(connection, SetIdClientAction(client_id=client.id, client_token=client.token))
+            session.close()
             async for msg in connection:
                 if msg.type != WSMsgType.TEXT:
                     continue
@@ -79,7 +84,7 @@ class WebsocketServer:
                     continue
                 try:
                     print('Received action "{}" with payload: {}'.format(action.name, action.payload))
-                    action.execute(connection)
+                    action.execute(connection, client)
                 except Exception as e:
                     print('Executing action "{}" failed: {}'.format(action.name, e))
         finally:

@@ -1,12 +1,15 @@
 
 [MESSAGES CONTROL]
-disable=missing-docstring,bad-continuation,too-few-public-methods,no-self-use,broad-except
+disable=missing-docstring,bad-continuation,too-few-public-methods,no-self-use,broad-except,duplicate-code
 
 [REPORTS]
 reports=no
 
 [VARIABLES]
 callbacks=cb_,_cb,on_
+
+[TYPECHECK]
+ignored-modules=ruamel,netifaces,pyroute2
 
 [BASIC]
 good-names=i,j,k,e,f,id
