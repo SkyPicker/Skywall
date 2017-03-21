@@ -11,16 +11,15 @@ class Config:
                 self.data = yaml.round_trip_load(f)
         except FileNotFoundError:
             self.data = None
-        self.validate()
 
     def save(self):
-        self.validate()
         with open('config.yaml', 'w') as f:
             yaml.round_trip_dump(self.data, f)
 
-    def validate(self):
+    def validate(self, mode):
         for name in settings:
-            settings[name].validate()
+            value = self.get(name)
+            settings[name].validate(value, mode)
 
     def get(self, name):
         setting = settings[name] # To make sure we get only registered settings

@@ -18,5 +18,5 @@ class AbstractSetting:
         return value
 
     @staticmethod
-    def validate():
+    def validate(value, mode):
         pass
