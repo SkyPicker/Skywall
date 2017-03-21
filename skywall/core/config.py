@@ -1,5 +1,5 @@
 from ruamel import yaml
-from skywall.core.settings import settings
+from skywall.core.settings import settings_registry
 
 
 class Config:
@@ -17,12 +17,12 @@ class Config:
             yaml.round_trip_dump(self.data, f)
 
     def validate(self, mode):
-        for name in settings:
+        for name in settings_registry:
             value = self.get(name)
-            settings[name].validate(value, mode)
+            settings_registry[name].validate(value, mode)
 
     def get(self, name):
-        setting = settings[name] # To make sure we get only registered settings
+        setting = settings_registry[name] # To make sure we get only registered settings
         data = self.data
         parts = name.split('.')
         for part in parts:
@@ -32,7 +32,7 @@ class Config:
         return data
 
     def set(self, name, value):
-        setting = settings[name] # To make sure we set only registered settings
+        setting = settings_registry[name] # To make sure we set only registered settings
         if not isinstance(self.data, dict):
             self.data = {}
         data = self.data

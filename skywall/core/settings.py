@@ -1,8 +1,8 @@
-settings = {}
+settings_registry = {}
 
 def register_setting(setting):
-    assert setting.name not in settings
-    settings[setting.name] = setting
+    assert setting.name not in settings_registry
+    settings_registry[setting.name] = setting
     return setting
 
 class AbstractSetting:

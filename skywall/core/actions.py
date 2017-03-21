@@ -1,17 +1,17 @@
 import json
 
-client_actions = {}
-server_actions = {}
+client_actions_registry = {}
+server_actions_registry = {}
 
 
 def register_client_action(action):
-    assert action.name not in client_actions
-    client_actions[action.name] = action
+    assert action.name not in client_actions_registry
+    client_actions_registry[action.name] = action
     return action
 
 def register_server_action(action):
-    assert action.name not in server_actions
-    server_actions[action.name] = action
+    assert action.name not in server_actions_registry
+    server_actions_registry[action.name] = action
     return action
 
 def send_action(connection, action):
@@ -19,13 +19,13 @@ def send_action(connection, action):
 
 def parse_client_action(data):
     data = json.loads(data)
-    klass = client_actions[data['action']]
+    klass = client_actions_registry[data['action']]
     action = klass(**data['payload'])
     return action
 
 def parse_server_action(data):
     data = json.loads(data)
-    klass = server_actions[data['action']]
+    klass = server_actions_registry[data['action']]
     action = klass(**data['payload'])
     return action
 

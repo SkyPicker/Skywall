@@ -1,9 +1,9 @@
-commands = {}
+commands_registry = {}
 
 
 def register_command(command):
-    assert command.name not in commands
-    commands[command.name] = command
+    assert command.name not in commands_registry
+    commands_registry[command.name] = command
     return command
 
 

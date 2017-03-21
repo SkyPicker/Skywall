@@ -1,5 +1,5 @@
 from skywall.core.config import config
-from skywall.core.settings import settings
+from skywall.core.settings import settings_registry
 from skywall.core.commands import AbstractCommand, register_command
 
 
@@ -24,7 +24,7 @@ class GetCommand(AbstractCommand):
                 help='Name or prefix of names of settings to show')
 
     def run(self, args):
-        for name in sorted(settings):
+        for name in sorted(settings_registry):
             if _setting_matches_args(name, args.names):
                 value = config.get(name)
                 print('{}: {}'.format(name, value))
@@ -38,14 +38,14 @@ class SetCommand(AbstractCommand):
     @staticmethod
     def arguments(parser):
         group = parser.add_argument_group('settings')
-        for name in sorted(settings):
+        for name in sorted(settings_registry):
             flag = '--{}'.format(name)
             metavar = name.rsplit('.', 1)[-1].upper()
-            group.add_argument(flag, metavar=metavar, help=settings[name].help)
+            group.add_argument(flag, metavar=metavar, help=settings_registry[name].help)
 
     def run(self, args):
         affected = []
-        for name in settings:
+        for name in settings_registry:
             value = getattr(args, name)
             if value is not None:
                 affected.append(name)
@@ -70,7 +70,7 @@ class UnsetCommand(AbstractCommand):
         for name in args.names:
             config.unset(name)
         config.save()
-        for name in sorted(settings):
+        for name in sorted(settings_registry):
             if _setting_matches_args(name, args.names):
                 value = config.get(name)
                 print('{}: {}'.format(name, value))
