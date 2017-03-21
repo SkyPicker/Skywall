@@ -1,6 +1,6 @@
 
 [MESSAGES CONTROL]
-disable=missing-docstring,bad-continuation,too-few-public-methods,no-self-use,broad-except,duplicate-code
+disable=missing-docstring,bad-continuation,too-few-public-methods,no-self-use,broad-except,duplicate-code,locally-disabled
 
 [REPORTS]
 reports=no
