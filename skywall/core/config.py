@@ -18,8 +18,9 @@ class Config:
 
     def validate(self, mode):
         for name in settings_registry:
+            setting = settings_registry[name]
             value = self.get(name)
-            settings_registry[name].validate(value, mode)
+            setting.validate(value, mode)
 
     def get(self, name):
         setting = settings_registry[name] # To make sure we get only registered settings

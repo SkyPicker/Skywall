@@ -7,12 +7,10 @@ class DatabaseSetting(AbstractSetting):
     name = 'server.database'
     help = 'Database conection string, e.g. "postgres://user:password@localhost/skywall" (Required)'
 
-    @staticmethod
-    def default():
+    def default(self):
         return None
 
-    @staticmethod
-    def validate(value, mode):
+    def validate(self, value, mode):
         if mode is SERVER_MODE and not value:
             raise ValueError(
                 'Database conection string is undefined.\n'

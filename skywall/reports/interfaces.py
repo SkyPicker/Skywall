@@ -7,8 +7,7 @@ from skywall.core.reports import AbstractReport, register_report
 class InterfacesReport(AbstractReport):
     name = 'interfaces'
 
-    @staticmethod
-    def collect():
+    def collect(self):
         return netifaces.interfaces()
 
 
@@ -16,8 +15,7 @@ class InterfacesReport(AbstractReport):
 class IpAddressesReport(AbstractReport):
     name = 'ip-addresses'
 
-    @staticmethod
-    def collect():
+    def collect(self):
         res = []
         for interface in netifaces.interfaces():
             for address in netifaces.ifaddresses(interface).get(netifaces.AF_INET, []):
@@ -31,8 +29,7 @@ class IpAddressesReport(AbstractReport):
 class PrimaryIpAddressReport(AbstractReport):
     name = 'primary-ip-address'
 
-    @staticmethod
-    def collect():
+    def collect(self):
         ipr = pyroute2.IPRoute()
         route = ipr.route('get', dst='8.8.8.8')
         try:

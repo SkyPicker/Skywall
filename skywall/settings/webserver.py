@@ -6,8 +6,7 @@ class WebserverHostSetting(AbstractSetting):
     name = 'webserver.host'
     help = 'Host name the web server listens on (default: localhost)'
 
-    @staticmethod
-    def default():
+    def default(self):
         return 'localhost'
 
 @register_setting
@@ -15,10 +14,8 @@ class WebserverPortSetting(AbstractSetting):
     name = 'webserver.port'
     help = 'Port number the web server listens on (default: 8080)'
 
-    @staticmethod
-    def default():
+    def default(self):
         return 8080
 
-    @staticmethod
-    def coerce(value):
+    def coerce(self, value):
         return int(value)

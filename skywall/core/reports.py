@@ -1,3 +1,6 @@
+import inspect
+
+
 reports_registry = {}
 
 
@@ -10,6 +13,9 @@ def collect_report():
     res = {}
     for name in reports_registry:
         try:
+            # Instantiate the report class on the first use
+            if inspect.isclass(reports_registry[name]):
+                reports_registry[name] = reports_registry[name]()
             res[name] = reports_registry[name].collect()
         except Exception as e:
             print('Collecting report "{}" failed: {}'.format(name, e))
@@ -19,6 +25,5 @@ def collect_report():
 class AbstractReport:
     name = None
 
-    @staticmethod
-    def collect():
+    def collect(self):
         return None

@@ -6,10 +6,8 @@ class ClientReportsSetting(AbstractSetting):
     name = 'client.reports.frequency'
     help = 'Frequency of client reports in seconds (default: 5 minutes)'
 
-    @staticmethod
-    def default():
+    def default(self):
         return 5 * 60
 
-    @staticmethod
-    def coerce(value):
+    def coerce(self, value):
         return int(value)

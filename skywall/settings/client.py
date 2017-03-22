@@ -6,8 +6,7 @@ class ClientIdSetting(AbstractSetting):
     name = 'client.id'
     help = 'ID issued by the server to the client (default: None)'
 
-    @staticmethod
-    def default():
+    def default(self):
         return None
 
 @register_setting
@@ -15,6 +14,5 @@ class ClientTokenSetting(AbstractSetting):
     name = 'client.token'
     help = 'Token issued by the server to the client (default: None)'
 
-    @staticmethod
-    def default():
+    def default(self):
         return None
