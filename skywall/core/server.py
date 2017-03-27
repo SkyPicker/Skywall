@@ -1,4 +1,7 @@
+import os
 import asyncio
+import subprocess
+import contextlib
 from aiohttp import WSMsgType, WSCloseCode
 from aiohttp.web import Application, WebSocketResponse, HTTPBadRequest, HTTPForbidden
 from aiohttp_swagger import setup_swagger
@@ -6,10 +9,11 @@ from skywall.core.config import config
 from skywall.core.routes import routes_registry
 from skywall.core.database import Session
 from skywall.core.actions import send_action, parse_server_action
-from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER
+from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER, API_ROUTE, STATIC_ROUTE, BUILD_ROUTE
 from skywall.core.utils import randomstring
 from skywall.models.client import Client
 from skywall.actions.clientid import SetIdClientAction
+from skywall.frontend import frontend
 
 
 class WebsocketServer:
@@ -109,8 +113,12 @@ class WebServer:
     def __enter__(self):
         self.app = Application(loop=self.loop)
         for route in routes_registry:
-            self.app.router.add_route(route.method, '/api' + route.path, route.handler)
-        setup_swagger(self.app, swagger_url='/api', title='Skywall web API')
+            self.app.router.add_route(route.method, API_ROUTE + route.path, route.handler)
+        setup_swagger(self.app, swagger_url=API_ROUTE, title='Skywall web API')
+        self.app.router.add_static(STATIC_ROUTE, 'skywall/frontend/static')
+        if os.path.isdir('build'):
+            self.app.router.add_static(BUILD_ROUTE, 'build')
+        self.app.router.add_get('/{tail:.*}', frontend)
 
         self.handler = self.app.make_handler()
         self.loop.run_until_complete(self.app.startup())
@@ -127,9 +135,29 @@ class WebServer:
         self.loop.run_until_complete(self.app.cleanup())
 
 
+class WebpackServer:
+
+    def __init__(self):
+        self.host = config.get('webpack.host')
+        self.port = config.get('webpack.port')
+        self.process = None
+
+    def __enter__(self):
+        env = dict(os.environ, WEBPACK_HOST=self.host, WEBPACK_PORT=str(self.port))
+        self.process = subprocess.Popen(['npm', 'run', 'webpack'], env=env)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.process.terminate()
+
+
 def run_server():
     loop = asyncio.get_event_loop()
-    with WebsocketServer(loop), WebServer(loop):
+    with contextlib.ExitStack() as stack:
+        stack.enter_context(WebsocketServer(loop))
+        stack.enter_context(WebServer(loop))
+        if config.get('devel'):
+            stack.enter_context(WebpackServer())
         try:
             loop.run_forever()
         except KeyboardInterrupt:

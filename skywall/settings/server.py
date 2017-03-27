@@ -1,5 +1,5 @@
 from skywall.core.config import config
-from skywall.core.settings import AbstractSetting, register_setting
+from skywall.core.settings import AbstractSetting, IntegerSetting, register_setting
 
 
 @register_setting
@@ -11,15 +11,12 @@ class ServerHostSetting(AbstractSetting):
         return 'localhost'
 
 @register_setting
-class ServerPortSetting(AbstractSetting):
+class ServerPortSetting(IntegerSetting):
     name = 'server.port'
     help = 'Port number the websocket server listens on (default: 9000)'
 
     def default(self):
         return 9000
-
-    def coerce(self, value):
-        return int(value)
 
 @register_setting
 class ServerPublicUrl(AbstractSetting):

@@ -39,9 +39,11 @@ class SetCommand(AbstractCommand):
     def arguments(parser):
         group = parser.add_argument_group('settings')
         for name in sorted(settings_registry):
+            setting = settings_registry[name]
             flag = '--{}'.format(name)
             metavar = name.rsplit('.', 1)[-1].upper()
-            group.add_argument(flag, metavar=metavar, help=settings_registry[name].help)
+            params = setting.add_argument_params()
+            group.add_argument(flag, metavar=metavar, help=setting.help, **params)
 
     def run(self, args):
         affected = []

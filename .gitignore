@@ -1,5 +1,8 @@
 /env
 /local
+/build
+/node_modules
+/webpack-assets.json
 /config.yaml
 
 *.db
