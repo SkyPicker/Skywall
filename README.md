@@ -117,6 +117,10 @@ And then you can run the server:
 (env) $ python skywall.py server
 ```
 
+To see Skywall frontend open `http://HOST:PORT/` in your browser, where HOST and PORT are
+webserver host and port you configured. [http://localhost:8080/](http://localhost:8080/)
+by default.
+
 ## Skywall Client
 
 ### Requirements
