@@ -3,6 +3,7 @@ import {some} from 'lodash'
 import {Grid} from 'react-bootstrap'
 import LoadingBar from 'react-loading-bar'
 import {connect} from '../utils'
+import Alerts from './Alerts'
 import Header from './Header'
 import 'react-loading-bar/dist/index.css'
 
@@ -19,6 +20,7 @@ class App extends React.Component {
         <LoadingBar show={isFetching} color="red" />
         <Header />
         <Grid>
+          <Alerts />
           {children}
         </Grid>
       </div>

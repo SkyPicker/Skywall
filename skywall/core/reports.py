@@ -24,6 +24,7 @@ def collect_report():
 
 class AbstractReport:
     name = None
+    label = None
 
     def collect(self):
         return None

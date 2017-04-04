@@ -1,6 +1,7 @@
 import React from 'react'
 import {Nav, NavItem, Col} from 'react-bootstrap'
-import {IndexLinkContainer} from 'react-router-bootstrap'
+import {LinkContainer, IndexLinkContainer} from 'react-router-bootstrap'
+import * as routes from '../constants/routes'
 
 
 class Menu extends React.Component {
@@ -15,6 +16,9 @@ class Menu extends React.Component {
           <IndexLinkContainer to="/">
             <NavItem>Dashboard</NavItem>
           </IndexLinkContainer>
+          <LinkContainer to={routes.CLIENTS}>
+            <NavItem>Clients</NavItem>
+          </LinkContainer>
         </Nav>
       </Col>
     )

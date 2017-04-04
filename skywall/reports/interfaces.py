@@ -6,6 +6,7 @@ from skywall.core.reports import AbstractReport, register_report
 @register_report
 class InterfacesReport(AbstractReport):
     name = 'interfaces'
+    label = 'Interfaces'
 
     def collect(self):
         return netifaces.interfaces()
@@ -14,6 +15,7 @@ class InterfacesReport(AbstractReport):
 @register_report
 class IpAddressesReport(AbstractReport):
     name = 'ip-addresses'
+    label = 'IP addresses'
 
     def collect(self):
         res = []
@@ -28,6 +30,7 @@ class IpAddressesReport(AbstractReport):
 @register_report
 class PrimaryIpAddressReport(AbstractReport):
     name = 'primary-ip-address'
+    label = 'Primary IP'
 
     def collect(self):
         ipr = pyroute2.IPRoute()

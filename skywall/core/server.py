@@ -6,7 +6,7 @@ from aiohttp import WSMsgType, WSCloseCode
 from aiohttp.web import Application, WebSocketResponse, HTTPBadRequest, HTTPForbidden
 from aiohttp_swagger import setup_swagger
 from skywall.core.config import config
-from skywall.core.routes import routes_registry
+from skywall.core.api import api_registry
 from skywall.core.database import Session
 from skywall.core.actions import send_action, parse_server_action
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER, API_ROUTE, STATIC_ROUTE, BUILD_ROUTE
@@ -112,8 +112,8 @@ class WebServer:
 
     def __enter__(self):
         self.app = Application(loop=self.loop)
-        for route in routes_registry:
-            self.app.router.add_route(route.method, API_ROUTE + route.path, route.handler)
+        for api in api_registry:
+            self.app.router.add_route(api.method, API_ROUTE + api.path, api.handler)
         setup_swagger(self.app, swagger_url=API_ROUTE, title='Skywall web API')
         self.app.router.add_static(STATIC_ROUTE, 'skywall/frontend/static')
         if os.path.isdir('build'):

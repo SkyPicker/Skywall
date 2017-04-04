@@ -5,7 +5,7 @@ from skywall.core.reports import AbstractReport, register_report
 @register_report
 class UptimeReport(AbstractReport):
     name = 'uptime'
+    label = 'Uptime'
 
-    @staticmethod
-    def collect():
+    def collect(self):
         return uptime.uptime()

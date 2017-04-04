@@ -16,7 +16,7 @@ class Report(Model):
     values = relationship('ReportValue', back_populates='report')
 
     def __repr__(self):
-        return '<Report id={[id]} client_id={[client_id]}>'.format(self)
+        return '<Report id={0.id} client_id={0.client_id}>'.format(self)
 
 
 class ReportValue(Model):
@@ -31,4 +31,4 @@ class ReportValue(Model):
     report = relationship('Report', back_populates='values')
 
     def __repr__(self):
-        return '<ReportValue id={[id]} report_id={[report_id]} name={[name]}>'.format(self)
+        return '<ReportValue id={0.id} report_id={0.report_id} name={0.name}>'.format(self)

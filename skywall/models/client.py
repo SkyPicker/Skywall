@@ -15,4 +15,4 @@ class Client(Model):
     reports = relationship('Report', back_populates='client')
 
     def __repr__(self):
-        return '<Client id={[id]} label={[label]}>'.format(self)
+        return '<Client id={0.id} label={0.label}>'.format(self)
