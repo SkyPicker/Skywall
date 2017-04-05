@@ -163,6 +163,15 @@ default the server listens on port 9000. If you changed it, you have to change i
 (env) $ python skywall.py set --server.host HOST --server.port PORT
 ```
 
+#### Client label
+
+To better identify your clients you may configure labels fot them. Labels may be set in GUI or using
+the following commandline setting.
+
+```
+(env) $ python skywall.py set --client.label LABEL
+```
+
 ### Running client
 
 ```
