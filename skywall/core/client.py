@@ -5,6 +5,7 @@ from skywall.core.actions import send_action, parse_client_action
 from skywall.core.reports import collect_report
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER
 from skywall.actions.reports import SaveReportServerAction
+from skywall.actions.labels import SaveLabelServerAction
 
 
 class WebsocketClient:
@@ -36,12 +37,17 @@ class WebsocketClient:
         headers[CLIENT_TOKEN_HEADER] = str(self.client_token)
         return headers
 
+    def label(self):
+        label = config.get('client.label')
+        send_action(self.connection, SaveLabelServerAction(label=label))
+
     def reports(self):
         report = collect_report()
         send_action(self.connection, SaveReportServerAction(report=report))
         self.loop.call_later(self.reports_frequency, self.reports)
 
     async def connect(self):
+        self.label()
         self.reports()
         async for msg in self.connection:
             if msg.type != WSMsgType.TEXT:

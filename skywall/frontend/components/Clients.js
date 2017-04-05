@@ -6,6 +6,7 @@ import moment from 'moment'
 import reportFormaters from '../../reports/formaters'
 import {getClients} from '../actions/clients'
 import {connect} from '../utils'
+import Emdash from './common/Emdash'
 import Moment from './common/Moment'
 
 
@@ -43,11 +44,11 @@ class Clients extends React.Component {
     const report = reportsMap[client.id]
     const value = report && get(valuesMap, [report.id, field.name, 'value'])
     const formater = reportFormaters[field.name] || identity
-    const empty = <span>&mdash;</span>
+    if (isNil(value)) return <Emdash />
     try {
-      return !isNil(value) ? formater(value) : empty
+      return formater(value)
     } catch (e) {
-      return empty
+      return <Emdash />
     }
   }
 
@@ -83,7 +84,7 @@ class Clients extends React.Component {
                 <For each="client" of={clients}>
                   <tr key={client.id}>
                     <td>{client.id}</td>
-                    <td>{client.label}</td>
+                    <td>{client.label || <Emdash />}</td>
                     <td><Moment at={moment.unix(client.created)} /></td>
                     <Choose>
                       <When condition={reportsMap[client.id]}>

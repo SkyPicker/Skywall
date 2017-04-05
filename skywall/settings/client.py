@@ -16,3 +16,11 @@ class ClientTokenSetting(AbstractSetting):
 
     def default(self):
         return None
+
+@register_setting
+class ClientLabelSetting(AbstractSetting):
+    name = 'client.label'
+    help = 'Label given to the client. Label may be set using this setting or via GUI (default: None)'
+
+    def default(self):
+        return None
