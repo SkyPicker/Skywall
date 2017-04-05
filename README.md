@@ -165,7 +165,7 @@ default the server listens on port 9000. If you changed it, you have to change i
 
 #### Client label
 
-To better identify your clients you may configure labels fot them. Labels may be set in GUI or using
+To better identify your clients you may configure labels for them. Labels may be set in GUI or using
 the following commandline setting.
 
 ```
