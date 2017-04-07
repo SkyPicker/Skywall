@@ -45,7 +45,7 @@ To install Skywall server you need:
 ### Installation
 
 ```
-$ git clone git@github.com:SkyPicker/Skywall.git skywall
+$ git clone https://github.com/SkyPicker/Skywall.git skywall
 $ cd skywall
 $ virtualenv --python=/usr/bin/python3 env
 $ . env/bin/activate
