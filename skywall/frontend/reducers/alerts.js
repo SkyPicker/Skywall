@@ -5,7 +5,7 @@ const initialState = {
   alerts: [],
 }
 
-export default function alerts(state = initialState, action) {
+const alerts = (state = initialState, action) => {
   switch (action.type) {
     case actions.ALERTS_ADD:
       return {
@@ -36,3 +36,5 @@ export default function alerts(state = initialState, action) {
       return state
   }
 }
+
+export default alerts

@@ -6,10 +6,12 @@ import Menu from './Menu'
 class WithMenu extends React.Component {
 
   static propTypes = {
+    // Default props
+    children: React.PropTypes.element.isRequired,
   }
 
   render() {
-    let {children} = this.props
+    const {children} = this.props
     return (
       <Row>
         <Menu />

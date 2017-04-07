@@ -7,7 +7,7 @@ export const clientsRequest = makeAction(actions.CLIENTS_REQUEST)
 export const clientsSuccess = makeAction(actions.CLIENTS_SUCCESS, 'data')
 export const clientsFailure = makeAction(actions.CLIENTS_FAILURE, 'error')
 
-export function getClients() {
+export const getClients = () => {
   return (dispatch) => {
     dispatch(alertsRemove('clients'))
     dispatch(clientsRequest())

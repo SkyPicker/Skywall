@@ -9,7 +9,7 @@ const initialState = {
   fields: null,
 }
 
-export default function clients(state = initialState, action) {
+const clients = (state = initialState, action) => {
   switch (action.type) {
     case actions.CLIENTS_REQUEST:
       return {
@@ -34,3 +34,5 @@ export default function clients(state = initialState, action) {
       return state
   }
 }
+
+export default clients

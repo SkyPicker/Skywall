@@ -11,10 +11,15 @@ import 'react-loading-bar/dist/index.css'
 class App extends React.Component {
 
   static propTypes = {
+    // Props from store
+    isFetching: React.PropTypes.bool.isRequired,
+
+    // Default props
+    children: React.PropTypes.element.isRequired,
   }
 
   render() {
-    let {isFetching, children} = this.props
+    const {isFetching, children} = this.props
     return (
       <div style={{paddingBottom: '200px'}}>
         <LoadingBar show={isFetching} color="red" />

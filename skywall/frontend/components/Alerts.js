@@ -17,11 +17,15 @@ const level2bsStyle = {
 class Alerts extends React.Component {
 
   static propTypes = {
+    // Props from store
     alerts: React.PropTypes.arrayOf(React.PropTypes.shape({
       level: React.PropTypes.oneOf(alerts.LEVELS).isRequired,
       title: React.PropTypes.string,
       message: React.PropTypes.string.isRequired,
     })).isRequired,
+
+    // Actions
+    alertsClose: React.PropTypes.func.isRequired,
   }
 
   render() {

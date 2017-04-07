@@ -13,6 +13,7 @@ import Moment from './common/Moment'
 class Clients extends React.Component {
 
   static propTypes = {
+    // Props from store
     clients: React.PropTypes.arrayOf(React.PropTypes.shape({
       id: React.PropTypes.number.isRequired,
       created: React.PropTypes.number.isRequired,
@@ -34,6 +35,9 @@ class Clients extends React.Component {
       name: React.PropTypes.string.isRequired,
       label: React.PropTypes.string.isRequired,
     })),
+
+    // Actions
+    getClients: React.PropTypes.func.isRequired,
   }
 
   componentDidMount() {

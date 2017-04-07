@@ -1,40 +1,38 @@
+import url from 'url'
 import {omitBy, isUndefined, zipObject} from 'lodash'
 import {bindActionCreators} from 'redux'
 import {connect as originalConnect} from 'react-redux'
 import {formatPattern} from 'react-router'
-import url from 'url'
 import config from '../config'
 
 
-export function dummyMiddleware() {
+export const dummyMiddleware = () => {
   return (next) => (action) => next(action)
 }
 
-export function makeAction(type, ...argNames) {
-  return function(...args) {
-    return {type, ...zipObject(argNames, args)}
-  }
+export const makeAction = (type, ...argNames) => {
+  return (...args) => ({type, ...zipObject(argNames, args)})
 }
 
-export function connect(component, mapDispatchToProps, mapStateToProps, options) {
+export const connect = (component, mapDispatchToProps, mapStateToProps, options) => {
   return originalConnect(mapStateToProps,
     (dispatch) => bindActionCreators(mapDispatchToProps, dispatch), null, options)(component)
 }
 
-export function api(point, options) {
-  let {data, query, params} = options || {}
-  let [method, pathPattern] = point.split(' ', 2)
-  let path = formatPattern(pathPattern, params)
-  let search = url.format({query: omitBy(query, isUndefined)})
-  let hasBody = !['HEAD', 'GET'].includes(method.toUpperCase())
+export const api = (point, options) => {
+  const {data, query, params} = options || {}
+  const [method, pathPattern] = point.split(' ', 2)
+  const path = formatPattern(pathPattern, params)
+  const search = url.format({query: omitBy(query, isUndefined)})
+  const hasBody = !['HEAD', 'GET'].includes(method.toUpperCase())
   return fetch(config.api + path + search, {
-    method: method,
+    method,
     headers: (hasBody ? {'Content-type': 'application/json'} : undefined),
     body: (hasBody ? JSON.stringify(data || {}) : undefined),
     credentials: 'same-origin',
   })
     .then((res) => {
-      let contentType = res.headers.get('content-type') || ''
+      const contentType = res.headers.get('content-type') || ''
       if (contentType.indexOf('application/json') > -1) {
         return res.json().then((data) => ({res, data}))
       } else {
