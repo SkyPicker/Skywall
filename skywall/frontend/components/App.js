@@ -15,7 +15,7 @@ class App extends React.Component {
     isFetching: React.PropTypes.bool.isRequired,
 
     // Default props
-    children: React.PropTypes.element.isRequired,
+    children: React.PropTypes.any,
   }
 
   render() {

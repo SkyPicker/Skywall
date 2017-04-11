@@ -1,13 +1,16 @@
 import React from 'react'
 import {get, isNil, mapValues, identity, keyBy, groupBy, sortBy, isEmpty} from 'lodash'
-import {Table} from 'react-bootstrap'
+import {formatPattern} from 'react-router'
+import {Table, Button} from 'react-bootstrap'
 import {Choose, When, Otherwise, For} from 'jsx-control-statements'
 import moment from 'moment'
 import reportFormaters from '../../reports/formaters'
-import {getClients} from '../actions/clients'
+import * as routes from '../constants/routes'
+import {getClients, renewClients} from '../actions/clients'
 import {connect} from '../utils'
 import Emdash from './common/Emdash'
 import Moment from './common/Moment'
+import TdLink from './common/TdLink'
 
 
 class Clients extends React.Component {
@@ -26,7 +29,6 @@ class Clients extends React.Component {
     })),
     values: React.PropTypes.arrayOf(React.PropTypes.shape({
       id: React.PropTypes.number.isRequired,
-      created: React.PropTypes.number.isRequired,
       reportId: React.PropTypes.number.isRequired,
       name: React.PropTypes.string.isRequired,
       value: React.PropTypes.any.isRequired,
@@ -38,10 +40,11 @@ class Clients extends React.Component {
 
     // Actions
     getClients: React.PropTypes.func.isRequired,
+    renewClients: React.PropTypes.func.isRequired,
   }
 
   componentDidMount() {
-    this.props.getClients()
+    this.props.renewClients()
   }
 
   renderValue(field, client, valuesMap, reportsMap) {
@@ -58,12 +61,17 @@ class Clients extends React.Component {
 
   render() {
     if (!this.props.clients) return null
-    const {clients, reports, values} = this.props
+    const {clients, reports, values, getClients} = this.props
     const fields = sortBy(this.props.fields, 'name')
+    const clientsById = keyBy(clients, 'id')
     const reportsMap = keyBy(reports, 'clientId')
     const valuesMap = mapValues(groupBy(values, 'reportId'), (values) => keyBy(values, 'name'))
+    const links = mapValues(clientsById, (client) => formatPattern(routes.CLIENT, {clientId: client.id}))
     return (
       <div>
+        <div className="pull-right">
+          <Button onClick={getClients}>Refresh</Button>
+        </div>
         <h2>Connected clients</h2>
         <Choose>
           <When condition={isEmpty(clients)}>
@@ -87,19 +95,29 @@ class Clients extends React.Component {
               <tbody>
                 <For each="client" of={clients}>
                   <tr key={client.id}>
-                    <td>{client.id}</td>
-                    <td>{client.label || <Emdash />}</td>
-                    <td><Moment at={moment.unix(client.created)} /></td>
-                    <Choose>
-                      <When condition={reportsMap[client.id]}>
-                        <td><Moment at={moment.unix(reportsMap[client.id].created)} /></td>
-                      </When>
-                      <Otherwise>
-                        <td>never</td>
-                      </Otherwise>
-                    </Choose>
+                    <TdLink to={links[client.id]}>
+                      {client.id}
+                    </TdLink>
+                    <TdLink to={links[client.id]}>
+                      {client.label || <Emdash />}
+                    </TdLink>
+                    <TdLink to={links[client.id]}>
+                      <Moment at={moment.unix(client.created)} />
+                    </TdLink>
+                    <TdLink to={links[client.id]}>
+                      <Choose>
+                        <When condition={reportsMap[client.id]}>
+                          <Moment at={moment.unix(reportsMap[client.id].created)} />
+                        </When>
+                        <Otherwise>
+                          never
+                        </Otherwise>
+                      </Choose>
+                    </TdLink>
                     <For each="field" of={fields}>
-                      <td key={field.name}>{this.renderValue(field, client, valuesMap, reportsMap)}</td>
+                      <TdLink key={field.name} to={links[client.id]}>
+                        {this.renderValue(field, client, valuesMap, reportsMap)}
+                      </TdLink>
                     </For>
                   </tr>
                 </For>
@@ -112,7 +130,7 @@ class Clients extends React.Component {
   }
 }
 
-export default connect(Clients, {getClients}, (state) => ({
+export default connect(Clients, {getClients, renewClients}, (state) => ({
   clients: state.clients.clients,
   reports: state.clients.reports,
   values: state.clients.values,

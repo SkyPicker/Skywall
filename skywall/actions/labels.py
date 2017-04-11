@@ -7,8 +7,6 @@ class SaveLabelServerAction(AbstractServerAction):
     name = 'save-label'
 
     def execute(self, connection, client):
-        session = Session()
-        session.add(client)
-        client.label = self.payload['label'] or ''
-        session.commit()
-        session.close()
+        with Session() as session:
+            session.add(client)
+            client.label = self.payload['label'] or ''

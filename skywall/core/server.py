@@ -53,20 +53,15 @@ class WebsocketServer:
         except KeyError:
             raise HTTPBadRequest(reason='Missing Client ID or Token Header')
 
-        if client_id == 'None':
-            session = Session()
-            client = Client(token=randomstring(32))
-            session.add(client)
-            session.commit()
-            session.close()
+        with Session() as session:
+            if client_id == 'None':
+                client = Client(token=randomstring(32))
+                session.add(client)
+            else:
+                client = session.query(Client).filter(Client.id == client_id).first()
+                if not client or client.token != client_token:
+                    raise HTTPForbidden(reason='Invalid Client ID or Token')
             return client
-
-        session = Session()
-        client = session.query(Client).filter(Client.id == client_id).first()
-        session.close()
-        if not client or client.token != client_token:
-            raise HTTPForbidden(reason='Invalid Client ID or Token')
-        return client
 
     async def connect(self, request):
         client = self.get_client(request)
@@ -74,10 +69,9 @@ class WebsocketServer:
         await connection.prepare(request)
         self.connections.append(connection)
         try:
-            session = Session()
-            session.add(client)
-            send_action(connection, SetIdClientAction(client_id=client.id, client_token=client.token))
-            session.close()
+            with Session() as session:
+                session.add(client)
+                send_action(connection, SetIdClientAction(client_id=client.id, client_token=client.token))
             async for msg in connection:
                 if msg.type != WSMsgType.TEXT:
                     continue

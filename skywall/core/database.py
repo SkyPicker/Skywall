@@ -1,4 +1,5 @@
 # pylint: disable=invalid-name, global-statement
+from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -16,5 +17,14 @@ def connect_database():
     session = sessionmaker(bind=engine)
     Model.metadata.create_all(engine)
 
+@contextmanager
 def Session():
-    return session()
+    s = session()
+    try:
+        yield s
+        s.commit()
+    except:
+        s.rollback()
+        raise
+    finally:
+        s.close()

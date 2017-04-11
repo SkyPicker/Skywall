@@ -1,8 +1,10 @@
+import moment from 'moment'
 import * as actions from '../constants/actions'
 
 
 const initialState = {
   isFetching: false,
+  lastFetch: null,
   clients: null,
   reports: null,
   values: null,
@@ -20,6 +22,7 @@ const clients = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
+        lastFetch: moment().valueOf(),
         clients: action.data.clients,
         reports: action.data.reports,
         values: action.data.values,

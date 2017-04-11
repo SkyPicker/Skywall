@@ -23,7 +23,8 @@ export default function makeConfig(isDevelopment) {
 
   function stylesLoaders() {
     return Object.keys(loaders).map((ext) => {
-      const prefix = 'css-loader!postcss-loader'
+      const modules = (ext !== 'css' ? '?modules' : '')
+      const prefix = `css-loader${modules}!postcss-loader`
       const extLoaders = prefix + loaders[ext]
       const loader = isDevelopment
         ? `style-loader!${extLoaders}`

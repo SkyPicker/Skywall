@@ -1,3 +1,5 @@
+import moment from 'moment'
+import {RENEW_FREQUENCY} from '../constants'
 import * as actions from '../constants/actions'
 import {makeAction, api} from '../utils'
 import {alertsError, alertsRemove} from './alerts'
@@ -22,5 +24,15 @@ export const getClients = () => {
         dispatch(alertsError('clients', 'Fetching clients failed', err))
         return {ok: false}
       })
+  }
+}
+
+export const renewClients = () => {
+  return (dispatch, getState) => {
+    const {lastFetch} = getState().clients
+    const recent = moment().subtract(RENEW_FREQUENCY)
+    if (!lastFetch || moment(lastFetch).isBefore(recent)) {
+      dispatch(getClients())
+    }
   }
 }

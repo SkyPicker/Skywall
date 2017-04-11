@@ -9,14 +9,12 @@ class SaveReportServerAction(AbstractServerAction):
     name = 'save-report'
 
     def execute(self, connection, client):
-        session = Session()
-        report = Report(client=client)
-        session.add(report)
-        session.flush()
+        with Session() as session:
+            report = Report(client=client)
+            session.add(report)
+            session.flush()
 
-        values = self.payload['report']
-        for name in reports_registry:
-            value = values.get(name, None)
-            session.add(ReportValue(report=report, name=name, value=value))
-        session.commit()
-        session.close()
+            values = self.payload['report']
+            for name in reports_registry:
+                value = values.get(name, None)
+                session.add(ReportValue(report=report, name=name, value=value))
