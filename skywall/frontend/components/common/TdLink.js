@@ -10,7 +10,7 @@ class TdLink extends React.Component {
     to: React.PropTypes.string.isRequired,
 
     // Default props
-    children: React.PropTypes.any,
+    children: React.PropTypes.node,
   }
 
   render() {

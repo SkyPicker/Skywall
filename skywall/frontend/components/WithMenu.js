@@ -7,7 +7,7 @@ class WithMenu extends React.Component {
 
   static propTypes = {
     // Default props
-    children: React.PropTypes.any,
+    children: React.PropTypes.node,
   }
 
   render() {
