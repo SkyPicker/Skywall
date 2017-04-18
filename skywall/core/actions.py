@@ -14,9 +14,6 @@ def register_server_action(action):
     server_actions_registry[action.name] = action
     return action
 
-def send_action(connection, action):
-    connection.send_json(dict(action=action.name, payload=action.payload))
-
 def parse_client_action(data):
     data = json.loads(data)
     klass = client_actions_registry[data['action']]
@@ -35,7 +32,7 @@ class AbstractClientAction:
     def __init__(self, **payload):
         self.payload = payload
 
-    def execute(self, connection):
+    def execute(self, client):
         pass
 
 class AbstractServerAction:
@@ -44,5 +41,5 @@ class AbstractServerAction:
     def __init__(self, **payload):
         self.payload = payload
 
-    def execute(self, connection, client):
+    def execute(self, connection):
         pass

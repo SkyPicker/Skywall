@@ -1,5 +1,6 @@
 import argparse
 from skywall.core.commands import commands_registry
+from skywall.signals import before_command_run, after_command_run
 
 
 def run():
@@ -13,4 +14,6 @@ def run():
 
     args = parser.parse_args()
     command = commands_registry[args.command]
+    before_command_run.emit(command=command)
     command().run(args)
+    after_command_run.emit(command=command)

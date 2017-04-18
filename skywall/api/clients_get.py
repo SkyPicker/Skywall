@@ -1,33 +1,33 @@
 from aiohttp.web import json_response
 from sqlalchemy import desc
-from skywall.core.api import register_api, parse_json_body, parse_obj_path_param, assert_request_param_is_string
-from skywall.core.database import Session
+from skywall.core.api import register_api
+from skywall.core.database import create_session
 from skywall.core.reports import reports_registry
 from skywall.models.client import Client
 from skywall.models.reports import Report, ReportValue
 
 
-def client_response(client):
+def _client_response(client):
     return {
             'id': client.id,
             'created': client.created.timestamp(),
             'label': client.label,
             }
 
-def clients_response(clients):
-    return [client_response(client) for client in clients]
+def _clients_response(clients):
+    return [_client_response(client) for client in clients]
 
-def report_response(report):
+def _report_response(report):
     return {
             'id': report.id,
             'created': report.created.timestamp(),
             'clientId': report.client_id,
             }
 
-def reports_response(reports):
-    return [report_response(report) for report in reports]
+def _reports_response(reports):
+    return [_report_response(report) for report in reports]
 
-def value_response(value):
+def _value_response(value):
     return {
             'id': value.id,
             'created': value.created.timestamp(),
@@ -36,17 +36,17 @@ def value_response(value):
             'value': value.value,
             }
 
-def values_response(values):
-    return [value_response(value) for value in values]
+def _values_response(values):
+    return [_value_response(value) for value in values]
 
-def field_response(field):
+def _field_response(field):
     return {
             'name': field.name,
             'label': field.label,
             }
 
-def fields_response(fields):
-    return [field_response(field) for field in fields]
+def _fields_response(fields):
+    return [_field_response(field) for field in fields]
 
 
 @register_api('GET', '/clients')
@@ -142,7 +142,7 @@ async def get_clients(request):
                   label:
                     type: string
     """
-    with Session() as session:
+    with create_session() as session:
         clients = session.query(Client).order_by(Client.id).all()
         reports = list(filter(None, (
                 session.query(Report).filter(Report.client_id == client.id).order_by(desc(Report.created)).first()
@@ -151,59 +151,8 @@ async def get_clients(request):
         values = (session.query(ReportValue)
                 .filter(ReportValue.report_id.in_(report.id for report in reports)).all())
         return json_response({
-                'clients': clients_response(clients),
-                'reports': reports_response(reports),
-                'values': values_response(values),
-                'fields': fields_response(reports_registry.values()),
+                'clients': _clients_response(clients),
+                'reports': _reports_response(reports),
+                'values': _values_response(values),
+                'fields': _fields_response(reports_registry.values()),
                 })
-
-
-@register_api('PUT', '/clients/{clientId}')
-async def put_clients(request):
-    """
-    ---
-    tags:
-      - Clients
-    summary: Update client
-    description: Updates an existing client
-    produces:
-      - text/pain
-    parameters:
-      - name: clientId
-        in: path
-        description: ID of client to update
-        required: true
-        type: integer
-      - name: body
-        in: body
-        description: Client properties to be updated
-        required: true
-        schema:
-          type: object
-          title: PutClientBody
-          required:
-            - label
-          properties:
-            label:
-              type: string
-    responses:
-      200:
-        description: Client updated
-        schema:
-          type: object
-          title: PutClientResponse
-          required:
-            - ok
-          properties:
-            ok:
-              type: boolean
-      404:
-        description: Client not found
-    """
-    with Session() as session:
-        body = await parse_json_body(request)
-        client = parse_obj_path_param(request, 'clientId', session, Client)
-        if 'label' in body:
-            assert_request_param_is_string('label', body['label'])
-            client.label = body['label']
-        return json_response({'ok': True})

@@ -1,4 +1,3 @@
-# pylint: disable=invalid-name, global-statement
 from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -7,24 +6,24 @@ from skywall.core.config import config
 
 
 Model = declarative_base()
-engine = None
-session = None
+_session = None
 
 def connect_database():
-    global engine, session
+    # pylint: disable=global-statement
+    global _session
     database = config.get('server.database')
     engine = create_engine(database, echo=True)
-    session = sessionmaker(bind=engine)
+    _session = sessionmaker(bind=engine)
     Model.metadata.create_all(engine)
 
 @contextmanager
-def Session():
-    s = session()
+def create_session():
+    session = _session()
     try:
-        yield s
-        s.commit()
+        yield session
+        session.commit()
     except:
-        s.rollback()
+        session.rollback()
         raise
     finally:
-        s.close()
+        session.close()

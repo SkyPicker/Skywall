@@ -1,4 +1,5 @@
 import inspect
+from skywall.signals import before_report_collect, after_report_collect
 
 
 reports_registry = {}
@@ -16,7 +17,10 @@ def collect_report():
             # Instantiate the report class on the first use
             if inspect.isclass(reports_registry[name]):
                 reports_registry[name] = reports_registry[name]()
-            res[name] = reports_registry[name].collect()
+            report = reports_registry[name]
+            before_report_collect.emit(report=report)
+            res[name] = report.collect()
+            after_report_collect.emit(report=report, value=res[name])
         except Exception as e:
             print('Collecting report "{}" failed: {}'.format(name, e))
     return res

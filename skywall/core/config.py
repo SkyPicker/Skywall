@@ -1,20 +1,25 @@
 from ruamel import yaml
 from skywall.core.settings import settings_registry
+from skywall.signals import before_config_load, after_config_load, before_config_save, after_config_save
 
 
 class Config:
     data = None
 
     def load(self):
+        before_config_load.emit(config=self)
         try:
             with open('config.yaml', 'r') as f:
                 self.data = yaml.round_trip_load(f)
         except FileNotFoundError:
             self.data = None
+        after_config_load.emit(config=self)
 
     def save(self):
+        before_config_save.emit(config=self)
         with open('config.yaml', 'w') as f:
             yaml.round_trip_dump(self.data, f)
+        after_config_save.emit(config=self)
 
     def validate(self, mode):
         for name in settings_registry:

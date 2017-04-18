@@ -1,5 +1,6 @@
 from collections import namedtuple
 from aiohttp.web import HTTPBadRequest, HTTPNotFound
+from skywall.signals import before_api_handler, after_api_handler
 
 
 Api = namedtuple('Api', ['method', 'path', 'handler'])
@@ -7,8 +8,18 @@ api_registry = []
 
 def register_api(method, path):
     def decorator(handler):
-        api_registry.append(Api(method, path, handler))
-        return handler
+        def signaled_handler(request):
+            before_api_handler.emit(api=api, request=request)
+            try:
+                response = handler(request)
+                after_api_handler.emit(api=api, request=request, response=response)
+                return response
+            except Exception as e:
+                after_api_handler.emit(api=api, request=request, exception=e)
+                raise
+        api = Api(method, path, signaled_handler)
+        api_registry.append(api)
+        return signaled_handler
     return decorator
 
 
@@ -34,3 +45,4 @@ def parse_obj_path_param(request, param, session, model):
 def assert_request_param_is_string(param, value):
     if not isinstance(value, str):
         raise HTTPBadRequest(reason='{} must be a string'.format(param))
+    return value
