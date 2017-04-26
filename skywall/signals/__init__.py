@@ -29,11 +29,13 @@ before_client_action_send = Signal('before_client_action_send')
 after_client_action_send = Signal('after_client_action_send')
 before_client_action_receive = Signal('before_client_action_receive')
 after_client_action_receive = Signal('after_client_action_receive')
+after_client_action_confirm = Signal('after_client_action_confirm')
 
 before_server_action_send = Signal('before_server_action_send')
 after_server_action_send = Signal('after_server_action_send')
 before_server_action_receive = Signal('before_server_action_receive')
 after_server_action_receive = Signal('after_server_action_receive')
+after_server_action_confirm = Signal('after_server_action_confirm')
 
 before_report_collect = Signal('before_report_collect')
 after_report_collect = Signal('after_report_collect')

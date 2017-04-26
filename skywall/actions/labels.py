@@ -15,10 +15,6 @@ class SaveLabelServerAction(AbstractServerAction):
             client = session.query(Client).filter(Client.id == connection.client_id).first()
             client.label = self.payload['label'] or ''
 
-@register_server_action
-class ConfirmLabelServerAction(AbstractServerAction):
-    name = 'confirm-label'
-
 @register_client_action
 class SetLabelClientAction(AbstractClientAction):
     name = 'set-label'
@@ -27,5 +23,3 @@ class SetLabelClientAction(AbstractClientAction):
         label = self.payload['label']
         config.set('client.label', label)
         config.save()
-        # Confirm back to server the client saved the label
-        client.send_action(ConfirmLabelServerAction(label=label))

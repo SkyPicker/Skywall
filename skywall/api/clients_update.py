@@ -1,37 +1,18 @@
 import asyncio
 from aiohttp.web import json_response, HTTPServiceUnavailable
-from skywall.core.constants import CLIENT_RESPONSE_TIMEOUT
 from skywall.core.api import register_api, parse_json_body, parse_obj_path_param, assert_request_param_is_string
 from skywall.core.database import create_session
 from skywall.core.server import get_server
 from skywall.models.client import Client
-from skywall.actions.labels import SetLabelClientAction, ConfirmLabelServerAction
-from skywall.signals import after_server_action_receive
+from skywall.actions.labels import SetLabelClientAction
 
 
 async def _send_label_to_client(client_id, label):
     connection = get_server().get_connection(client_id)
     if not connection:
         raise HTTPServiceUnavailable(reason='Client {} is not connected right now'.format(client_id))
-
-    # Send the label to the client and wait for him to confirm he received and saved it
-    connection.send_action(SetLabelClientAction(label=label))
-    future = asyncio.Future()
-
-    def listener(connection, action):
-        if not isinstance(action, ConfirmLabelServerAction):
-            return
-        if connection.client_id != client_id:
-            return
-        if action.payload.get('label') != label:
-            return
-        if not future.done():
-            future.set_result(True)
-
-    after_server_action_receive.connect(listener)
-
     try:
-        await asyncio.wait_for(future, CLIENT_RESPONSE_TIMEOUT)
+        await connection.check_send_action(SetLabelClientAction(label=label))
     except asyncio.TimeoutError:
         raise HTTPServiceUnavailable(reason='Client {} is not responding right now'.format(client_id))
 

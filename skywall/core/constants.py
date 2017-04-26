@@ -11,5 +11,5 @@ API_ROUTE = '/api'
 STATIC_ROUTE = '/static'
 BUILD_ROUTE = '/build'
 
-# Timeout for clients to respond (in seconds, may be a float number)
-CLIENT_RESPONSE_TIMEOUT = 5
+# Timeout to respond to actions (in seconds, may be a float number)
+ACTION_CONFIRM_TIMEOUT = 5

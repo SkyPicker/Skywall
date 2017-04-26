@@ -1,5 +1,6 @@
 import asyncio
 from aiohttp import ClientSession, WSCloseCode, WSMsgType
+from skywall.core.constants import ACTION_CONFIRM_TIMEOUT
 from skywall.core.config import config
 from skywall.core.actions import parse_client_action
 from skywall.core.reports import collect_report
@@ -8,7 +9,7 @@ from skywall.actions.reports import SaveReportServerAction
 from skywall.actions.labels import SaveLabelServerAction
 from skywall.signals import (
         before_client_start, after_client_start, before_client_stop, after_client_stop,
-        before_server_action_send, after_server_action_send,
+        before_server_action_send, after_server_action_send, after_server_action_confirm,
         before_client_action_receive, after_client_action_receive
         )
 
@@ -45,10 +46,64 @@ class WebsocketClient:
         headers[CLIENT_TOKEN_HEADER] = str(self.client_token)
         return headers
 
+    def _process_confirm(self, action):
+        try:
+            print('Received confirmation of action "{}" with payload: {}'.format(action.name, action.payload))
+            after_server_action_confirm.emit(client=self, action=action)
+        except Exception as e:
+            print('Processing confirmation of action "{}" failed: {}'.format(action.name, e))
+
+    def _process_action(self, action):
+        try:
+            print('Received action "{}" with payload: {}'.format(action.name, action.payload))
+            before_client_action_receive.emit(client=self, action=action)
+            action.execute(self)
+            after_client_action_receive.emit(client=self, action=action)
+            self.socket.send_json(action.send_confirm())
+        except Exception as e:
+            print('Executing action "{}" failed: {}'.format(action.name, e))
+
+    def _process_message(self, msg):
+        if msg.type != WSMsgType.TEXT:
+            return
+        try:
+            action = parse_client_action(msg.data)
+        except Exception as e:
+            print('Invalid message received: {}; Error: {}'.format(msg.data, e))
+            return
+        if action.confirm:
+            self._process_confirm(action)
+        else:
+            self._process_action(action)
+
+    async def connect(self):
+        self.send_label()
+        self.send_reports()
+        async for msg in self.socket:
+            self._process_message(msg)
+
     def send_action(self, action):
         before_server_action_send.emit(client=self, action=action)
-        self.socket.send_json(dict(action=action.name, payload=action.payload))
+        self.socket.send_json(action.send())
         after_server_action_send.emit(client=self, action=action)
+
+    async def check_send_action(self, action):
+        future = asyncio.Future()
+        sent_action = action
+
+        def listener(client, action):
+            if client is not self:
+                return
+            if action.name != sent_action.name:
+                return
+            if action.action_id != sent_action.action_id:
+                return
+            if not future.done():
+                future.set_result(True)
+
+        with after_server_action_confirm.connected(listener):
+            self.send_action(sent_action)
+            await asyncio.wait_for(future, ACTION_CONFIRM_TIMEOUT)
 
     def send_label(self):
         label = config.get('client.label')
@@ -58,25 +113,6 @@ class WebsocketClient:
         report = collect_report()
         self.send_action(SaveReportServerAction(report=report))
         self.loop.call_later(self.reports_frequency, self.send_reports)
-
-    async def connect(self):
-        self.send_label()
-        self.send_reports()
-        async for msg in self.socket:
-            if msg.type != WSMsgType.TEXT:
-                continue
-            try:
-                action = parse_client_action(msg.data)
-            except Exception:
-                print('Invalid message received: {}'.format(msg.data))
-                continue
-            try:
-                print('Received action "{}" with payload: {}'.format(action.name, action.payload))
-                before_client_action_receive.emit(client=self, action=action)
-                action.execute(self)
-                after_client_action_receive.emit(client=self, action=action)
-            except Exception as e:
-                print('Executing action "{}" failed: {}'.format(action.name, e))
 
 
 _client = None

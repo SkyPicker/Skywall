@@ -1,4 +1,5 @@
 import weakref
+from contextlib import contextmanager
 
 
 class Signal:
@@ -18,6 +19,14 @@ class Signal:
     def disconnect(self, listener):
         self.cleanup_lost_refs()
         self.listeners = [listener_ref for listener_ref in self.listeners if listener_ref() != listener]
+
+    @contextmanager
+    def connected(self, listener):
+        self.connect(listener)
+        try:
+            yield
+        finally:
+            self.disconnect(listener)
 
     def emit(self, **kwargs):
         self.cleanup_lost_refs()
