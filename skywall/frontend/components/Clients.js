@@ -5,10 +5,10 @@ import {Table, Button} from 'react-bootstrap'
 import {Choose, When, Otherwise, For} from 'jsx-control-statements'
 import moment from 'moment'
 import reportFormaters from '../../reports/formaters'
+import {EMDASH} from '../constants/symbols'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import {connect} from '../utils'
-import Emdash from './common/Emdash'
 import Moment from './common/Moment'
 import TdLink from './common/TdLink'
 
@@ -51,11 +51,11 @@ class Clients extends React.Component {
     const report = reportsMap[client.id]
     const value = report && get(valuesMap, [report.id, field.name, 'value'])
     const formater = reportFormaters[field.name] || identity
-    if (isNil(value)) return <Emdash />
+    if (isNil(value)) return EMDASH
     try {
       return formater(value)
     } catch (e) {
-      return <Emdash />
+      return EMDASH
     }
   }
 
@@ -99,7 +99,7 @@ class Clients extends React.Component {
                       {client.id}
                     </TdLink>
                     <TdLink to={links[client.id]}>
-                      {client.label || <Emdash />}
+                      {client.label || EMDASH}
                     </TdLink>
                     <TdLink to={links[client.id]}>
                       <Moment at={moment.unix(client.created)} />
