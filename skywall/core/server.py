@@ -242,8 +242,6 @@ def run_server():
             stack.enter_context(WebpackServer())
         try:
             loop.run_forever()
-        except KeyboardInterrupt:
-            pass
         finally:
             _server = None
     loop.close()

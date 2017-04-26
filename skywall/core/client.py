@@ -1,6 +1,6 @@
 import asyncio
-from aiohttp import ClientSession, WSCloseCode, WSMsgType
-from skywall.core.constants import ACTION_CONFIRM_TIMEOUT
+from aiohttp import ClientSession, WSCloseCode, WSMsgType, ClientConnectionError
+from skywall.core.constants import ACTION_CONFIRM_TIMEOUT, CLIENT_RECONECT_INTERVAL
 from skywall.core.config import config
 from skywall.core.actions import parse_client_action
 from skywall.core.reports import collect_report
@@ -25,20 +25,27 @@ class WebsocketClient:
         self.socket = None
 
     def __enter__(self):
-        before_client_start.emit(client=self)
-        headers = self._headers()
-        self.session = ClientSession(loop=self.loop)
-        self.socket = self.loop.run_until_complete(self.session.ws_connect(self.url, headers=headers))
-        after_client_start.emit(client=self)
-        return self
+        try:
+            before_client_start.emit(client=self)
+            headers = self._headers()
+            self.session = ClientSession(loop=self.loop)
+            self.socket = self.loop.run_until_complete(self.session.ws_connect(self.url, headers=headers))
+            after_client_start.emit(client=self)
+            return self
+        except:
+            self._close()
+            raise
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         before_client_stop.emit(client=self)
+        self._close()
+        after_client_stop.emit(client=self)
+
+    def _close(self):
         if self.socket:
             self.loop.run_until_complete(self.socket.close(code=WSCloseCode.GOING_AWAY))
         if self.session:
             self.loop.run_until_complete(self.session.close())
-        after_client_stop.emit(client=self)
 
     def _headers(self):
         headers = {}
@@ -121,14 +128,20 @@ def run_client():
     # pylint: disable=global-statement
     global _client
     loop = asyncio.get_event_loop()
-    with WebsocketClient(loop) as _client:
-        try:
-            loop.run_until_complete(_client.connect())
-        except KeyboardInterrupt:
-            pass
-        finally:
-            _client = None
-    loop.close()
+    try:
+        while True:
+            try:
+                with WebsocketClient(loop) as _client:
+                    loop.run_until_complete(_client.connect())
+            except ClientConnectionError as e:
+                print('Connection to server failed: {}'.format(e))
+            else:
+                print('Connection to server failed: Connection closed by server.')
+            finally:
+                _client = None
+            loop.run_until_complete(asyncio.sleep(CLIENT_RECONECT_INTERVAL))
+    finally:
+        loop.close()
 
 
 def get_client():

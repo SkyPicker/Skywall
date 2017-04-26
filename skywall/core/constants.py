@@ -13,3 +13,6 @@ BUILD_ROUTE = '/build'
 
 # Timeout to respond to actions (in seconds, may be a float number)
 ACTION_CONFIRM_TIMEOUT = 5
+
+# Number of seconds the client waits before reconnecting
+CLIENT_RECONECT_INTERVAL = 10
