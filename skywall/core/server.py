@@ -92,7 +92,7 @@ class WebsocketConnection:
 
     async def close(self):
         before_server_connection_close.emit(connection=self)
-        self.socket.close(code=WSCloseCode.GOING_AWAY)
+        await self.socket.close(code=WSCloseCode.GOING_AWAY)
         after_server_connection_close.emit(connection=self)
 
     def send_action(self, action):
