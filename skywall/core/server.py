@@ -160,6 +160,13 @@ class WebsocketServer:
 
     async def _connect(self, request):
         connection = WebsocketConnection(self, request)
+
+        # If a client connects again without closing his previous connection, close it manually.
+        # Each client may have only one opened connection at any time.
+        old_connection = self.get_connection(connection.client_id)
+        if old_connection:
+            await old_connection.close()
+
         self.connections.append(connection)
         try:
             await connection.connect()
