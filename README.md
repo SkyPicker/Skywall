@@ -45,13 +45,11 @@ To install Skywall server you need:
 ### Installation
 
 ```
-$ git clone https://github.com/SkyPicker/Skywall.git skywall
 $ cd skywall
 $ virtualenv --python=/usr/bin/python3 env
 $ . env/bin/activate
-(env) $ pip install -r requirements.txt
+(env) $ pip install git+https://github.com/SkyPicker/Skywall.git
 (env) $ nodeenv -p
-(env) $ npm install
 ```
 
 ### Configuration
@@ -59,13 +57,13 @@ $ . env/bin/activate
 To see the current configuration run:
 
 ```
-(env) $ python skywall.py get
+(env) $ skywall get
 ```
 
 To see available settings run:
 
 ```
-(env) $ python skywall.py set --help
+(env) $ skywall set --help
 ```
 
 #### Database
@@ -73,7 +71,7 @@ To see available settings run:
 To run skywall server you need to configure your database connection string:
 
 ```
-(env) $ python skywall.py set --server.database 'postgres://USER:PASSWORD@HOST/DATABASE'
+(env) $ skywall set --server.database 'postgres://USER:PASSWORD@HOST/DATABASE'
 ```
 
 #### Server host and port
@@ -82,14 +80,14 @@ By default the server listens on localhost on port 9000. To configure custom ser
 run:
 
 ```
-(env) $ python skywall.py set --server.host HOST --server.port PORT
+(env) $ skywall set --server.host HOST --server.port PORT
 ```
 
 If the server is behind a proxy or the public websocket url of the server is different than the
 server host and port for some reason, you may need to configure public websocket url as well:
 
 ```
-(env) $ python skywall.py set --server.publicUrl URL
+(env) $ skywall set --server.publicUrl URL
 ```
 
 #### Webserver host and port
@@ -100,21 +98,25 @@ default the webserver listens on localhost on port 8080. To configure custom web
 port set:
 
 ```
-(env) $ python skywall.py set --webserver.host HOST --sebserver.port PORT
+(env) $ skywall set --webserver.host HOST --sebserver.port PORT
 ```
+
+#### Configuration file
+
+Alternatively, you can manually edit the configuration file stored in `env/share/skywall/config.yaml`
 
 ### Running server
 
 To run the Skywall server you first need to build the frontend app:
 
 ```
-(env) $ python skywall.py build
+(env) $ skywall build
 ```
 
 And then you can run the server:
 
 ```
-(env) $ python skywall.py server
+(env) $ skywall server
 ```
 
 To see Skywall frontend open `http://HOST:PORT/` in your browser, where HOST and PORT are
@@ -133,6 +135,71 @@ To install Skywall client you need:
 ### Installation
 
 ```
+$ cd skywall
+$ virtualenv --python=/usr/bin/python3 env
+$ . env/bin/activate
+(env) $ pip install git+https://github.com/SkyPicker/Skywall.git
+```
+
+### Configuration
+
+To see the current configuration run:
+
+```
+(env) $ skywall get
+```
+
+To see available settings run:
+
+```
+(env) $ skywall set --help
+```
+
+#### Server host and port
+
+You need to configure host and port how your Skywall client can connect to your Skywall server. By
+default the server listens on port 9000. If you changed it, you have to change it here as well.
+
+```
+(env) $ skywall set --server.host HOST --server.port PORT
+```
+
+#### Client label
+
+To better identify your clients you may configure labels for them. Labels may be set in GUI or using
+the following commandline setting.
+
+```
+(env) $ skywall set --client.label LABEL
+```
+
+#### Configuration file
+
+Alternatively, you can manually edit the configuration file stored in `env/share/skywall/config.yaml`
+
+### Running client
+
+```
+(env) $ skywall client
+```
+
+## Instructions for developers
+
+### Installing server form a cloned repository
+
+```
+$ git clone https://github.com/SkyPicker/Skywall.git skywall
+$ cd skywall
+$ virtualenv --python=/usr/bin/python3 env
+$ . env/bin/activate
+(env) $ pip install -r requirements.txt
+(env) $ nodeenv -p
+(env) $ npm install
+```
+
+### Installing client form a cloned repository
+
+```
 $ git clone https://github.com/SkyPicker/Skywall.git skywall
 $ cd skywall
 $ virtualenv --python=/usr/bin/python3 env
@@ -154,32 +221,6 @@ To see available settings run:
 (env) $ python skywall.py set --help
 ```
 
-#### Server host and port
-
-You need to configure host and port how your Skywall client can connect to your Skywall server. By
-default the server listens on port 9000. If you changed it, you have to change it here as well.
-
-```
-(env) $ python skywall.py set --server.host HOST --server.port PORT
-```
-
-#### Client label
-
-To better identify your clients you may configure labels for them. Labels may be set in GUI or using
-the following commandline setting.
-
-```
-(env) $ python skywall.py set --client.label LABEL
-```
-
-### Running client
-
-```
-(env) $ python skywall.py client
-```
-
-## Instructions for developers
-
 ### Running server in developement mode
 
 To run your server in the developement mode with frontend hot-reload you need to enable it:
@@ -196,6 +237,14 @@ And then run your server (without manually building it, it will build itself):
 
 This option will enable various debug messages and it will automatically reload the frontend app
 whenever you change some code in it.
+
+### Running client
+
+Client has no developement mode yet. Just run:
+
+```
+(env) $ python skywall.py client
+```
 
 ### Pylint and Eslint
 
