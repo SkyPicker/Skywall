@@ -45,9 +45,9 @@ export default function makeConfig(isDevelopment) {
     entry: {
       app: isDevelopment ? [
         `webpack-hot-middleware/client?path=http://${hotHost}:${hotPort}/__webpack_hmr`,
-        path.join(constants.SRC_DIR, 'skywall/frontend/index.js'),
+        path.join(constants.SRC_DIR, 'frontend/index.js'),
       ] : [
-        path.join(constants.SRC_DIR, 'skywall/frontend/index.js'),
+        path.join(constants.SRC_DIR, 'frontend/index.js'),
       ],
     },
 

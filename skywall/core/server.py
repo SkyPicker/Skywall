@@ -12,6 +12,7 @@ from skywall.core.api import api_registry
 from skywall.core.database import create_session
 from skywall.core.actions import parse_server_action
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER, API_ROUTE, STATIC_ROUTE, BUILD_ROUTE
+from skywall.core.frontend import frontend
 from skywall.core.utils import randomstring
 from skywall.models.client import Client
 from skywall.models.connections import Connection
@@ -23,7 +24,6 @@ from skywall.signals import (
         before_client_action_send, after_client_action_send, after_client_action_confirm,
         before_server_action_receive, after_server_action_receive,
         )
-from skywall.frontend import frontend
 
 
 class WebsocketConnection:
@@ -222,7 +222,7 @@ class WebServer:
         for api in api_registry:
             self.app.router.add_route(api.method, API_ROUTE + api.path, api.handler)
         setup_swagger(self.app, swagger_url=API_ROUTE, title='Skywall web API')
-        self.app.router.add_static(STATIC_ROUTE, 'skywall/frontend/static')
+        self.app.router.add_static(STATIC_ROUTE, 'frontend/static')
         if os.path.isdir('build'):
             self.app.router.add_static(BUILD_ROUTE, 'build')
         self.app.router.add_get('/{tail:.*}', frontend)
