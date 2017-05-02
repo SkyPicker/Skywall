@@ -5,6 +5,7 @@ import contextlib
 from aiohttp import WSMsgType, WSCloseCode
 from aiohttp.web import Application, WebSocketResponse, HTTPBadRequest, HTTPForbidden
 from aiohttp_swagger import setup_swagger
+from sqlalchemy.sql.functions import current_timestamp
 from skywall.core.constants import ACTION_CONFIRM_TIMEOUT
 from skywall.core.config import config
 from skywall.core.api import api_registry
@@ -13,6 +14,7 @@ from skywall.core.actions import parse_server_action
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER, API_ROUTE, STATIC_ROUTE, BUILD_ROUTE
 from skywall.core.utils import randomstring
 from skywall.models.client import Client
+from skywall.models.connections import Connection
 from skywall.actions.clientid import SetIdClientAction
 from skywall.signals import (
         before_server_start, after_server_start, before_server_stop, after_server_stop,
@@ -28,6 +30,7 @@ class WebsocketConnection:
 
     def __init__(self, server, request):
         self.client_id = self._get_request_client_id(request)
+        self.connection_id = self._get_request_connection_id(self.client_id)
         self.server = server
         self.request = request
         self.socket = None
@@ -49,6 +52,23 @@ class WebsocketConnection:
                 if not client or client.token != client_token:
                     raise HTTPForbidden(reason='Invalid Client ID or Token')
             return client.id
+
+    def _get_request_connection_id(self, client_id):
+        with create_session() as session:
+            connection = Connection(client_id=client_id)
+            session.add(connection)
+            session.flush()
+            return connection.id
+
+    def _save_connection_last_activity(self):
+        with create_session() as session:
+            connection = session.query(Connection).filter(Connection.id == self.connection_id).first()
+            connection.last_activity = current_timestamp()
+
+    def _save_connection_closed(self):
+        with create_session() as session:
+            connection = session.query(Connection).filter(Connection.id == self.connection_id).first()
+            connection.closed = current_timestamp()
 
     def _process_confirm(self, action):
         try:
@@ -87,7 +107,9 @@ class WebsocketConnection:
         after_server_connection_open.emit(connection=self)
         self.send_client_id()
         async for msg in self.socket:
+            self._save_connection_last_activity()
             self._process_message(msg)
+        self._save_connection_closed()
         after_server_connection_ended.emit(connection=self)
 
     async def close(self):

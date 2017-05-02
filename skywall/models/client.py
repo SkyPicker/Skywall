@@ -13,6 +13,7 @@ class Client(Model):
     label = Column(String, nullable=False, server_default='')
 
     reports = relationship('Report', back_populates='client')
+    connections = relationship('Connection', back_populates='client')
 
     def __repr__(self):
         return '<Client id={0.id} label={0.label}>'.format(self)

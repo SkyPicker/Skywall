@@ -19,6 +19,10 @@ class ClientForm extends Form {
       created: React.PropTypes.number.isRequired,
       label: React.PropTypes.string.isRequired,
     }),
+    connection: React.PropTypes.shape({
+      id: React.PropTypes.number.isRequired,
+      lastActivity: React.PropTypes.number.isRequired,
+    }),
     report: React.PropTypes.shape({
       id: React.PropTypes.number.isRequired,
       created: React.PropTypes.number.isRequired,
@@ -43,12 +47,12 @@ class ClientForm extends Form {
 
   render() {
     const {label} = this.fields
-    const {client, report} = this.props
+    const {client, connection, report} = this.props
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
           <Row>
-            <Col md={12}>
+            <Col md={4}>
               <FormGroup>
                 <ControlLabel>First connection</ControlLabel>
                 <div>
@@ -56,9 +60,22 @@ class ClientForm extends Form {
                 </div>
               </FormGroup>
             </Col>
-          </Row>
-          <Row>
-            <Col md={12}>
+            <Col md={4}>
+              <FormGroup>
+                <ControlLabel>Last activity</ControlLabel>
+                <div>
+                  <Choose>
+                    <When condition={connection}>
+                      <Moment at={moment.unix(connection.lastActivity)} />
+                    </When>
+                    <Otherwise>
+                      Never
+                    </Otherwise>
+                  </Choose>
+                </div>
+              </FormGroup>
+            </Col>
+            <Col md={4}>
               <FormGroup>
                 <ControlLabel>Last report</ControlLabel>
                 <div>

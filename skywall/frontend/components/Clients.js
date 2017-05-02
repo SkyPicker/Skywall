@@ -5,7 +5,7 @@ import {Table, Button} from 'react-bootstrap'
 import {Choose, When, Otherwise, For} from 'jsx-control-statements'
 import moment from 'moment'
 import reportFormaters from '../../reports/formaters'
-import {EMDASH} from '../constants/symbols'
+import {EMDASH, CHECK_MARK, CROSS_MARK} from '../constants/symbols'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import {connect} from '../utils'
@@ -19,8 +19,8 @@ class Clients extends React.Component {
     // Props from store
     clients: React.PropTypes.arrayOf(React.PropTypes.shape({
       id: React.PropTypes.number.isRequired,
-      created: React.PropTypes.number.isRequired,
       label: React.PropTypes.string.isRequired,
+      connected: React.PropTypes.bool.isRequired,
     })),
     reports: React.PropTypes.arrayOf(React.PropTypes.shape({
       id: React.PropTypes.number.isRequired,
@@ -72,7 +72,7 @@ class Clients extends React.Component {
         <div className="pull-right">
           <Button onClick={getClients}>Refresh</Button>
         </div>
-        <h2>Connected clients</h2>
+        <h2>Clients</h2>
         <Choose>
           <When condition={isEmpty(clients)}>
             <div>
@@ -85,11 +85,11 @@ class Clients extends React.Component {
                 <tr>
                   <th>ID</th>
                   <th>Label</th>
-                  <th>First connection</th>
                   <th>Last report</th>
                   <For each="field" of={fields}>
                     <th key={field.name}>{field.label}</th>
                   </For>
+                  <th>Connected</th>
                 </tr>
               </thead>
               <tbody>
@@ -100,9 +100,6 @@ class Clients extends React.Component {
                     </TdLink>
                     <TdLink to={links[client.id]}>
                       {client.label || EMDASH}
-                    </TdLink>
-                    <TdLink to={links[client.id]}>
-                      <Moment at={moment.unix(client.created)} />
                     </TdLink>
                     <TdLink to={links[client.id]}>
                       <Choose>
@@ -119,6 +116,9 @@ class Clients extends React.Component {
                         {this.renderValue(field, client, valuesMap, reportsMap)}
                       </TdLink>
                     </For>
+                    <TdLink to={links[client.id]}>
+                      {client.connected ? CHECK_MARK : CROSS_MARK}
+                    </TdLink>
                   </tr>
                 </For>
               </tbody>

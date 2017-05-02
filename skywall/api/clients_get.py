@@ -3,7 +3,9 @@ from sqlalchemy import desc
 from skywall.core.api import register_api
 from skywall.core.database import create_session
 from skywall.core.reports import reports_registry
+from skywall.core.server import get_server
 from skywall.models.client import Client
+from skywall.models.connections import Connection
 from skywall.models.reports import Report, ReportValue
 
 
@@ -12,6 +14,7 @@ def _client_response(client):
             'id': client.id,
             'created': client.created.timestamp(),
             'label': client.label,
+            'connected': get_server().get_connection(client.id) is not None,
             }
 
 def _clients_response(clients):
@@ -26,6 +29,18 @@ def _report_response(report):
 
 def _reports_response(reports):
     return [_report_response(report) for report in reports]
+
+def _connection_response(connection):
+    return {
+            'id': connection.id,
+            'created': connection.created.timestamp(),
+            'clientId': connection.client_id,
+            'lastActivity': connection.last_activity.timestamp(),
+            'closed': connection.closed and connection.closed.timestamp(),
+            }
+
+def _connections_response(connections):
+    return [_connection_response(connection) for connection in connections]
 
 def _value_response(value):
     return {
@@ -56,17 +71,18 @@ async def get_clients(request):
     tags:
       - Clients
     summary: List of clients
-    description: Returns list of clients with their most recent reports
+    description: Returns list of clients with their most recent connections and reports
     produces:
       - application/json
     responses:
       200:
-        description: List of clients with their most recent reports
+        description: List of clients with their most recent connections and reports
         schema:
           type: object
           title: GetClientsResponse
           required:
             - clients
+            - connections
             - reports
             - values
             - fields
@@ -80,6 +96,7 @@ async def get_clients(request):
                   - id
                   - created
                   - label
+                  - connected
                 properties:
                   id:
                     type: integer
@@ -88,6 +105,33 @@ async def get_clients(request):
                     format: float
                   label:
                     type: string
+                  connected:
+                    type: boolean
+            connections:
+              type: array
+              items:
+                type: object
+                title: Connection
+                required:
+                  - id
+                  - created
+                  - clientId
+                  - lastActivity
+                  - closed
+                properties:
+                  id:
+                    type: integer
+                  created:
+                    type: number
+                    format: float
+                  clientId:
+                    type: integer
+                  lastActivity:
+                    type: number
+                    format: float
+                  closed:
+                    type: number
+                    format: float
             reports:
               type: array
               items:
@@ -144,14 +188,23 @@ async def get_clients(request):
     """
     with create_session() as session:
         clients = session.query(Client).order_by(Client.id).all()
+        connections = list(filter(None, (
+                session.query(Connection)
+                    .filter(Connection.client_id == client.id)
+                    .order_by(desc(Connection.created)).first()
+                        for client in clients
+                )))
         reports = list(filter(None, (
-                session.query(Report).filter(Report.client_id == client.id).order_by(desc(Report.created)).first()
-                    for client in clients
+                session.query(Report)
+                    .filter(Report.client_id == client.id)
+                    .order_by(desc(Report.created)).first()
+                        for client in clients
                 )))
         values = (session.query(ReportValue)
                 .filter(ReportValue.report_id.in_(report.id for report in reports)).all())
         return json_response({
                 'clients': _clients_response(clients),
+                'connections': _connections_response(connections),
                 'reports': _reports_response(reports),
                 'values': _values_response(values),
                 'fields': _fields_response(reports_registry.values()),
