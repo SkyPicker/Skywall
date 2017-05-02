@@ -8,5 +8,8 @@ import skywall.settings
 
 
 def run_skywall():
-    config.load()
-    run()
+    try:
+        config.load()
+        run()
+    except KeyboardInterrupt:
+        pass
