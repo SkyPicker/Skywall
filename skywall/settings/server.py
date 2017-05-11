@@ -19,7 +19,7 @@ class ServerPortSetting(IntegerSetting):
         return 9000
 
 @register_setting
-class ServerPublicUrl(AbstractSetting):
+class ServerPublicUrlSetting(AbstractSetting):
     name = 'server.publicUrl'
     help = 'Websocket server public url (default: "http://HOST:PORT/")'
 

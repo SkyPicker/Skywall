@@ -16,7 +16,7 @@ class AbstractSetting:
     def default(self):
         return None
 
-    def coerce(self, value):
+    def coerce(self, old_value, value):
         return value
 
     def validate(self, value, mode):
@@ -25,7 +25,7 @@ class AbstractSetting:
 
 class IntegerSetting(AbstractSetting):
 
-    def coerce(self, value):
+    def coerce(self, old_value, value):
         return int(value)
 
 
@@ -34,5 +34,23 @@ class BooleanSetting(AbstractSetting):
     def add_argument_params(self):
         return dict(choices=['true', 'false', 'yes', 'no'], type=str.lower)
 
-    def coerce(self, value):
+    def coerce(self, old_value, value):
         return value in ['true', 'yes']
+
+
+class ListSetting(AbstractSetting):
+
+    def add_argument_params(self):
+        return dict(action='append')
+
+    def coerce(self, old_value, value):
+        items = list(old_value or [])
+        for group in value:
+            for item in group.split(','):
+                item = item.strip()
+                if item.startswith('~'):
+                    if item[1:] in items:
+                        items.remove(item[1:])
+                elif item and item not in items:
+                    items.append(item)
+        return items

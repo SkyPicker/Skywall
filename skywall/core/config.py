@@ -47,7 +47,8 @@ class Config:
             if part not in data or not isinstance(data[part], dict):
                 data[part] = {}
             data = data[part]
-        data[parts[-1]] = setting.coerce(value)
+        old_value = data.get(parts[-1])
+        data[parts[-1]] = setting.coerce(old_value, value)
 
     def unset(self, name):
         if not isinstance(self.data, dict):
