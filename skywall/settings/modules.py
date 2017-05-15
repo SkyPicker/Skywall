@@ -1,5 +1,4 @@
 from skywall.core.settings import ListSetting, register_setting
-from skywall.core.run import import_modules
 
 
 @register_setting
@@ -12,8 +11,3 @@ class ModulesSetting(ListSetting):
 
     def default(self):
         return None
-
-    def coerce(self, old_value, value):
-        value = super().coerce(old_value, value)
-        import_modules(value)
-        return value
