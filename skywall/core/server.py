@@ -1,6 +1,5 @@
 import os
 import asyncio
-import subprocess
 import contextlib
 from aiohttp import WSMsgType, WSCloseCode
 from aiohttp.web import Application, WebSocketResponse, HTTPBadRequest, HTTPForbidden
@@ -12,7 +11,7 @@ from skywall.core.api import api_registry
 from skywall.core.database import create_session
 from skywall.core.actions import parse_server_action
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER, API_ROUTE, STATIC_ROUTE, BUILD_ROUTE
-from skywall.core.frontend import frontend
+from skywall.core.frontend import get_frontend, run_webpack
 from skywall.core.utils import randomstring
 from skywall.models.client import Client
 from skywall.models.connections import Connection
@@ -225,7 +224,7 @@ class WebServer:
         self.app.router.add_static(STATIC_ROUTE, 'frontend/static')
         if os.path.isdir('build'):
             self.app.router.add_static(BUILD_ROUTE, 'build')
-        self.app.router.add_get('/{tail:.*}', frontend)
+        self.app.router.add_get('/{tail:.*}', get_frontend)
 
         self.handler = self.app.make_handler()
         self.loop.run_until_complete(self.app.startup())
@@ -245,13 +244,10 @@ class WebServer:
 class WebpackServer:
 
     def __init__(self):
-        self.host = config.get('webpack.host')
-        self.port = config.get('webpack.port')
         self.process = None
 
     def __enter__(self):
-        env = dict(os.environ, WEBPACK_HOST=self.host, WEBPACK_PORT=str(self.port))
-        self.process = subprocess.Popen(['npm', 'run', 'webpack'], env=env)
+        self.process = run_webpack()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):

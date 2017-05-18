@@ -1,11 +1,13 @@
+import os
 import html
 import json
+import subprocess
 import aiohttp.web
 from skywall.core.config import config
 from skywall.core.constants import API_ROUTE, BUILD_ROUTE
 
 
-def frontend(request):
+def get_frontend(request):
     devel = config.get('devel')
     host = config.get('webpack.host')
     port = config.get('webpack.port')
@@ -53,3 +55,21 @@ def frontend(request):
             )
 
     return aiohttp.web.Response(text=content, content_type='text/html')
+
+
+def install_frontend():
+    subprocess.run(['npm', 'install'])
+
+
+def build_frontend():
+    host = config.get('webpack.host')
+    port = config.get('webpack.port')
+    env = dict(os.environ, WEBPACK_HOST=host, WEBPACK_PORT=str(port))
+    subprocess.run(['npm', 'run', 'build'], env=env)
+
+
+def run_webpack():
+    host = config.get('webpack.host')
+    port = config.get('webpack.port')
+    env = dict(os.environ, WEBPACK_HOST=host, WEBPACK_PORT=str(port))
+    return subprocess.Popen(['npm', 'run', 'webpack'], env=env)
