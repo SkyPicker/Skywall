@@ -10,7 +10,7 @@ from skywall.core.config import config
 from skywall.core.api import api_registry
 from skywall.core.database import create_session
 from skywall.core.actions import parse_server_action
-from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER, API_ROUTE, STATIC_ROUTE, BUILD_ROUTE
+from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER, API_ROUTE, BUILD_ROUTE
 from skywall.core.frontend import get_frontend, run_webpack
 from skywall.core.utils import randomstring
 from skywall.models.client import Client
@@ -221,7 +221,6 @@ class WebServer:
         for api in api_registry:
             self.app.router.add_route(api.method, API_ROUTE + api.path, api.handler)
         setup_swagger(self.app, swagger_url=API_ROUTE, title='Skywall web API')
-        self.app.router.add_static(STATIC_ROUTE, 'frontend/static')
         if os.path.isdir('build'):
             self.app.router.add_static(BUILD_ROUTE, 'build')
         self.app.router.add_get('/{tail:.*}', get_frontend)
