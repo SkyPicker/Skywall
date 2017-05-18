@@ -103,7 +103,33 @@ port set:
 
 #### Configuration file
 
-Alternatively, you can manually edit the configuration file stored in `env/share/skywall/config.yaml`
+Alternatively, you can manually edit the configuration file `config.yaml` automatically created in
+your main directory.
+
+### Extending with modules
+
+Skywall is extensible with modules. You may use some of the existing Skywall modules or write your
+own. To install and enable a module run:
+
+```
+(env) $ pip install MODULE
+(env) $ skywall set --modules MODULE
+(env) $ skywall install
+```
+
+For instance, to enable [Skywall-iptables](https://github.com/SkyPicker/Skywall-iptables) run:
+
+```
+(env) $ pip install git+https://github.com/SkyPicker/Skywall-iptables.git
+(env) $ skywall set --modules skywall_iptables
+(env) $ skywall install
+```
+
+To disable a module run:
+
+```
+(env) $ skywall set --modules ~MODULE
+```
 
 ### Running server
 
@@ -175,7 +201,32 @@ the following commandline setting.
 
 #### Configuration file
 
-Alternatively, you can manually edit the configuration file stored in `env/share/skywall/config.yaml`
+Alternatively, you can manually edit the configuration file `config.yaml` automatically created in
+your main directory.
+
+
+### Extending with modules
+
+Skywall is extensible with modules. You may use some of the existing Skywall modules or write your
+own. To install and enable a module run:
+
+```
+(env) $ pip install MODULE
+(env) $ skywall set --modules MODULE
+```
+
+For instance, to enable [Skywall-iptables](https://github.com/SkyPicker/Skywall-iptables) run:
+
+```
+(env) $ pip install git+https://github.com/SkyPicker/Skywall-iptables.git
+(env) $ skywall set --modules skywall_iptables
+```
+
+To disable a module run:
+
+```
+(env) $ skywall set --modules ~MODULE
+```
 
 ### Running client
 
@@ -185,54 +236,80 @@ Alternatively, you can manually edit the configuration file stored in `env/share
 
 ## Instructions for developers
 
-### Installing server form a cloned repository
+### Installing server form the repository
 
 ```
 $ git clone https://github.com/SkyPicker/Skywall.git skywall
 $ cd skywall
 $ virtualenv --python=/usr/bin/python3 env
+$ pwd > $(echo env/lib/python*/site-packages)/local.pth
+$ cp bin/skywall env/bin/skywall
 $ . env/bin/activate
 (env) $ pip install -r requirements.txt
 (env) $ nodeenv -p
 (env) $ npm install
+(env) $ ln -s .. node_modules/skywall
 ```
 
-### Installing client form a cloned repository
+If you want to enable some modules, run:
+
+```
+(env) $ pip install MODULE
+(env) $ skywall set --modules MODULE
+(env) $ skywall install
+```
+
+For instance, to enable [Skywall-iptables](https://github.com/SkyPicker/Skywall-iptables) run:
+
+```
+(env) $ pip install git+https://github.com/SkyPicker/Skywall-iptables.git
+(env) $ skywall set --modules skywall_iptables
+(env) $ skywall install
+```
+
+### Installing client form the repository
 
 ```
 $ git clone https://github.com/SkyPicker/Skywall.git skywall
 $ cd skywall
 $ virtualenv --python=/usr/bin/python3 env
+$ pwd > $(echo env/lib/python*/site-packages)/local.pth
+$ cp bin/skywall env/bin/skywall
 $ . env/bin/activate
 (env) $ pip install -r requirements.txt
 ```
 
+If you want to enable some modules, run:
+
+```
+(env) $ pip install MODULE
+(env) $ skywall set --modules MODULE
+```
+
+For instance, to enable [Skywall-iptables](https://github.com/SkyPicker/Skywall-iptables) run:
+
+```
+(env) $ pip install git+https://github.com/SkyPicker/Skywall-iptables.git
+(env) $ skywall set --modules skywall_iptables
+```
+
 ### Configuration
 
-To see the current configuration run:
-
-```
-(env) $ python skywall.py get
-```
-
-To see available settings run:
-
-```
-(env) $ python skywall.py set --help
-```
+Follow general configuration instructions for the [server](#configuration) and the
+[client](#configuration-1) above.
 
 ### Running server in developement mode
 
 To run your server in the developement mode with frontend hot-reload you need to enable it:
 
 ```
-(env) $ python skywall.py set --devel true
+(env) $ skywall set --devel true
 ```
 
 And then run your server (without manually building it, it will build itself):
 
 ```
-(env) $ python skywall.py server
+(env) $ skywall server
 ```
 
 This option will enable various debug messages and it will automatically reload the frontend app
@@ -243,7 +320,7 @@ whenever you change some code in it.
 Client has no developement mode yet. Just run:
 
 ```
-(env) $ python skywall.py client
+(env) $ skywall client
 ```
 
 ### Pylint and Eslint

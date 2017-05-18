@@ -17,5 +17,5 @@ class DatabaseSetting(AbstractSetting):
                 '\n'
                 'Please configure your database conection string to run the server. E.g.:\n'
                 '\n'
-                '    skywall.py set --server.database "postgres://user:password@localhost/skywall"\n'
+                '    $ skywall set --server.database "postgres://user:password@localhost/skywall"\n'
                 )
