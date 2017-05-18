@@ -5,6 +5,7 @@ import subprocess
 import aiohttp.web
 from skywall.core.config import config
 from skywall.core.constants import API_ROUTE, BUILD_ROUTE
+from skywall.core.modules import import_enabled_modules
 
 
 def get_frontend(request):
@@ -58,18 +59,28 @@ def get_frontend(request):
 
 
 def install_frontend():
-    subprocess.run(['npm', 'install'])
+    paths = []
+    if os.path.isfile(os.path.join(os.path.dirname(__file__), '../javascript/package.json')):
+        paths.append(os.path.join(os.path.dirname(__file__), '../javascript'))
+    for module in import_enabled_modules():
+        path = os.path.dirname(module.__file__)
+        if os.path.isfile(os.path.join(path, 'javascript/package.json')):
+            paths.append(os.path.join(path, 'javascript'))
+    if paths:
+        subprocess.run(['npm', 'install'] + paths)
 
 
 def build_frontend():
     host = config.get('webpack.host')
     port = config.get('webpack.port')
-    env = dict(os.environ, WEBPACK_HOST=host, WEBPACK_PORT=str(port))
-    subprocess.run(['npm', 'run', 'build'], env=env)
+    modules = ','.join(['skywall'] + [module.__name__ for module in import_enabled_modules()])
+    env = dict(os.environ, WEBPACK_HOST=host, WEBPACK_PORT=str(port), FRONTEND_ENTRIES=modules)
+    subprocess.run(['node', '-e', 'require("skywall/webpack/build")'], env=env)
 
 
 def run_webpack():
     host = config.get('webpack.host')
     port = config.get('webpack.port')
-    env = dict(os.environ, WEBPACK_HOST=host, WEBPACK_PORT=str(port))
-    return subprocess.Popen(['npm', 'run', 'webpack'], env=env)
+    modules = ','.join(['skywall'] + [module.__name__ for module in import_enabled_modules()])
+    env = dict(os.environ, WEBPACK_HOST=host, WEBPACK_PORT=str(port), FRONTEND_ENTRIES=modules)
+    return subprocess.Popen(['node', '-e', 'require("skywall/webpack/server")'], env=env)

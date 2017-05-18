@@ -2,18 +2,18 @@
   "name": "skywall",
   "version": "0.0.1",
   "description": "Frontend for Skywall",
-  "main": "index.js",
+  "main": "frontend/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint": "node_modules/.bin/eslint frontend",
-    "pylint": "env/bin/pylint skywall",
-    "webpack": "node webpack/server",
-    "build": "node webpack/build"
+    "postinstall": "if [ -d frontend-src ]; then babel frontend-src -d frontend --copy-files && babel webpack-src -d webpack --copy-files; fi",
+    "test": "echo 'Error: no test specified' && exit 1",
+    "eslint": "eslint frontend",
+    "pylint": "pylint skywall"
   },
   "author": "",
   "license": "SEE LICENSE IN ./LICENSE",
   "dependencies": {
     "autoprefixer": "^6.7.7",
+    "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.1",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
