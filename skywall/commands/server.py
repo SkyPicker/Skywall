@@ -12,7 +12,6 @@ class InstallCommand(AbstractCommand):
     help = 'Install Skywall frontend npm dependencies'
 
     def run(self, args):
-        config.validate(SERVER_MODE)
         install_frontend()
 
 
@@ -22,7 +21,6 @@ class BuildCommand(AbstractCommand):
     help = 'Build Skywall frontend'
 
     def run(self, args):
-        config.validate(SERVER_MODE)
         build_frontend()
 
 

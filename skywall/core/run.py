@@ -1,27 +1,18 @@
 import os
-import sys
 import argparse
+from skywall.core.config import config
 from skywall.core.modules import import_enabled_modules
 from skywall.core.commands import commands_registry
 from skywall.signals import before_command_run, after_command_run
 
 
-def _get_skywall_dir():
-    # Use the repository root if running a cloned repository
-    if os.path.isfile(os.path.join(os.path.dirname(__file__), '../../package.json')):
-        return os.path.join(os.path.dirname(__file__), '../../')
+def assert_virtualenv():
+    if not os.environ.get('VIRTUAL_ENV'):
+        raise NotImplementedError('Running Skywall outside a virtualenv is not supported')
 
-    # Use env/share/skywall if running an installed package
-    if hasattr(sys, 'real_prefix'):
-        return os.path.join(sys.prefix, 'share/skywall')
-    if hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix:
-        return os.path.join(sys.prefix, 'share/skywall')
-    raise NotImplementedError('Running Skywall outside a virtualenv is not supported')
-
-def chdir():
-    skywall_dir = _get_skywall_dir()
-    os.makedirs(skywall_dir, exist_ok=True)
-    os.chdir(skywall_dir)
+def change_to_workdir():
+    workdir = os.path.dirname(os.environ.get('VIRTUAL_ENV'))
+    os.chdir(workdir)
 
 def parse_args():
     desc = 'Client-Server based manager for connecting systems together and running tasks.'
@@ -36,6 +27,9 @@ def parse_args():
     return args
 
 def run():
+    assert_virtualenv()
+    change_to_workdir()
+    config.load()
     import_enabled_modules()
     args = parse_args()
     command = commands_registry[args.command]
