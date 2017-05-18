@@ -19,7 +19,9 @@ def _get_skywall_dir():
     raise NotImplementedError('Running Skywall outside a virtualenv is not supported')
 
 def chdir():
-    os.chdir(_get_skywall_dir())
+    skywall_dir = _get_skywall_dir()
+    os.makedirs(skywall_dir, exist_ok=True)
+    os.chdir(skywall_dir)
 
 def parse_args():
     desc = 'Client-Server based manager for connecting systems together and running tasks.'
