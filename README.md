@@ -49,7 +49,7 @@ $ cd skywall
 $ virtualenv --python=/usr/bin/python3 env
 $ . env/bin/activate
 (env) $ pip install git+https://github.com/SkyPicker/Skywall.git
-(env) $ nodeenv -p
+(env) $ nodeenv -p --node=7.7.4
 ```
 
 ### Configuration
@@ -246,9 +246,10 @@ $ pwd > $(echo env/lib/python*/site-packages)/local.pth
 $ cp bin/skywall env/bin/skywall
 $ . env/bin/activate
 (env) $ pip install -r requirements.txt
-(env) $ nodeenv -p
+(env) $ nodeenv -p --node=7.7.4
 (env) $ npm install
 (env) $ ln -s .. node_modules/skywall
+(env) $ skywall install
 ```
 
 If you want to enable some modules, run:
