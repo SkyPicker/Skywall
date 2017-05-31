@@ -1,6 +1,7 @@
 import React from 'react'
 import {Alert} from 'react-bootstrap'
 import {If, For} from 'jsx-control-statements'
+import PropTypes from 'prop-types'
 import * as alerts from '../constants/alerts'
 import {alertsClose} from '../actions/alerts'
 import {alertsRenderSignal} from '../signals'
@@ -20,14 +21,14 @@ class Alerts extends React.Component {
 
   static propTypes = {
     // Props from store
-    alerts: React.PropTypes.arrayOf(React.PropTypes.shape({
-      level: React.PropTypes.oneOf(alerts.LEVELS).isRequired,
-      title: React.PropTypes.string,
-      message: React.PropTypes.string.isRequired,
+    alerts: PropTypes.arrayOf(PropTypes.shape({
+      level: PropTypes.oneOf(alerts.LEVELS).isRequired,
+      title: PropTypes.string,
+      message: PropTypes.string.isRequired,
     })).isRequired,
 
     // Actions
-    alertsClose: React.PropTypes.func.isRequired,
+    alertsClose: PropTypes.func.isRequired,
   }
 
   render() {

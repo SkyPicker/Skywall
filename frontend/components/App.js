@@ -2,6 +2,7 @@ import React from 'react'
 import {some} from 'lodash'
 import {Grid} from 'react-bootstrap'
 import LoadingBar from 'react-loading-bar'
+import PropTypes from 'prop-types'
 import {appRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
 import {connect} from '../utils'
@@ -14,10 +15,10 @@ class App extends React.Component {
 
   static propTypes = {
     // Props from store
-    isFetching: React.PropTypes.bool.isRequired,
+    isFetching: PropTypes.bool.isRequired,
 
     // Default props
-    children: React.PropTypes.node,
+    children: PropTypes.node,
   }
 
   render() {

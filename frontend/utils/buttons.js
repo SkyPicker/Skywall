@@ -1,6 +1,7 @@
 import React from 'react'
 import {If} from 'jsx-control-statements'
 import {Button} from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
 
 export const editButton = ({form, label}) => {
@@ -15,8 +16,8 @@ export const editButton = ({form, label}) => {
 }
 
 editButton.propTypes = {
-  form: React.PropTypes.object.isRequired,
-  label: React.PropTypes.string.isRequired,
+  form: PropTypes.object.isRequired,
+  label: PropTypes.string.isRequired,
 }
 
 export const cancelButton = ({form, label}) => {
@@ -31,8 +32,8 @@ export const cancelButton = ({form, label}) => {
 }
 
 cancelButton.propTypes = {
-  form: React.PropTypes.object.isRequired,
-  label: React.PropTypes.string.isRequired,
+  form: PropTypes.object.isRequired,
+  label: PropTypes.string.isRequired,
 }
 
 export const saveButton = ({form, label, allowUnchanged}) => {
@@ -50,7 +51,7 @@ export const saveButton = ({form, label, allowUnchanged}) => {
 }
 
 saveButton.propTypes = {
-  form: React.PropTypes.object.isRequired,
-  label: React.PropTypes.string.isRequired,
-  allowUnchanged: React.PropTypes.bool,
+  form: PropTypes.object.isRequired,
+  label: PropTypes.string.isRequired,
+  allowUnchanged: PropTypes.bool,
 }

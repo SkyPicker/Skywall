@@ -1,11 +1,12 @@
 import React from 'react'
 import {every, some, assign, forEach, mapValues} from 'lodash'
+import PropTypes from 'prop-types'
 
 
 export class Form extends React.Component {
   static propTypes = {
-    inactive: React.PropTypes.bool,
-    registerDirty: React.PropTypes.func,
+    inactive: PropTypes.bool,
+    registerDirty: PropTypes.func,
   }
   constructor(props) {
     super(props)

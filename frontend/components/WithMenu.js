@@ -1,5 +1,6 @@
 import React from 'react'
 import {Col, Row} from 'react-bootstrap'
+import PropTypes from 'prop-types'
 import {withMenuRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
 import Menu from './Menu'
@@ -9,7 +10,7 @@ class WithMenu extends React.Component {
 
   static propTypes = {
     // Default props
-    children: React.PropTypes.node,
+    children: PropTypes.node,
   }
 
   render() {

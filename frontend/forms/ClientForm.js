@@ -1,6 +1,7 @@
 import React from 'react'
 import {Row, Col, FormGroup, ControlLabel, Clearfix} from 'react-bootstrap'
 import {Choose, When, Otherwise} from 'jsx-control-statements'
+import PropTypes from 'prop-types'
 import moment from 'moment'
 import {clientUpdate} from '../actions/clientUpdate'
 import {ClientLabel} from '../fields/clients'
@@ -14,22 +15,22 @@ class ClientForm extends Form {
 
   static propTypes = {
     // Props from parent element
-    client: React.PropTypes.shape({
-      id: React.PropTypes.number.isRequired,
-      created: React.PropTypes.number.isRequired,
-      label: React.PropTypes.string.isRequired,
+    client: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      created: PropTypes.number.isRequired,
+      label: PropTypes.string.isRequired,
     }),
-    connection: React.PropTypes.shape({
-      id: React.PropTypes.number.isRequired,
-      lastActivity: React.PropTypes.number.isRequired,
+    connection: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      lastActivity: PropTypes.number.isRequired,
     }),
-    report: React.PropTypes.shape({
-      id: React.PropTypes.number.isRequired,
-      created: React.PropTypes.number.isRequired,
+    report: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      created: PropTypes.number.isRequired,
     }),
 
     // Actions
-    clientUpdate: React.PropTypes.func.isRequired,
+    clientUpdate: PropTypes.func.isRequired,
   }
 
   initFields() {

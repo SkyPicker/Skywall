@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
+import PropTypes from 'prop-types'
 import styles from './TdLink.scss'
 
 
@@ -7,10 +8,10 @@ class TdLink extends React.Component {
 
   static propTypes = {
     // Props passed to component
-    to: React.PropTypes.string.isRequired,
+    to: PropTypes.string.isRequired,
 
     // Default props
-    children: React.PropTypes.node,
+    children: PropTypes.node,
   }
 
   render() {

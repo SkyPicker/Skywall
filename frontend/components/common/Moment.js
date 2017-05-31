@@ -1,11 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import moment from 'moment'
 
 
 class Moment extends React.Component {
 
   static propTypes = {
-    at: React.PropTypes.instanceOf(moment).isRequired,
+    at: PropTypes.instanceOf(moment).isRequired,
   }
 
   render() {

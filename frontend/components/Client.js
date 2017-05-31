@@ -3,6 +3,7 @@ import {find, toInteger} from 'lodash'
 import {Alert, Button} from 'react-bootstrap'
 import {IndexLinkContainer} from 'react-router-bootstrap'
 import {If} from 'jsx-control-statements'
+import PropTypes from 'prop-types'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
@@ -16,30 +17,30 @@ class Client extends React.Component {
 
   static propTypes = {
     // Props from router
-    params: React.PropTypes.shape({
-      clientId: React.PropTypes.string.isRequired,
+    params: PropTypes.shape({
+      clientId: PropTypes.string.isRequired,
     }),
 
     // Props from store
-    clients: React.PropTypes.arrayOf(React.PropTypes.shape({
-      id: React.PropTypes.number.isRequired,
-      connected: React.PropTypes.bool.isRequired,
+    clients: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      connected: PropTypes.bool,
     })),
-    connections: React.PropTypes.arrayOf(React.PropTypes.shape({
-      id: React.PropTypes.number.isRequired,
-      clientId: React.PropTypes.number.isRequired,
+    connections: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      clientId: PropTypes.number,
     })),
-    reports: React.PropTypes.arrayOf(React.PropTypes.shape({
-      id: React.PropTypes.number.isRequired,
-      clientId: React.PropTypes.number.isRequired,
+    reports: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      clientId: PropTypes.number,
     })),
 
     // Actions
-    getClients: React.PropTypes.func.isRequired,
-    renewClients: React.PropTypes.func.isRequired,
+    getClients: PropTypes.func.isRequired,
+    renewClients: PropTypes.func.isRequired,
 
     // Props from confirmDirty
-    registerDirty: React.PropTypes.func.isRequired,
+    registerDirty: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
