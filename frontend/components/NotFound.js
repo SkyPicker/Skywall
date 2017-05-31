@@ -1,4 +1,6 @@
 import React from 'react'
+import {notFoundRenderSignal} from '../signals'
+import signalRender from '../hocs/signalRender'
 
 
 class NotFound extends React.Component {
@@ -15,4 +17,6 @@ class NotFound extends React.Component {
   }
 }
 
-export default NotFound
+const SignaledNotFound = signalRender(notFoundRenderSignal)(NotFound)
+
+export default SignaledNotFound

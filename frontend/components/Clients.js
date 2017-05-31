@@ -8,6 +8,8 @@ import {EMDASH, CHECK_MARK, CROSS_MARK} from '../constants/symbols'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import reportFormaters from '../reports/formaters'
+import {clientsRenderSignal} from '../signals'
+import signalRender from '../hocs/signalRender'
 import {connect} from '../utils'
 import Moment from './common/Moment'
 import TdLink from './common/TdLink'
@@ -94,7 +96,7 @@ class Clients extends React.Component {
               </thead>
               <tbody>
                 <For each="client" of={clients}>
-                  <tr key={client.id}>
+                  <tr key={client.id} data-clientId={client.id}>
                     <TdLink to={links[client.id]}>
                       {client.id}
                     </TdLink>
@@ -130,7 +132,9 @@ class Clients extends React.Component {
   }
 }
 
-export default connect(Clients, {getClients, renewClients}, (state) => ({
+const SignaledClients = signalRender(clientsRenderSignal)(Clients)
+
+export default connect(SignaledClients, {getClients, renewClients}, (state) => ({
   clients: state.clients.clients,
   reports: state.clients.reports,
   values: state.clients.values,

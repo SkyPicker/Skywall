@@ -3,6 +3,8 @@ import {Alert} from 'react-bootstrap'
 import {If, For} from 'jsx-control-statements'
 import * as alerts from '../constants/alerts'
 import {alertsClose} from '../actions/alerts'
+import {alertsRenderSignal} from '../signals'
+import signalRender from '../hocs/signalRender'
 import {connect} from '../utils'
 
 
@@ -45,6 +47,8 @@ class Alerts extends React.Component {
   }
 }
 
-export default connect(Alerts, {alertsClose}, (state) => ({
+const SignaledAlerts = signalRender(alertsRenderSignal)(Alerts)
+
+export default connect(SignaledAlerts, {alertsClose}, (state) => ({
   alerts: state.alerts.alerts,
 }))
