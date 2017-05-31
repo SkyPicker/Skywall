@@ -2,11 +2,12 @@ import React from 'react'
 import {Alert} from 'react-bootstrap'
 import {If, For} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
 import * as alerts from '../constants/alerts'
 import {alertsClose} from '../actions/alerts'
 import {alertsRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
-import {connect} from '../utils'
 
 
 const level2bsStyle = {
@@ -48,8 +49,15 @@ class Alerts extends React.Component {
   }
 }
 
-const SignaledAlerts = signalRender(alertsRenderSignal)(Alerts)
-
-export default connect(SignaledAlerts, {alertsClose}, (state) => ({
+const mapStateToProps = (state) => ({
   alerts: state.alerts.alerts,
-}))
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  alertsClose: (index) => dispatch(alertsClose(index)),
+})
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  signalRender(alertsRenderSignal),
+)(Alerts)

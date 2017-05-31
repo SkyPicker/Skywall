@@ -1,7 +1,5 @@
 import url from 'url'
 import {omitBy, isUndefined, zipObject} from 'lodash'
-import {bindActionCreators} from 'redux'
-import {connect as originalConnect} from 'react-redux'
 import {formatPattern} from 'react-router'
 import config from '../config'
 
@@ -12,11 +10,6 @@ export const dummyMiddleware = () => {
 
 export const makeAction = (type, ...argNames) => {
   return (...args) => ({type, ...zipObject(argNames, args)})
-}
-
-export const connect = (component, mapDispatchToProps, mapStateToProps, options) => {
-  return originalConnect(mapStateToProps,
-    (dispatch) => bindActionCreators(mapDispatchToProps, dispatch), null, options)(component)
 }
 
 export const api = (point, options) => {

@@ -1,5 +1,6 @@
 import React from 'react'
 import {Row, Col} from 'react-bootstrap'
+import {compose} from 'redux'
 import {dashboardRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
 
@@ -22,6 +23,6 @@ class Dashboard extends React.Component {
   }
 }
 
-const SignaledDashboard = signalRender(dashboardRenderSignal)(Dashboard)
-
-export default SignaledDashboard
+export default compose(
+  signalRender(dashboardRenderSignal),
+)(Dashboard)

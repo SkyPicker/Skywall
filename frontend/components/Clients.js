@@ -4,6 +4,8 @@ import {formatPattern} from 'react-router'
 import {Table, Button} from 'react-bootstrap'
 import {Choose, When, Otherwise, For} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
 import moment from 'moment'
 import {EMDASH, CHECK_MARK, CROSS_MARK} from '../constants/symbols'
 import * as routes from '../constants/routes'
@@ -11,7 +13,6 @@ import {getClients, renewClients} from '../actions/clients'
 import reportFormaters from '../reports/formaters'
 import {clientsRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
-import {connect} from '../utils'
 import Moment from './common/Moment'
 import TdLink from './common/TdLink'
 
@@ -136,11 +137,19 @@ class Clients extends React.Component {
   }
 }
 
-const SignaledClients = signalRender(clientsRenderSignal)(Clients)
-
-export default connect(SignaledClients, {getClients, renewClients}, (state) => ({
+const mapStateToProps = (state) => ({
   clients: state.clients.clients,
   reports: state.clients.reports,
   values: state.clients.values,
   fields: state.clients.fields,
-}))
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getClients: () => dispatch(getClients()),
+  renewClients: () => dispatch(renewClients()),
+})
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  signalRender(clientsRenderSignal),
+)(Clients)

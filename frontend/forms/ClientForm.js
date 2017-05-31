@@ -2,12 +2,15 @@ import React from 'react'
 import {Row, Col, FormGroup, ControlLabel, Clearfix} from 'react-bootstrap'
 import {Choose, When, Otherwise} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
 import moment from 'moment'
 import {clientUpdate} from '../actions/clientUpdate'
 import {ClientLabel} from '../fields/clients'
+import {clientFormRenderSignal} from '../signals'
+import signalRender from '../hocs/signalRender'
 import {Form} from '../utils/forms'
 import {cancelButton, saveButton, editButton} from '../utils/buttons'
-import {connect} from '../utils'
 import Moment from '../components/common/Moment'
 
 
@@ -112,6 +115,15 @@ class ClientForm extends Form {
   }
 }
 
-export default connect(ClientForm, {clientUpdate}, (state) => ({
+const mapStateToProps = (state) => ({
   isFetching: state.clientUpdate.isFetching,
-}))
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  clientUpdate: (clientId, data) => dispatch(clientUpdate(clientId, data)),
+})
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  signalRender(clientFormRenderSignal),
+)(ClientForm)

@@ -3,9 +3,10 @@ import {some} from 'lodash'
 import {Grid} from 'react-bootstrap'
 import LoadingBar from 'react-loading-bar'
 import PropTypes from 'prop-types'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
 import {appRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
-import {connect} from '../utils'
 import Alerts from './Alerts'
 import Header from './Header'
 import 'react-loading-bar/dist/index.css'
@@ -36,8 +37,15 @@ class App extends React.Component {
   }
 }
 
-const SignaledApp = signalRender(appRenderSignal)(App)
-
-export default connect(SignaledApp, {}, (state) => ({
+const mapStateToProps = (state) => ({
   isFetching: some(state, (s) => s.isFetching),
-}))
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  // Empty
+})
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  signalRender(appRenderSignal),
+)(App)

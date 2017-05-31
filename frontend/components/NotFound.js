@@ -1,4 +1,5 @@
 import React from 'react'
+import {compose} from 'redux'
 import {notFoundRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
 
@@ -17,6 +18,6 @@ class NotFound extends React.Component {
   }
 }
 
-const SignaledNotFound = signalRender(notFoundRenderSignal)(NotFound)
-
-export default SignaledNotFound
+export default compose(
+  signalRender(notFoundRenderSignal),
+)(NotFound)

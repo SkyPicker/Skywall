@@ -1,6 +1,7 @@
 import React from 'react'
 import {Nav, NavItem, Col} from 'react-bootstrap'
 import {LinkContainer, IndexLinkContainer} from 'react-router-bootstrap'
+import {compose} from 'redux'
 import * as routes from '../constants/routes'
 import {menuRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
@@ -27,6 +28,6 @@ class Menu extends React.Component {
   }
 }
 
-const SignaledMenu = signalRender(menuRenderSignal)(Menu)
-
-export default SignaledMenu
+export default compose(
+  signalRender(menuRenderSignal),
+)(Menu)

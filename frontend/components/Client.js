@@ -3,6 +3,8 @@ import {find, toInteger} from 'lodash'
 import {Alert, Button} from 'react-bootstrap'
 import {IndexLinkContainer} from 'react-router-bootstrap'
 import {If} from 'jsx-control-statements'
+import {compose} from 'redux'
+import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
@@ -10,7 +12,6 @@ import confirmDirty from '../hocs/confirmDirty'
 import ClientForm from '../forms/ClientForm'
 import {clientRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
-import {connect} from '../utils'
 
 
 class Client extends React.Component {
@@ -81,10 +82,19 @@ class Client extends React.Component {
   }
 }
 
-const SignaledClient = signalRender(clientRenderSignal)(Client)
-
-export default confirmDirty(connect(SignaledClient, {getClients, renewClients}, (state) => ({
+const mapStateToProps = (state) => ({
   clients: state.clients.clients,
   connections: state.clients.connections,
   reports: state.clients.reports,
-})))
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getClients: () => dispatch(getClients()),
+  renewClients: () => dispatch(renewClients()),
+})
+
+export default compose(
+  confirmDirty,
+  connect(mapStateToProps, mapDispatchToProps),
+  signalRender(clientRenderSignal),
+)(Client)
