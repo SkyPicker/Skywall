@@ -11,7 +11,6 @@ const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(webpackIso
 const entries = process.env.FRONTEND_ENTRIES.split(',')
 const hotHost = process.env.WEBPACK_HOST
 const hotPort = process.env.WEBPACK_PORT
-const devtools = 'cheap-module-eval-source-map'
 const loaders = {
   css: '',
   less: '!less-loader',
@@ -42,7 +41,7 @@ export default function makeConfig(isDevelopment) {
     hotPort,
     cache: isDevelopment,
     debug: isDevelopment,
-    devtool: isDevelopment ? devtools : '',
+    devtool: isDevelopment ? 'source-map' : '',
     entry: {
       app: isDevelopment ? [
         `webpack-hot-middleware/client?path=http://${hotHost}:${hotPort}/__webpack_hmr`,
