@@ -10,7 +10,7 @@
     "pylint": "pylint skywall"
   },
   "author": "",
-  "license": "SEE LICENSE IN ./LICENSE",
+  "license": "GPL-3.0",
   "dependencies": {
     "autoprefixer": "^6.7.7",
     "babel-cli": "^6.24.1",
