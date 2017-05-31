@@ -1,5 +1,7 @@
 import React from 'react'
 import {Col, Row} from 'react-bootstrap'
+import {withMenuRenderSignal} from '../signals'
+import signalRender from '../hocs/signalRender'
 import Menu from './Menu'
 
 
@@ -23,4 +25,6 @@ class WithMenu extends React.Component {
   }
 }
 
-export default WithMenu
+const SignaledWithMenu = signalRender(withMenuRenderSignal)(WithMenu)
+
+export default SignaledWithMenu

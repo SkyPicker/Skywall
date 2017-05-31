@@ -1,6 +1,8 @@
 import React from 'react'
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {Link} from 'react-router'
+import {headerRenderSignal} from '../signals'
+import signalRender from '../hocs/signalRender'
 import {connect} from '../utils'
 
 
@@ -33,5 +35,7 @@ class Header extends React.Component {
   }
 }
 
-export default connect(Header, {}, (state) => ({
+const SignaledHeader = signalRender(headerRenderSignal)(Header)
+
+export default connect(SignaledHeader, {}, (state) => ({
 }))

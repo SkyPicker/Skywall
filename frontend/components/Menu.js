@@ -2,6 +2,8 @@ import React from 'react'
 import {Nav, NavItem, Col} from 'react-bootstrap'
 import {LinkContainer, IndexLinkContainer} from 'react-router-bootstrap'
 import * as routes from '../constants/routes'
+import {menuRenderSignal} from '../signals'
+import signalRender from '../hocs/signalRender'
 
 
 class Menu extends React.Component {
@@ -25,4 +27,6 @@ class Menu extends React.Component {
   }
 }
 
-export default Menu
+const SignaledMenu = signalRender(menuRenderSignal)(Menu)
+
+export default SignaledMenu

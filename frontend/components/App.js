@@ -2,6 +2,8 @@ import React from 'react'
 import {some} from 'lodash'
 import {Grid} from 'react-bootstrap'
 import LoadingBar from 'react-loading-bar'
+import {appRenderSignal} from '../signals'
+import signalRender from '../hocs/signalRender'
 import {connect} from '../utils'
 import Alerts from './Alerts'
 import Header from './Header'
@@ -33,6 +35,8 @@ class App extends React.Component {
   }
 }
 
-export default connect(App, {}, (state) => ({
+const SignaledApp = signalRender(appRenderSignal)(App)
+
+export default connect(SignaledApp, {}, (state) => ({
   isFetching: some(state, (s) => s.isFetching),
 }))

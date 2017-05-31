@@ -18,9 +18,12 @@ const root = document.getElementById('app')
 const logger = config.devel ? createLogger() : dummyMiddleware
 const store = createStore(reducer, applyMiddleware(thunk, logger))
 
-render(
+// Wait for modules to initialize
+setTimeout(() => render(
   <Provider store={store}>
     <Router history={browserHistory}>
-      {routes}
+      {routes()}
     </Router>
-  </Provider>, root)
+  </Provider>,
+  root,
+))

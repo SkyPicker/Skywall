@@ -7,10 +7,12 @@ import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
 import ClientForm from '../forms/ClientForm'
+import {clientRenderSignal} from '../signals'
+import signalRender from '../hocs/signalRender'
 import {connect} from '../utils'
 
 
-class Clients extends React.Component {
+class Client extends React.Component {
 
   static propTypes = {
     // Props from router
@@ -78,7 +80,9 @@ class Clients extends React.Component {
   }
 }
 
-export default confirmDirty(connect(Clients, {getClients, renewClients}, (state) => ({
+const SignaledClient = signalRender(clientRenderSignal)(Client)
+
+export default confirmDirty(connect(SignaledClient, {getClients, renewClients}, (state) => ({
   clients: state.clients.clients,
   connections: state.clients.connections,
   reports: state.clients.reports,
