@@ -2,7 +2,7 @@ import React from 'react'
 import {Row, Col, FormGroup, ControlLabel, Clearfix} from 'react-bootstrap'
 import {Choose, When, Otherwise} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
-import {compose} from 'redux'
+import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import moment from 'moment'
 import {clientUpdate} from '../actions/clientUpdate'
@@ -119,11 +119,11 @@ const mapStateToProps = (state) => ({
   isFetching: state.clientUpdate.isFetching,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  clientUpdate: (clientId, data) => dispatch(clientUpdate(clientId, data)),
-})
+const mapDispatchToProps = {
+  clientUpdate,
+}
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
   signalRender(clientFormRenderSignal),
 )(ClientForm)

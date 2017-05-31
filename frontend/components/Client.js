@@ -3,7 +3,7 @@ import {find, toInteger} from 'lodash'
 import {Alert, Button} from 'react-bootstrap'
 import {IndexLinkContainer} from 'react-router-bootstrap'
 import {If} from 'jsx-control-statements'
-import {compose} from 'redux'
+import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import * as routes from '../constants/routes'
@@ -88,13 +88,13 @@ const mapStateToProps = (state) => ({
   reports: state.clients.reports,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  getClients: () => dispatch(getClients()),
-  renewClients: () => dispatch(renewClients()),
-})
+const mapDispatchToProps = {
+  getClients,
+  renewClients,
+}
 
 export default compose(
   confirmDirty,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
   signalRender(clientRenderSignal),
 )(Client)

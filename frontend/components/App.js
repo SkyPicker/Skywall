@@ -3,7 +3,7 @@ import {some} from 'lodash'
 import {Grid} from 'react-bootstrap'
 import LoadingBar from 'react-loading-bar'
 import PropTypes from 'prop-types'
-import {compose} from 'redux'
+import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {appRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
@@ -41,11 +41,11 @@ const mapStateToProps = (state) => ({
   isFetching: some(state, (s) => s.isFetching),
 })
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = {
   // Empty
-})
+}
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
   signalRender(appRenderSignal),
 )(App)

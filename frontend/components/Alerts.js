@@ -2,7 +2,7 @@ import React from 'react'
 import {Alert} from 'react-bootstrap'
 import {If, For} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
-import {compose} from 'redux'
+import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as alerts from '../constants/alerts'
 import {alertsClose} from '../actions/alerts'
@@ -53,11 +53,11 @@ const mapStateToProps = (state) => ({
   alerts: state.alerts.alerts,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  alertsClose: (index) => dispatch(alertsClose(index)),
-})
+const mapDispatchToProps = {
+  alertsClose,
+}
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
   signalRender(alertsRenderSignal),
 )(Alerts)

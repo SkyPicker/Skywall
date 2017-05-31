@@ -4,7 +4,7 @@ import {formatPattern} from 'react-router'
 import {Table, Button} from 'react-bootstrap'
 import {Choose, When, Otherwise, For} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
-import {compose} from 'redux'
+import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import moment from 'moment'
 import {EMDASH, CHECK_MARK, CROSS_MARK} from '../constants/symbols'
@@ -144,12 +144,12 @@ const mapStateToProps = (state) => ({
   fields: state.clients.fields,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  getClients: () => dispatch(getClients()),
-  renewClients: () => dispatch(renewClients()),
-})
+const mapDispatchToProps = {
+  getClients,
+  renewClients,
+}
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
   signalRender(clientsRenderSignal),
 )(Clients)
