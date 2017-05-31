@@ -1,10 +1,12 @@
 import React from 'react'
 import {pull} from 'lodash'
 import {withRouter} from 'react-router'
+import getDisplayName from 'react-display-name'
 
 
 const confirmDirty = (WrappedComponent) => {
   class ConfirmDirty extends React.Component {
+    static displayName = `ConfirmDirty(${getDisplayName(WrappedComponent)})`
     static propTypes = {
       route: React.PropTypes.object.isRequired,
       router: React.PropTypes.shape({
