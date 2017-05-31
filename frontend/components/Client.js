@@ -9,9 +9,9 @@ import PropTypes from 'prop-types'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
-import ClientForm from '../forms/ClientForm'
 import {clientRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
+import ClientForm from './ClientForm'
 
 
 class Client extends React.Component {
