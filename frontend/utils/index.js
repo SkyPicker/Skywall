@@ -20,7 +20,7 @@ export const api = (point, options) => {
   const hasBody = !['HEAD', 'GET'].includes(method.toUpperCase())
   return fetch(config.api + path + search, {
     method,
-    headers: (hasBody ? {'Content-type': 'application/json'} : undefined),
+    headers: (hasBody ? {'Content-type': 'application/json'} : {}),
     body: (hasBody ? JSON.stringify(data || {}) : undefined),
     credentials: 'same-origin',
   })
