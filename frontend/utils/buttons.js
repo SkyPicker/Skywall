@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 export const editButton = ({form, label}) => {
   return (
     <If condition={!form.state.isEditing}>
-      <Button bsStyle="primary" onClick={form.handleEdit} disabled={form.props.isFetching}>
+      <Button bsStyle="primary" onClick={form.handleEdit} disabled={form.isFetching()}>
         {label || 'Edit'}
       </Button>
       {' '}
@@ -23,7 +23,7 @@ editButton.propTypes = {
 export const cancelButton = ({form, label}) => {
   return (
     <If condition={form.state.isEditing}>
-      <Button bsStyle="default" onClick={form.handleCancel} disabled={form.props.isFetching}>
+      <Button bsStyle="default" onClick={form.handleCancel} disabled={form.isFetching()}>
         {label || 'Cancel'}
       </Button>
       {' '}
@@ -41,7 +41,7 @@ export const saveButton = ({form, label, allowUnchanged}) => {
     <If condition={form.state.isEditing}>
       <Button
           bsStyle="primary" type="submit"
-          disabled={form.props.isFetching || (!allowUnchanged && !form.isChanged()) || !form.isValid()}
+          disabled={form.isFetching() || (!allowUnchanged && !form.isChanged()) || !form.isValid()}
       >
         {label || 'Save'}
       </Button>

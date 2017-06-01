@@ -38,7 +38,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  isFetching: some(state, (s) => s.isFetching),
+  isFetching: some(state.fetching),
 })
 
 const mapDispatchToProps = {

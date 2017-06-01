@@ -5,7 +5,7 @@ import {If, Choose, When, Otherwise} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
 import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import {clientUpdate} from '../actions/clientUpdate'
+import {clientUpdate} from '../actions/clients'
 import {ClientLabel} from '../fields/clients'
 import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
@@ -36,6 +36,7 @@ class ClientDetailForm extends Form {
       clientId: PropTypes.number,
       created: PropTypes.number,
     })),
+    isFetching: React.PropTypes.bool,
 
     // Actions
     clientUpdate: PropTypes.func.isRequired,
@@ -52,6 +53,10 @@ class ClientDetailForm extends Form {
     const {label} = values
     return this.props.clientUpdate(clientId, {label})
       .then(({ok}) => ({ok, stopEditing: ok}))
+  }
+
+  isFetching() {
+    return this.props.isFetching
   }
 
   render() {
@@ -131,7 +136,7 @@ class ClientDetailForm extends Form {
 const mapStateToProps = (state) => ({
   connections: state.clients.connections,
   reports: state.clients.reports,
-  isFetching: state.clientUpdate.isFetching,
+  isFetching: state.fetching.clientUpdate,
 })
 
 const mapDispatchToProps = {
