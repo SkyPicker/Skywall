@@ -1,5 +1,5 @@
 import moment from 'moment'
-import {RENEW_FREQUENCY} from '../constants'
+import {RENEW_INTERVAL} from '../constants'
 import * as actions from '../constants/actions'
 import {makeAction, api} from '../utils'
 import {alertsError, alertsRemove} from './alerts'
@@ -29,7 +29,7 @@ export const getClients = () => {
 export const renewClients = () => {
   return (dispatch, getState) => {
     const {lastFetch} = getState().clients
-    const recent = moment().subtract(RENEW_FREQUENCY)
+    const recent = moment().subtract(RENEW_INTERVAL)
     if (!lastFetch || moment(lastFetch).isBefore(recent)) {
       dispatch(getClients())
     }

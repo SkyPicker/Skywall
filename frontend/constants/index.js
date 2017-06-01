@@ -1,1 +1,1 @@
-export const RENEW_FREQUENCY = {minutes: 1}
+export const RENEW_INTERVAL = {minutes: 1}
