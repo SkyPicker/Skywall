@@ -13,8 +13,8 @@ import {getClients, renewClients} from '../actions/clients'
 import reportFormaters from '../reports/formaters'
 import {clientsRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
-import Moment from './common/Moment'
-import TdLink from './common/TdLink'
+import Moment from './visual/Moment'
+import TdLink from './visual/TdLink'
 
 
 class Clients extends React.Component {

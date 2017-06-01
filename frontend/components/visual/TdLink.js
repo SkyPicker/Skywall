@@ -15,9 +15,9 @@ class TdLink extends React.Component {
   }
 
   render() {
-    const {to, children} = this.props
+    const {to, children, ...props} = this.props
     return (
-      <td className={styles.cell}>
+      <td {...props} className={styles.cell}>
         <Link to={to} className={styles.link} />
         {children}
       </td>

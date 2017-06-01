@@ -11,7 +11,7 @@ import {clientFormRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
 import {Form} from '../utils/forms'
 import {cancelButton, saveButton, editButton} from '../utils/buttons'
-import Moment from '../components/common/Moment'
+import Moment from '../components/visual/Moment'
 
 
 class ClientForm extends Form {
