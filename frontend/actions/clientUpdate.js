@@ -1,4 +1,5 @@
 import * as actions from '../constants/actions'
+import * as routes from '../constants/routes'
 import {makeAction, api} from '../utils'
 import {alertsError, alertsRemove} from './alerts'
 import {getClients} from './clients'
@@ -11,7 +12,7 @@ export const clientUpdateFailure = makeAction(actions.CLIENT_UPDATE_FAILURE, 'er
 export const clientUpdate = (clientId, data) => {
   return (dispatch) => {
     dispatch(clientUpdateRequest())
-    return api('PUT /clients/:clientId', {params: {clientId}, data})
+    return api('PUT', routes.API_CLIENT_UPDATE, {params: {clientId}, data})
       .then((data) => {
         dispatch(clientUpdateSuccess(data))
         dispatch(alertsRemove('clientUpdate'))

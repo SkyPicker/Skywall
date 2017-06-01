@@ -1,6 +1,7 @@
 import moment from 'moment'
 import {RENEW_INTERVAL} from '../constants'
 import * as actions from '../constants/actions'
+import * as routes from '../constants/routes'
 import {makeAction, api} from '../utils'
 import {alertsError, alertsRemove} from './alerts'
 
@@ -12,7 +13,7 @@ export const clientsFailure = makeAction(actions.CLIENTS_FAILURE, 'error')
 export const getClients = () => {
   return (dispatch) => {
     dispatch(clientsRequest())
-    return api('GET /clients')
+    return api('GET', routes.API_CLIENT_LIST)
       .then((data) => {
         dispatch(clientsSuccess(data))
         dispatch(alertsRemove('clients'))

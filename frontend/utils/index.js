@@ -12,9 +12,8 @@ export const makeAction = (type, ...argNames) => {
   return (...args) => ({type, ...zipObject(argNames, args)})
 }
 
-export const api = (point, options) => {
+export const api = (method, pathPattern, options) => {
   const {data, query, params} = options || {}
-  const [method, pathPattern] = point.split(' ', 2)
   const path = formatPattern(pathPattern, params)
   const search = url.format({query: omitBy(query, isUndefined)})
   const hasBody = !['HEAD', 'GET'].includes(method.toUpperCase())
