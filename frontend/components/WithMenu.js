@@ -2,8 +2,8 @@ import React from 'react'
 import {Col, Row} from 'react-bootstrap'
 import PropTypes from 'prop-types'
 import {compose} from 'redux'
-import {withMenuRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
+import {RenderSignal} from '../utils/signals'
 import Menu from './Menu'
 
 
@@ -26,6 +26,8 @@ class WithMenu extends React.Component {
     )
   }
 }
+
+export const withMenuRenderSignal = new RenderSignal('withMenuRenderSignal')
 
 export default compose(
   signalRender(withMenuRenderSignal),

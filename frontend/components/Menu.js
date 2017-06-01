@@ -3,8 +3,8 @@ import {Nav, NavItem, Col} from 'react-bootstrap'
 import {LinkContainer, IndexLinkContainer} from 'react-router-bootstrap'
 import {compose} from 'redux'
 import * as routes from '../constants/routes'
-import {menuRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
+import {RenderSignal} from '../utils/signals'
 
 
 class Menu extends React.Component {
@@ -19,7 +19,7 @@ class Menu extends React.Component {
           <IndexLinkContainer to="/">
             <NavItem>Dashboard</NavItem>
           </IndexLinkContainer>
-          <LinkContainer to={routes.CLIENTS}>
+          <LinkContainer to={routes.CLIENT_LIST}>
             <NavItem>Clients</NavItem>
           </LinkContainer>
         </Nav>
@@ -27,6 +27,8 @@ class Menu extends React.Component {
     )
   }
 }
+
+export const menuRenderSignal = new RenderSignal('menuRenderSignal')
 
 export default compose(
   signalRender(menuRenderSignal),

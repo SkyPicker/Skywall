@@ -1,36 +1,41 @@
 import React from 'react'
-import {Row, Col, FormGroup, ControlLabel, Clearfix} from 'react-bootstrap'
-import {Choose, When, Otherwise} from 'jsx-control-statements'
+import {find} from 'lodash'
+import {Row, Col, FormGroup, ControlLabel, Clearfix, Alert} from 'react-bootstrap'
+import {If, Choose, When, Otherwise} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
 import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import moment from 'moment'
 import {clientUpdate} from '../actions/clientUpdate'
 import {ClientLabel} from '../fields/clients'
-import {clientFormRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
+import {RenderSignal} from '../utils/signals'
 import {Form} from '../utils/forms'
 import {cancelButton, saveButton, editButton} from '../utils/buttons'
 import Moment from '../components/visual/Moment'
 
 
-class ClientForm extends Form {
+class ClientDetailForm extends Form {
 
   static propTypes = {
     // Props from parent element
     client: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      created: PropTypes.number.isRequired,
-      label: PropTypes.string.isRequired,
-    }),
-    connection: PropTypes.shape({
+      created: PropTypes.number,
+      label: PropTypes.string,
+      connected: PropTypes.bool,
+    }).isRequired,
+
+    // Props from store
+    connections: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired,
-      lastActivity: PropTypes.number.isRequired,
-    }),
-    report: PropTypes.shape({
+      clientId: PropTypes.number,
+      lastActivity: PropTypes.number,
+    })),
+    reports: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired,
-      created: PropTypes.number.isRequired,
-    }),
+      clientId: PropTypes.number,
+      created: PropTypes.number,
+    })),
 
     // Actions
     clientUpdate: PropTypes.func.isRequired,
@@ -51,16 +56,24 @@ class ClientForm extends Form {
 
   render() {
     const {label} = this.fields
-    const {client, connection, report} = this.props
+    const {client, connections, reports} = this.props
+    const connection = find(connections, {clientId: client.id})
+    const report = find(reports, {clientId: client.id})
     return (
       <div>
+        <h2>Client #{client.id}</h2>
+        <If condition={!client.connected}>
+          <Alert bsStyle="warning">
+            Client #{client.id} is not connected right now.
+          </Alert>
+        </If>
         <form onSubmit={this.handleSubmit}>
           <Row>
             <Col md={4}>
               <FormGroup>
                 <ControlLabel>First connection</ControlLabel>
                 <div>
-                  <Moment at={moment.unix(client.created)} />
+                  <Moment at={client.created} />
                 </div>
               </FormGroup>
             </Col>
@@ -70,7 +83,7 @@ class ClientForm extends Form {
                 <div>
                   <Choose>
                     <When condition={connection}>
-                      <Moment at={moment.unix(connection.lastActivity)} />
+                      <Moment at={connection.lastActivity} />
                     </When>
                     <Otherwise>
                       Never
@@ -85,7 +98,7 @@ class ClientForm extends Form {
                 <div>
                   <Choose>
                     <When condition={report}>
-                      <Moment at={moment.unix(report.created)} />
+                      <Moment at={report.created} />
                     </When>
                     <Otherwise>
                       Never
@@ -116,6 +129,8 @@ class ClientForm extends Form {
 }
 
 const mapStateToProps = (state) => ({
+  connections: state.clients.connections,
+  reports: state.clients.reports,
   isFetching: state.clientUpdate.isFetching,
 })
 
@@ -123,7 +138,9 @@ const mapDispatchToProps = {
   clientUpdate,
 }
 
+export const clientDetailFormRenderSignal = new RenderSignal('clientDetailFormRenderSignal')
+
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(clientFormRenderSignal),
-)(ClientForm)
+  signalRender(clientDetailFormRenderSignal),
+)(ClientDetailForm)

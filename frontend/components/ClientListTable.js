@@ -1,23 +1,21 @@
 import React from 'react'
 import {get, isNil, mapValues, identity, keyBy, groupBy, sortBy, isEmpty} from 'lodash'
 import {formatPattern} from 'react-router'
-import {Table, Button} from 'react-bootstrap'
+import {Table} from 'react-bootstrap'
 import {Choose, When, Otherwise, For} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
 import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import moment from 'moment'
 import {EMDASH, CHECK_MARK, CROSS_MARK} from '../constants/symbols'
 import * as routes from '../constants/routes'
-import {getClients, renewClients} from '../actions/clients'
 import reportFormaters from '../reports/formaters'
-import {clientsRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
+import {RenderSignal} from '../utils/signals'
 import Moment from './visual/Moment'
 import TdLink from './visual/TdLink'
 
 
-class Clients extends React.Component {
+class ClientListTable extends React.Component {
 
   static propTypes = {
     // Props from store
@@ -41,14 +39,6 @@ class Clients extends React.Component {
       name: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
     })),
-
-    // Actions
-    getClients: PropTypes.func.isRequired,
-    renewClients: PropTypes.func.isRequired,
-  }
-
-  componentDidMount() {
-    this.props.renewClients()
   }
 
   renderValue(field, client, valuesMap, reportsMap) {
@@ -65,17 +55,14 @@ class Clients extends React.Component {
 
   render() {
     if (!this.props.clients) return null
-    const {clients, reports, values, getClients} = this.props
+    const {clients, reports, values} = this.props
     const fields = sortBy(this.props.fields, 'name')
     const clientsById = keyBy(clients, 'id')
     const reportsMap = keyBy(reports, 'clientId')
     const valuesMap = mapValues(groupBy(values, 'reportId'), (values) => keyBy(values, 'name'))
-    const links = mapValues(clientsById, (client) => formatPattern(routes.CLIENT, {clientId: client.id}))
+    const links = mapValues(clientsById, (client) => formatPattern(routes.CLIENT_DETAIL, {clientId: client.id}))
     return (
       <div>
-        <div className="pull-right">
-          <Button onClick={getClients}>Refresh</Button>
-        </div>
         <h2>Clients</h2>
         <Choose>
           <When condition={isEmpty(clients)}>
@@ -107,14 +94,11 @@ class Clients extends React.Component {
                     </TdLink>
                     <TdLink to={links[client.id]}>
                       <Choose>
-                        <When condition={!reportsMap[client.id]}>
-                          never
-                        </When>
-                        <When condition={!reportsMap[client.id].created}>
-                          invalid value
+                        <When condition={reportsMap[client.id]}>
+                          <Moment at={reportsMap[client.id].created} />
                         </When>
                         <Otherwise>
-                          <Moment at={moment.unix(reportsMap[client.id].created)} />
+                          never
                         </Otherwise>
                       </Choose>
                     </TdLink>
@@ -145,11 +129,12 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  getClients,
-  renewClients,
+  // Empty
 }
+
+export const clientListTableRenderSignal = new RenderSignal('clientListTableRenderSignal')
 
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(clientsRenderSignal),
-)(Clients)
+  signalRender(clientListTableRenderSignal),
+)(ClientListTable)

@@ -1,20 +1,19 @@
 import React from 'react'
 import {find, toInteger} from 'lodash'
-import {Alert, Button} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
 import {IndexLinkContainer} from 'react-router-bootstrap'
-import {If} from 'jsx-control-statements'
 import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
-import {clientRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
-import ClientForm from './ClientForm'
+import {RenderSignal} from '../utils/signals'
+import ClientDetailForm from './ClientDetailForm'
 
 
-class Client extends React.Component {
+class ClientDetail extends React.Component {
 
   static propTypes = {
     // Props from router
@@ -25,15 +24,6 @@ class Client extends React.Component {
     // Props from store
     clients: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired,
-      connected: PropTypes.bool,
-    })),
-    connections: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      clientId: PropTypes.number,
-    })),
-    reports: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      clientId: PropTypes.number,
     })),
 
     // Actions
@@ -50,33 +40,19 @@ class Client extends React.Component {
 
   render() {
     if (!this.props.clients) return null
-    const {clients, connections, reports, params, registerDirty, getClients} = this.props
+    const {clients, params, registerDirty, getClients} = this.props
     const clientId = toInteger(params.clientId)
     const client = find(clients, {id: clientId})
-    const connection = find(connections, {clientId})
-    const report = find(reports, {clientId})
     return (
       <div>
         <div className="pull-right">
-          <IndexLinkContainer to={routes.CLIENTS}>
+          <IndexLinkContainer to={routes.CLIENT_LIST}>
             <Button>Show All Clients</Button>
           </IndexLinkContainer>
           {' '}
           <Button onClick={getClients}>Refresh</Button>
         </div>
-        <h2>Client #{clientId}</h2>
-        <If condition={!client.connected}>
-          <Alert bsStyle="warning">
-            Client #{clientId} is not connected right now.
-          </Alert>
-        </If>
-        <ClientForm
-            inactive
-            client={client}
-            connection={connection}
-            report={report}
-            registerDirty={registerDirty}
-        />
+        <ClientDetailForm inactive client={client} registerDirty={registerDirty} />
       </div>
     )
   }
@@ -84,8 +60,6 @@ class Client extends React.Component {
 
 const mapStateToProps = (state) => ({
   clients: state.clients.clients,
-  connections: state.clients.connections,
-  reports: state.clients.reports,
 })
 
 const mapDispatchToProps = {
@@ -93,8 +67,10 @@ const mapDispatchToProps = {
   renewClients,
 }
 
+export const clientDetailRenderSignal = new RenderSignal('clientDetailRenderSignal')
+
 export default compose(
   confirmDirty,
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(clientRenderSignal),
-)(Client)
+  signalRender(clientDetailRenderSignal),
+)(ClientDetail)

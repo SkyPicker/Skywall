@@ -7,8 +7,8 @@ import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as alerts from '../constants/alerts'
 import {alertsClose} from '../actions/alerts'
-import {alertsRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
+import {RenderSignal} from '../utils/signals'
 
 
 const level2bsStyle = {
@@ -67,6 +67,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   alertsClose,
 }
+
+export const alertsRenderSignal = new RenderSignal('alertsRenderSignal')
 
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),

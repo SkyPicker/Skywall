@@ -5,8 +5,8 @@ import LoadingBar from 'react-loading-bar'
 import PropTypes from 'prop-types'
 import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import {appRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
+import {RenderSignal} from '../utils/signals'
 import Alerts from './Alerts'
 import Header from './Header'
 import 'react-loading-bar/dist/index.css'
@@ -44,6 +44,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   // Empty
 }
+
+export const appRenderSignal = new RenderSignal('appRenderSignal')
 
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),

@@ -1,8 +1,8 @@
 import React from 'react'
 import {Row, Col} from 'react-bootstrap'
 import {compose} from 'redux'
-import {dashboardRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
+import {RenderSignal} from '../utils/signals'
 
 
 class Dashboard extends React.Component {
@@ -22,6 +22,8 @@ class Dashboard extends React.Component {
     )
   }
 }
+
+export const dashboardRenderSignal = new RenderSignal('dashboardRenderSignal')
 
 export default compose(
   signalRender(dashboardRenderSignal),

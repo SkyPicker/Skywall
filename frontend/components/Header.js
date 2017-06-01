@@ -2,8 +2,8 @@ import React from 'react'
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {Link} from 'react-router'
 import {compose} from 'redux'
-import {headerRenderSignal} from '../signals'
 import signalRender from '../hocs/signalRender'
+import {RenderSignal} from '../utils/signals'
 
 
 class Header extends React.Component {
@@ -34,6 +34,8 @@ class Header extends React.Component {
     )
   }
 }
+
+export const headerRenderSignal = new RenderSignal('headerRenderSignal')
 
 export default compose(
   signalRender(headerRenderSignal),

@@ -1,2 +1,2 @@
-export const CLIENTS = '/clients'
-export const CLIENT = '/clients/:clientId'
+export const CLIENT_LIST = '/clients'
+export const CLIENT_DETAIL = '/clients/:clientId'
