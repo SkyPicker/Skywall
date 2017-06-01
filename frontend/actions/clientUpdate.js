@@ -10,7 +10,6 @@ export const clientUpdateFailure = makeAction(actions.CLIENT_UPDATE_FAILURE, 'er
 
 export const clientUpdate = (clientId, data) => {
   return (dispatch) => {
-    dispatch(alertsRemove('clientUpdate'))
     dispatch(clientUpdateRequest())
     return api('PUT /clients/:clientId', {params: {clientId}, data})
       .then((data) => {

@@ -11,7 +11,6 @@ export const clientsFailure = makeAction(actions.CLIENTS_FAILURE, 'error')
 
 export const getClients = () => {
   return (dispatch) => {
-    dispatch(alertsRemove('clients'))
     dispatch(clientsRequest())
     return api('GET /clients')
       .then((data) => {

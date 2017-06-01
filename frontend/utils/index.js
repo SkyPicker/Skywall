@@ -39,7 +39,4 @@ export const api = (point, options) => {
         throw new Error(data && data.error || res.statusText || 'Unknown error')
       }
     })
-    .catch((err) => {
-      return Promise.reject(err.message || 'Unknown error')
-    })
 }

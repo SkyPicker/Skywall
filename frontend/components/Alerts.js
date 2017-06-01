@@ -1,6 +1,7 @@
 import React from 'react'
+import {isString, isError} from 'lodash'
 import {Alert} from 'react-bootstrap'
-import {If, For} from 'jsx-control-statements'
+import {If, Choose, When, Otherwise, For} from 'jsx-control-statements'
 import PropTypes from 'prop-types'
 import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
@@ -25,7 +26,7 @@ class Alerts extends React.Component {
     alerts: PropTypes.arrayOf(PropTypes.shape({
       level: PropTypes.oneOf(alerts.LEVELS).isRequired,
       title: PropTypes.string,
-      message: PropTypes.string.isRequired,
+      message: PropTypes.any,
     })).isRequired,
 
     // Actions
@@ -41,7 +42,17 @@ class Alerts extends React.Component {
             <If condition={alert.title}>
               <strong>{alert.title}: </strong>
             </If>
-            {alert.message}
+            <Choose>
+              <When condition={isError(alert.message)}>
+                {alert.message.message}
+              </When>
+              <When condition={isString(alert.message)}>
+                {alert.message}
+              </When>
+              <Otherwise>
+                {JSON.stringify(alert.message)}
+              </Otherwise>
+            </Choose>
           </Alert>
         </For>
       </div>
