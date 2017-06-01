@@ -122,10 +122,10 @@ class ClientListTable extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  clients: state.clients.clients,
-  reports: state.clients.reports,
-  values: state.clients.values,
-  fields: state.clients.fields,
+  clients: state.clients.data.clients,
+  reports: state.clients.data.reports,
+  values: state.clients.data.values,
+  fields: state.clients.data.fields,
 })
 
 const mapDispatchToProps = {

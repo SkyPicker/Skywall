@@ -59,7 +59,7 @@ class ClientDetail extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  clients: state.clients.clients,
+  clients: state.clients.data.clients,
 })
 
 const mapDispatchToProps = {

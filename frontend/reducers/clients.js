@@ -4,11 +4,7 @@ import * as actions from '../constants/actions'
 
 const initialState = {
   lastFetch: null,
-  clients: null,
-  connections: null,
-  reports: null,
-  values: null,
-  fields: null,
+  data: {},
 }
 
 const clients = (state = initialState, action) => {
@@ -17,11 +13,7 @@ const clients = (state = initialState, action) => {
       return {
         ...state,
         lastFetch: moment().valueOf(),
-        clients: action.data.clients,
-        connections: action.data.connections,
-        reports: action.data.reports,
-        values: action.data.values,
-        fields: action.data.fields,
+        data: action.data,
       }
     default:
       return state

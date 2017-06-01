@@ -134,8 +134,8 @@ class ClientDetailForm extends Form {
 }
 
 const mapStateToProps = (state) => ({
-  connections: state.clients.connections,
-  reports: state.clients.reports,
+  connections: state.clients.data.connections,
+  reports: state.clients.data.reports,
   isFetching: state.fetching.clientUpdate,
 })
 
