@@ -1,5 +1,5 @@
 import React from 'react'
-import {head, tail, isNil, isEmpty, isBoolean, isString, isNumber, isArray, isPlainObject} from 'lodash'
+import {head, tail, isNil, isEmpty, isBoolean, isString, isNumber, isArray, isPlainObject, castArray} from 'lodash'
 
 
 export const isEmptyNode = (node) => {
@@ -61,7 +61,8 @@ export const findElements = (node, pattern, visitor) => {
   return traverse(node, findVisitor, pattern)
 }
 
-export const appendChild = (node, child) => {
-  const children = React.Children.toArray(node.props.children)
-  return React.cloneElement(node, {}, [...children, child])
+export const appendChildren = (node, children) => {
+  const original = React.Children.toArray(node.props.children)
+  const appended = castArray(children)
+  return React.cloneElement(node, {}, [...original, ...appended])
 }

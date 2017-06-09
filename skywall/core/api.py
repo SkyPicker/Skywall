@@ -48,3 +48,8 @@ def assert_request_param_is_string(param, value):
     if not isinstance(value, str):
         raise HTTPBadRequest(reason='{} must be a string'.format(param))
     return value
+
+def assert_request_param_is_boolean(param, value):
+    if not isinstance(value, bool):
+        raise HTTPBadRequest(reason='{} must be boolean'.format(param))
+    return value

@@ -38,10 +38,10 @@ export const renewClients = () => (dispatch, getState) => {
 export const clientUpdate = (clientId, data) => (dispatch) => {
   dispatch(fetchingStart('clientUpdate'))
   return api('PUT', routes.API_CLIENT_UPDATE, {params: {clientId}, data})
-    .then((data) => {
+    .then(async (data) => {
+      await dispatch(getClients())
       dispatch(fetchingStop('clientUpdate'))
       dispatch(alertsRemove('clientUpdate'))
-      dispatch(getClients())
       return {ok: true}
     })
     .catch((err) => {
