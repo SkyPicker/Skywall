@@ -24,6 +24,7 @@ export class Form extends React.Component {
     }
     this.handleEdit = this.handleEdit.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
+    this.handleReset = this.handleReset.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
   componentDidMount() {
@@ -59,31 +60,47 @@ export class Form extends React.Component {
       values: assign({}, this.state.values, {[key]: value}),
     })
   }
-  handleEdit = (e) => {
-    e.preventDefault()
+  edit() {
     this.setState({
       isEditing: true,
     })
   }
-  handleCancel = (e) => {
-    e.preventDefault()
+  cancel() {
     this.setState({
       isEditing: false,
       isSaved: false,
       values: this.initial(),
     })
   }
+  reset() {
+    this.setState({
+      isSaved: false,
+      values: this.initial(),
+    })
+  }
+  handleEdit = (e) => {
+    e.preventDefault()
+    this.edit()
+  }
+  handleCancel = (e) => {
+    e.preventDefault()
+    this.cancel()
+  }
+  handleReset = (e) => {
+    e.preventDefault()
+    this.reset()
+  }
   handleSubmit = (e) => {
     e.preventDefault()
     const formattedValues = mapValues(this.fields, (field) => field.formattedValue())
-    this.save(formattedValues).then(({ok, stopEditing}) => {
+    this.save(formattedValues).then(({ok, data, stopEditing}) => {
       if (this.isFormMounted) {
         this.setState({
           isEditing: this.state.isEditing && !stopEditing,
           isSaved: ok,
         })
       }
-      if (ok) this.saved()
+      if (ok) this.saved(data)
     })
   }
   // For a subclass to implement
@@ -93,8 +110,11 @@ export class Form extends React.Component {
   save(values) {
     throw new Error('Implement this.save()')
   }
-  saved() {
+  saved(data) {
     // Empty
+  }
+  isFetching() {
+    return false
   }
 }
 
