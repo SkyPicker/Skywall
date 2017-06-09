@@ -14,16 +14,18 @@ import {dummyMiddleware} from './utils'
 import 'bootstrap/dist/css/bootstrap.css'
 
 
-const root = document.getElementById('app')
-const logger = config.devel ? createLogger() : dummyMiddleware
-const store = createStore(reducer, applyMiddleware(thunk, logger))
-
 // Wait for modules to initialize
-setTimeout(() => render(
-  <Provider store={store}>
-    <Router history={browserHistory}>
-      {routes()}
-    </Router>
-  </Provider>,
-  root,
-))
+setTimeout(() => {
+  const root = document.getElementById('app')
+  const logger = config.devel ? createLogger() : dummyMiddleware
+  const store = createStore(reducer(), applyMiddleware(thunk, logger))
+
+  return render(
+    <Provider store={store}>
+      <Router history={browserHistory}>
+        {routes()}
+      </Router>
+    </Provider>,
+    root,
+  )
+})
