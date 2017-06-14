@@ -44,12 +44,34 @@ def parse_obj_path_param(request, param, session, model):
     except:
         raise HTTPNotFound(reason='Requested {} not found'.format(param))
 
-def assert_request_param_is_string(param, value):
+def assert_request_param_is_required(param, values):
+    try:
+        return values[param]
+    except:
+        raise HTTPBadRequest(reason='{} is required'.format(param))
+
+def assert_request_param_is_string(param, values):
+    value = assert_request_param_is_required(param, values)
     if not isinstance(value, str):
         raise HTTPBadRequest(reason='{} must be a string'.format(param))
     return value
 
-def assert_request_param_is_boolean(param, value):
+def assert_request_param_is_boolean(param, values):
+    value = assert_request_param_is_required(param, values)
     if not isinstance(value, bool):
         raise HTTPBadRequest(reason='{} must be boolean'.format(param))
     return value
+
+def assert_request_param_is_enum(param, values, enum):
+    value = assert_request_param_is_required(param, values)
+    try:
+        return enum[value]
+    except:
+        raise HTTPBadRequest(reason='{} must be {}'.format(param, enum.__name__))
+
+def assert_request_param_is_entity(param, values, session, model):
+    value = assert_request_param_is_required(param, values)
+    try:
+        return session.query(model).filter(model.id == value).one()
+    except:
+        raise HTTPBadRequest(reason='{} must be {} id'.format(param, model.__name__))

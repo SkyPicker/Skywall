@@ -62,7 +62,7 @@ async def update_client(request):
     with create_session() as session:
         client = parse_obj_path_param(request, 'clientId', session, Client)
         if 'label' in body:
-            label = assert_request_param_is_string('label', body['label'])
+            label = assert_request_param_is_string('label', body)
             await _send_label_to_client(client.id, label)
             client.label = label
         return json_response({'ok': True})
