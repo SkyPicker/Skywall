@@ -24,7 +24,6 @@ export class TextField extends Field {
             onChange={this.handleChange}
             disabled={!this.isEditing()}
         />
-        <FormControl.Feedback />
         <HelpBlock>{this.validationHelp()}</HelpBlock>
       </FormGroup>
     )
@@ -54,7 +53,6 @@ export class CheckBoxField extends Field {
         >
           {this.opts.label}
         </Checkbox>
-        <FormControl.Feedback />
         <HelpBlock>{this.validationHelp()}</HelpBlock>
       </FormGroup>
     )
