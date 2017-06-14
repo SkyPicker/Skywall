@@ -2,6 +2,7 @@ import React from 'react'
 import {If} from 'jsx-control-statements'
 import {Button} from 'react-bootstrap'
 import PropTypes from 'prop-types'
+import {NBSP} from '../constants/symbols'
 
 
 export const editButton = ({form, label}) => {
@@ -10,7 +11,7 @@ export const editButton = ({form, label}) => {
       <Button bsStyle="primary" onClick={form.handleEdit} disabled={form.isFetching()}>
         {label || 'Edit'}
       </Button>
-      {' '}
+      {NBSP}
     </If>
   )
 }
@@ -26,7 +27,7 @@ export const cancelButton = ({form, label}) => {
       <Button bsStyle="default" onClick={form.handleCancel} disabled={form.isFetching()}>
         {label || 'Cancel'}
       </Button>
-      {' '}
+      {NBSP}
     </If>
   )
 }
@@ -45,7 +46,7 @@ export const saveButton = ({form, label, allowUnchanged}) => {
       >
         {label || 'Save'}
       </Button>
-      {' '}
+      {NBSP}
     </If>
   )
 }

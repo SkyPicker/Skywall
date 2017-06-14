@@ -5,6 +5,7 @@ import {IndexLinkContainer} from 'react-router-bootstrap'
 import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
+import {NBSP} from '../constants/symbols'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
@@ -49,7 +50,7 @@ class ClientDetail extends React.Component {
           <IndexLinkContainer to={routes.CLIENT_LIST}>
             <Button>Show All Clients</Button>
           </IndexLinkContainer>
-          {' '}
+          {NBSP}
           <Button onClick={getClients}>Refresh</Button>
         </div>
         <ClientDetailForm inactive client={client} registerDirty={registerDirty} />
