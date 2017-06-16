@@ -4,7 +4,7 @@ from skywall.core.api import register_api
 from skywall.core.database import create_session
 from skywall.core.reports import reports_registry
 from skywall.core.server import get_server
-from skywall.models.client import Client
+from skywall.models.clients import Client
 from skywall.models.groups import Group
 from skywall.models.connections import Connection
 from skywall.models.reports import Report, ReportValue
@@ -81,7 +81,7 @@ async def get_clients(request):
     """
     ---
     tags:
-      - Clients
+      - Skywall Core
     summary: List of clients
     description: Returns list of clients with their most recent connections and reports
     produces:

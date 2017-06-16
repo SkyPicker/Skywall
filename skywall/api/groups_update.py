@@ -11,7 +11,7 @@ async def update_group(request):
     """
     ---
     tags:
-      - Groups
+      - Skywall Core
     summary: Update group
     description: Updates an existing group
     produces:

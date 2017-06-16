@@ -1,9 +1,11 @@
 from skywall.core.run import run
+import skywall.actions
+import skywall.api
 import skywall.commands
 import skywall.models
 import skywall.reports
-import skywall.api
 import skywall.settings
+import skywall.signals
 
 
 def run_skywall():

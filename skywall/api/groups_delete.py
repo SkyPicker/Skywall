@@ -9,7 +9,7 @@ async def delete_group(request):
     """
     ---
     tags:
-      - Groups
+      - Skywall Core
     summary: Delete group
     description: Deletes an existing group
     produces:

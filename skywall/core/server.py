@@ -13,7 +13,7 @@ from skywall.core.actions import parse_server_action
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER, API_ROUTE, BUILD_ROUTE
 from skywall.core.frontend import get_frontend, run_webpack
 from skywall.core.utils import randomstring
-from skywall.models.client import Client
+from skywall.models.clients import Client
 from skywall.models.connections import Connection
 from skywall.actions.clientid import SetIdClientAction
 from skywall.signals import (

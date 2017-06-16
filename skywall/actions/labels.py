@@ -3,7 +3,7 @@ from skywall.core.database import create_session
 from skywall.core.actions import (
         AbstractServerAction, AbstractClientAction, register_server_action, register_client_action
         )
-from skywall.models.client import Client
+from skywall.models.clients import Client
 
 
 @register_server_action

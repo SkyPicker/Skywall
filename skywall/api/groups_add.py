@@ -11,7 +11,7 @@ async def add_group(request):
     """
     ---
     tags:
-      - Groups
+      - Skywall Core
     summary: Add group
     description: Creates a new group
     produces:

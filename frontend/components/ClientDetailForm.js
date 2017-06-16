@@ -16,6 +16,7 @@ import {clientLabel} from '../utils/humanize'
 import Moment from '../components/visual/Moment'
 
 
+/** @extends React.Component */
 class ClientDetailForm extends Form {
 
   static propTypes = {

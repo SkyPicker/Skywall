@@ -7,7 +7,7 @@ from skywall.core.api import (
 from skywall.core.database import create_session
 from skywall.core.server import get_server
 from skywall.models.groups import Group
-from skywall.models.client import Client
+from skywall.models.clients import Client
 from skywall.actions.labels import SetLabelClientAction
 
 
@@ -28,11 +28,11 @@ async def update_client(request):
     """
     ---
     tags:
-      - Clients
+      - Skywall Core
     summary: Update client
     description: Updates an existing client
     produces:
-      - text/pain
+      - application/json
     parameters:
       - name: clientId
         in: path

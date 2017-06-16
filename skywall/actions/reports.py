@@ -2,7 +2,7 @@ from skywall.core.database import create_session
 from skywall.core.actions import AbstractServerAction, register_server_action
 from skywall.core.reports import reports_registry
 from skywall.models.reports import Report, ReportValue
-from skywall.models.client import Client
+from skywall.models.clients import Client
 
 
 @register_server_action
