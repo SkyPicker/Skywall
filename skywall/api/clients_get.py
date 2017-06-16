@@ -5,6 +5,7 @@ from skywall.core.database import create_session
 from skywall.core.reports import reports_registry
 from skywall.core.server import get_server
 from skywall.models.client import Client
+from skywall.models.groups import Group
 from skywall.models.connections import Connection
 from skywall.models.reports import Report, ReportValue
 
@@ -14,11 +15,22 @@ def _client_response(client):
             'id': client.id,
             'created': client.created.timestamp(),
             'label': client.label,
+            'groupId': client.group_id,
             'connected': get_server().get_connection(client.id) is not None,
             }
 
 def _clients_response(clients):
     return [_client_response(client) for client in clients]
+
+def _group_response(group):
+    return {
+            'id': group.id,
+            'name': group.name,
+            'description': group.description,
+            }
+
+def _group_responses(groups):
+    return [_group_response(group) for group in groups]
 
 def _report_response(report):
     return {
@@ -105,8 +117,26 @@ async def get_clients(request):
                     format: float
                   label:
                     type: string
+                  groupId:
+                    type: integer
                   connected:
                     type: boolean
+            groups:
+              type: array
+              items:
+                type: object
+                title: Group
+                required:
+                  - id
+                  - name
+                  - description
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
             connections:
               type: array
               items:
@@ -188,6 +218,7 @@ async def get_clients(request):
     """
     with create_session() as session:
         clients = session.query(Client).order_by(Client.id).all()
+        groups = session.query(Group).order_by(Group.id).all()
         connections = list(filter(None, (
                 session.query(Connection)
                     .filter(Connection.client_id == client.id)
@@ -204,6 +235,7 @@ async def get_clients(request):
                 .filter(ReportValue.report_id.in_(report.id for report in reports)).all())
         return json_response({
                 'clients': _clients_response(clients),
+                'groups': _group_responses(groups),
                 'connections': _connections_response(connections),
                 'reports': _reports_response(reports),
                 'values': _values_response(values),

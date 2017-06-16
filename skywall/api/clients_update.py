@@ -1,8 +1,12 @@
 import asyncio
 from aiohttp.web import json_response, HTTPServiceUnavailable
-from skywall.core.api import register_api, parse_json_body, parse_obj_path_param, assert_request_param_is_string
+from skywall.core.api import (
+        register_api, parse_json_body, parse_obj_path_param, assert_request_param_is_string,
+        assert_request_param_is_entity,
+        )
 from skywall.core.database import create_session
 from skywall.core.server import get_server
+from skywall.models.groups import Group
 from skywall.models.client import Client
 from skywall.actions.labels import SetLabelClientAction
 
@@ -10,11 +14,13 @@ from skywall.actions.labels import SetLabelClientAction
 async def _send_label_to_client(client_id, label):
     connection = get_server().get_connection(client_id)
     if not connection:
-        raise HTTPServiceUnavailable(reason='Client {} is not connected right now'.format(client_id))
+        reason = 'Changing label failed. Client {} is not connected right now.'.format(client_id)
+        raise HTTPServiceUnavailable(reason=reason)
     try:
         await connection.check_send_action(SetLabelClientAction(label=label))
     except asyncio.TimeoutError:
-        raise HTTPServiceUnavailable(reason='Client {} is not responding right now'.format(client_id))
+        reason = 'Changing label failed. Client {} is not responding right now.'.format(client_id)
+        raise HTTPServiceUnavailable(reason=reason)
 
 
 @register_api('PUT', '/clients/{clientId}')
@@ -44,6 +50,8 @@ async def update_client(request):
           properties:
             label:
               type: string
+            groupId:
+              type: integer
     responses:
       200:
         description: Client updated
@@ -61,8 +69,18 @@ async def update_client(request):
     body = await parse_json_body(request)
     with create_session() as session:
         client = parse_obj_path_param(request, 'clientId', session, Client)
+
         if 'label' in body:
             label = assert_request_param_is_string('label', body)
-            await _send_label_to_client(client.id, label)
-            client.label = label
+            if label != client.label:
+                await _send_label_to_client(client.id, label)
+                client.label = label
+
+        if 'groupId' in body:
+            if body['groupId'] is None:
+                group = None
+            else:
+                group = assert_request_param_is_entity('groupId', body, session, Group)
+            client.group = group
+
         return json_response({'ok': True})

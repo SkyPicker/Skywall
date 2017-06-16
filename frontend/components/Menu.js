@@ -22,6 +22,9 @@ class Menu extends React.Component {
           <LinkContainer to={routes.CLIENT_LIST}>
             <NavItem>Clients</NavItem>
           </LinkContainer>
+          <LinkContainer to={routes.GROUP_LIST}>
+            <NavItem>Groups</NavItem>
+          </LinkContainer>
         </Nav>
       </Col>
     )

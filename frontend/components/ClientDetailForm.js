@@ -7,6 +7,7 @@ import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {clientUpdate} from '../actions/clients'
 import {ClientLabel} from '../fields/clients'
+import {SelectGroup} from '../fields/common'
 import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
 import {Form} from '../utils/forms'
@@ -22,10 +23,15 @@ class ClientDetailForm extends Form {
       id: PropTypes.number.isRequired,
       created: PropTypes.number,
       label: PropTypes.string,
+      groupId: PropTypes.number,
       connected: PropTypes.bool,
     }).isRequired,
 
     // Props from store
+    groups: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string,
+    })),
     connections: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired,
       clientId: PropTypes.number,
@@ -44,14 +50,20 @@ class ClientDetailForm extends Form {
 
   initFields() {
     return {
-      label: new ClientLabel({initial: () => this.props.client.label}),
+      label: new ClientLabel({
+        initial: () => this.props.client.label,
+      }),
+      groupId: new SelectGroup({
+        initial: () => this.props.client.groupId,
+        groups: () => this.props.groups,
+      }),
     }
   }
 
   save(values) {
     const clientId = this.props.client.id
-    const {label} = values
-    return this.props.clientUpdate(clientId, {label})
+    const {label, groupId} = values
+    return this.props.clientUpdate(clientId, {label, groupId})
       .then(({ok}) => ({ok, stopEditing: ok}))
   }
 
@@ -60,7 +72,7 @@ class ClientDetailForm extends Form {
   }
 
   render() {
-    const {label} = this.fields
+    const {label, groupId} = this.fields
     const {client, connections, reports} = this.props
     const connection = find(connections, {clientId: client.id})
     const report = find(reports, {clientId: client.id})
@@ -114,7 +126,8 @@ class ClientDetailForm extends Form {
             </Col>
           </Row>
           <Row>
-            <Col md={12}>{label.render()}</Col>
+            <Col md={6}>{label.render()}</Col>
+            <Col md={6}>{groupId.render()}</Col>
           </Row>
           <Row>
             <Col md={12}>
@@ -134,6 +147,7 @@ class ClientDetailForm extends Form {
 }
 
 const mapStateToProps = (state) => ({
+  groups: state.clients.data.groups,
   connections: state.clients.data.connections,
   reports: state.clients.data.reports,
   isFetching: state.fetching.clientUpdate,

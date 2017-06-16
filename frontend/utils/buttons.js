@@ -37,6 +37,22 @@ cancelButton.propTypes = {
   label: PropTypes.string.isRequired,
 }
 
+export const resetButton = ({form, label}) => {
+  return (
+    <If condition={form.state.isEditing}>
+      <Button bsStyle="default" onClick={form.handleReset} disabled={form.isFetching()}>
+        {label || 'Reset'}
+      </Button>
+      {NBSP}
+    </If>
+  )
+}
+
+resetButton.propTypes = {
+  form: PropTypes.object.isRequired,
+  label: PropTypes.string.isRequired,
+}
+
 export const saveButton = ({form, label, allowUnchanged}) => {
   return (
     <If condition={form.state.isEditing}>
