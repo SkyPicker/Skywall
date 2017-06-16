@@ -44,6 +44,19 @@ def parse_obj_path_param(request, param, session, model):
     except:
         raise HTTPNotFound(reason='Requested {} not found'.format(param))
 
+def parse_string_path_param(request, param):
+    try:
+        return str(request.match_info.get(param))
+    except:
+        raise HTTPBadRequest(reason='Invalid {} in path'.format(param))
+
+def parse_enum_path_param(request, param, enum):
+    value = parse_string_path_param(request, param)
+    try:
+        return enum[value]
+    except:
+        raise HTTPBadRequest(reason='{} must be {}'.format(param, enum.__name__))
+
 def assert_request_param_is_required(param, values):
     try:
         return values[param]
