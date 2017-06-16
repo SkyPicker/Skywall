@@ -12,6 +12,7 @@ import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
 import {Form} from '../utils/forms'
 import {cancelButton, saveButton, editButton} from '../utils/buttons'
+import {clientLabel} from '../utils/humanize'
 import Moment from '../components/visual/Moment'
 
 
@@ -78,10 +79,10 @@ class ClientDetailForm extends Form {
     const report = find(reports, {clientId: client.id})
     return (
       <div>
-        <h2>Client #{client.id}</h2>
+        <h2>Client: {clientLabel(client)}</h2>
         <If condition={!client.connected}>
           <Alert bsStyle="warning">
-            Client #{client.id} is not connected right now.
+            Client is not connected right now.
           </Alert>
         </If>
         <form onSubmit={this.handleSubmit}>

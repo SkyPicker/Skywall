@@ -15,7 +15,7 @@ class GroupDefaultForm extends React.Component {
   render() {
     return (
       <div>
-        <h2>Default Group</h2>
+        <h2>Group: {defaultGroupLabel}</h2>
         <Row>
           <Col md={6}>
             <FormGroup>

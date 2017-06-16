@@ -10,6 +10,7 @@ import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
 import {Form} from '../utils/forms'
 import {cancelButton, saveButton, editButton} from '../utils/buttons'
+import {groupLabel} from '../utils/humanize'
 
 
 /** @extends React.Component */
@@ -79,7 +80,7 @@ class GroupDetailForm extends Form {
     const {group} = this.props
     return (
       <div>
-        <h2>Group #{group.id}</h2>
+        <h2>Group: {groupLabel(group)}</h2>
         <form onSubmit={this.handleSubmit}>
           <Row>
             <Col md={6}>{name.render()}</Col>
