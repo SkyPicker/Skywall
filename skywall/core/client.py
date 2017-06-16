@@ -1,5 +1,5 @@
 import asyncio
-from aiohttp import ClientSession, WSCloseCode, WSMsgType, ClientConnectionError
+from aiohttp import ClientSession, WSCloseCode, WSMsgType, ClientConnectionError, WSServerHandshakeError
 from skywall.core.constants import ACTION_CONFIRM_TIMEOUT, CLIENT_RECONECT_INTERVAL
 from skywall.core.config import config
 from skywall.core.actions import parse_client_action
@@ -134,6 +134,8 @@ def run_client():
                 with WebsocketClient(loop) as _client:
                     loop.run_until_complete(_client.connect())
             except ClientConnectionError as e:
+                print('Connection to server failed: {}'.format(e))
+            except WSServerHandshakeError as e:
                 print('Connection to server failed: {}'.format(e))
             else:
                 print('Connection to server failed: Connection closed by server.')
