@@ -14,6 +14,7 @@ ignored-modules=ruamel,netifaces,pyroute2
 [BASIC]
 good-names=i,j,k,e,f,id
 const-rgx=[A-Za-z_][A-Za-z0-9_]*$
+function-rgx=[a-z_][a-z0-9_]{2,}$
 
 [FORMAT]
 max-line-length=115
