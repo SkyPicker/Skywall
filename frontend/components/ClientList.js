@@ -6,12 +6,18 @@ import {connect} from 'react-redux'
 import {getClients, renewClients} from '../actions/clients'
 import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
+import Loading from './visual/Loading'
 import ClientListTable from './ClientListTable'
 
 
 class ClientList extends React.Component {
 
   static propTypes = {
+    // Props from store
+    clients: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    })),
+
     // Actions
     getClients: PropTypes.func.isRequired,
     renewClients: PropTypes.func.isRequired,
@@ -22,7 +28,8 @@ class ClientList extends React.Component {
   }
 
   render() {
-    const {getClients} = this.props
+    const {clients, getClients} = this.props
+    if (!clients) return <Loading />
     return (
       <div>
         <div className="pull-right">
@@ -35,7 +42,7 @@ class ClientList extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  // Empty
+  clients: state.clients.data.clients,
 })
 
 const mapDispatchToProps = {

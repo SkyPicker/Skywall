@@ -11,6 +11,7 @@ import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
 import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
+import Loading from './visual/Loading'
 import NotFound from './NotFound'
 import GroupDetailForm from './GroupDetailForm'
 import GroupDetailClientTable from './GroupDetailClientTable'
@@ -42,8 +43,8 @@ class GroupDetail extends React.Component {
   }
 
   render() {
-    if (!this.props.groups) return null
     const {groups, params, registerDirty, getClients} = this.props
+    if (!groups) return <Loading />
     const groupId = toInteger(params.groupId)
     const group = find(groups, {id: groupId})
     if (!group) return <NotFound />

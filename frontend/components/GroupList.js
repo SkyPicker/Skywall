@@ -7,12 +7,18 @@ import {NBSP} from '../constants/symbols'
 import {getClients, renewClients} from '../actions/clients'
 import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
+import Loading from './visual/Loading'
 import GroupListTable from './GroupListTable'
 
 
 class GroupList extends React.Component {
 
   static propTypes = {
+    // Props from store
+    groups: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    })),
+
     // Actions
     getClients: PropTypes.func.isRequired,
     renewClients: PropTypes.func.isRequired,
@@ -23,7 +29,8 @@ class GroupList extends React.Component {
   }
 
   render() {
-    const {getClients} = this.props
+    const {groups, getClients} = this.props
+    if (!groups) return <Loading />
     return (
       <div>
         <div className="pull-right">
@@ -37,7 +44,7 @@ class GroupList extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  // Empty
+  groups: state.clients.data.groups,
 })
 
 const mapDispatchToProps = {

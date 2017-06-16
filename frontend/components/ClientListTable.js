@@ -59,7 +59,6 @@ class ClientListTable extends React.Component {
   }
 
   render() {
-    if (!this.props.clients) return null
     const {groups, clients, reports, values} = this.props
     const fields = sortBy(this.props.fields, 'name')
     const groupsById = keyBy(groups, 'id')

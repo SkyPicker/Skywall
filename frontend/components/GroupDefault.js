@@ -9,6 +9,7 @@ import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
+import Loading from './visual/Loading'
 import GroupDefaultForm from './GroupDefaultForm'
 import GroupDetailClientTable from './GroupDetailClientTable'
 
@@ -16,6 +17,11 @@ import GroupDetailClientTable from './GroupDetailClientTable'
 class GroupDefault extends React.Component {
 
   static propTypes = {
+    // Props from store
+    groups: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    })),
+
     // Actions
     getClients: PropTypes.func.isRequired,
     renewClients: PropTypes.func.isRequired,
@@ -26,7 +32,8 @@ class GroupDefault extends React.Component {
   }
 
   render() {
-    const {getClients} = this.props
+    const {groups, getClients} = this.props
+    if (!groups) return <Loading />
     return (
       <div>
         <div className="pull-right">
@@ -44,7 +51,7 @@ class GroupDefault extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  // Empty
+  groups: state.clients.data.groups,
 })
 
 const mapDispatchToProps = {

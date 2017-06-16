@@ -11,6 +11,8 @@ import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
 import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
+import Loading from './visual/Loading'
+import NotFound from './NotFound'
 import ClientDetailForm from './ClientDetailForm'
 
 
@@ -40,10 +42,11 @@ class ClientDetail extends React.Component {
   }
 
   render() {
-    if (!this.props.clients) return null
     const {clients, params, registerDirty, getClients} = this.props
+    if (!clients) return <Loading />
     const clientId = toInteger(params.clientId)
     const client = find(clients, {id: clientId})
+    if (!client) return <NotFound />
     return (
       <div>
         <div className="pull-right">

@@ -31,7 +31,6 @@ class GroupListTable extends React.Component {
   }
 
   render() {
-    if (!this.props.groups) return null
     const {groups, clients} = this.props
     const numberOfClientsByGroupId = countBy(clients, 'groupId')
     return (

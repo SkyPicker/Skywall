@@ -10,6 +10,7 @@ import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
 import signalRender from '../hocs/signalRender'
 import {RenderSignal} from '../utils/signals'
+import Loading from './visual/Loading'
 import GroupAddForm from './GroupAddForm'
 
 
@@ -34,8 +35,8 @@ class GroupAdd extends React.Component {
   }
 
   render() {
-    if (!this.props.groups) return null
-    const {getClients, registerDirty} = this.props
+    const {groups, getClients, registerDirty} = this.props
+    if (!groups) return <Loading />
     return (
       <div>
         <div className="pull-right">
