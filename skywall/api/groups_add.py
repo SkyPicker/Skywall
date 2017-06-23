@@ -3,7 +3,7 @@ from aiohttp.web import json_response, HTTPBadRequest
 from sqlalchemy.exc import IntegrityError
 from skywall.core.api import register_api, parse_json_body, assert_request_param_is_string
 from skywall.core.database import create_session
-from skywall.models.groups import Group
+from skywall.models.groups import Group, before_group_create, after_group_create
 
 
 @register_api('POST', '/groups')
@@ -65,8 +65,10 @@ async def add_group(request):
                     name=name,
                     description=description,
                     )
+            before_group_create.emit(session=session, group=group)
             session.add(group)
             session.flush()
+            after_group_create.emit(session=session, group=group)
             return json_response({'ok': True, 'groupId': group.id})
 
     except IntegrityError as e:
