@@ -44,33 +44,15 @@ class GroupListTable extends React.Component {
         <Table striped bordered condensed hover responsive>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Name</th>
               <th>Description</th>
               <th>Clients</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <TdLink to={routes.GROUP_DEFAULT}>
-                {EMDASH}
-              </TdLink>
-              <TdLink to={routes.GROUP_DEFAULT}>
-                {defaultGroupLabel || EMDASH}
-              </TdLink>
-              <TdLink to={routes.GROUP_DEFAULT}>
-                {defaultGroupDescription || EMDASH}
-              </TdLink>
-              <TdLink to={routes.GROUP_DEFAULT}>
-                {numberOfClientsByGroupId.null || 0}
-              </TdLink>
-            </tr>
             <For each="group" of={groups}>
               <With link={formatPattern(routes.GROUP_DETAIL, {groupId: group.id})}>
                 <tr key={group.id} data-groupId={group.id}>
-                  <TdLink to={link}>
-                    {group.id}
-                  </TdLink>
                   <TdLink to={link}>
                     {group.name || EMDASH}
                   </TdLink>
@@ -83,6 +65,17 @@ class GroupListTable extends React.Component {
                 </tr>
               </With>
             </For>
+            <tr>
+              <TdLink to={routes.GROUP_DEFAULT}>
+                {defaultGroupLabel || EMDASH}
+              </TdLink>
+              <TdLink to={routes.GROUP_DEFAULT}>
+                {defaultGroupDescription || EMDASH}
+              </TdLink>
+              <TdLink to={routes.GROUP_DEFAULT}>
+                {numberOfClientsByGroupId.null || 0}
+              </TdLink>
+            </tr>
           </tbody>
         </Table>
       </div>
