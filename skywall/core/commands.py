@@ -10,6 +10,8 @@ def register_command(command):
 class AbstractCommand:
     name = None
     help = None
+    before_run = None
+    after_run = None
 
     @staticmethod
     def arguments(parser):

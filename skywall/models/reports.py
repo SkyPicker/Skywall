@@ -3,6 +3,14 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import current_timestamp
 from sqlalchemy.dialects.postgresql import JSONB
 from skywall.core.database import Model
+from skywall.core.signals import Signal
+
+
+before_report_create = Signal('before_report_create')
+after_report_create = Signal('after_report_create')
+
+before_report_value_create = Signal('before_report_value_create')
+after_report_value_create = Signal('after_report_value_create')
 
 
 class Report(Model):

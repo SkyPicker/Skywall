@@ -6,6 +6,10 @@ from skywall.core.signals import Signal
 
 before_group_create = Signal('before_group_create')
 after_group_create = Signal('after_group_create')
+before_group_update = Signal('before_group_update')
+after_group_update = Signal('after_group_update')
+before_group_delete = Signal('before_group_delete')
+after_group_delete = Signal('after_group_delete')
 
 
 class Group(Model):

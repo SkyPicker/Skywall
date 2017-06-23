@@ -1,5 +1,6 @@
 import asyncio
 from aiohttp.web import json_response, HTTPServiceUnavailable
+from skywall.core.signals import Signal
 from skywall.core.api import (
         register_api, parse_json_body, parse_obj_path_param, assert_request_param_is_string,
         assert_request_param_is_entity,
@@ -7,8 +8,12 @@ from skywall.core.api import (
 from skywall.core.database import create_session
 from skywall.core.server import get_server
 from skywall.models.groups import Group
-from skywall.models.clients import Client
+from skywall.models.clients import Client, before_client_update, after_client_update
 from skywall.actions.labels import SetLabelClientAction
+
+
+before_update_client = Signal('before_update_client')
+after_update_client = Signal('before_update_client')
 
 
 async def _send_label_to_client(client_id, label):
@@ -23,7 +28,7 @@ async def _send_label_to_client(client_id, label):
         raise HTTPServiceUnavailable(reason=reason)
 
 
-@register_api('PUT', '/clients/{clientId}')
+@register_api('PUT', '/clients/{clientId}', before_update_client, after_update_client)
 async def update_client(request):
     """
     ---
@@ -83,4 +88,7 @@ async def update_client(request):
                 group = assert_request_param_is_entity('groupId', body, session, Group)
             client.group = group
 
+        before_client_update.emit(session=session, client=client)
+        session.flush()
+        after_client_update.emit(session=session, client=client)
         return json_response({'ok': True})

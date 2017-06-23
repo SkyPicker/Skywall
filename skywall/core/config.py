@@ -1,6 +1,12 @@
 from ruamel import yaml
 from skywall.core.settings import settings_registry
-from skywall.signals import before_config_load, after_config_load, before_config_save, after_config_save
+from skywall.core.signals import Signal
+
+
+before_config_load = Signal('before_config_load')
+after_config_load = Signal('after_config_load')
+before_config_save = Signal('before_config_save')
+after_config_save = Signal('after_config_save')
 
 
 class Config:

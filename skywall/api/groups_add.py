@@ -1,12 +1,17 @@
 import re
 from aiohttp.web import json_response, HTTPBadRequest
 from sqlalchemy.exc import IntegrityError
+from skywall.core.signals import Signal
 from skywall.core.api import register_api, parse_json_body, assert_request_param_is_string
 from skywall.core.database import create_session
 from skywall.models.groups import Group, before_group_create, after_group_create
 
 
-@register_api('POST', '/groups')
+before_add_group = Signal('before_add_group')
+after_add_group = Signal('before_add_group')
+
+
+@register_api('POST', '/groups', before_add_group, after_add_group)
 async def add_group(request):
     """
     ---

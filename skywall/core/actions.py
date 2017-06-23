@@ -36,6 +36,11 @@ def parse_server_action(data):
 
 class _AbstractAction:
     name = None
+    before_send = None
+    after_send = None
+    before_receive = None
+    after_receive = None
+    after_confirm = None
 
     def __init__(self, **payload):
         self.payload = payload

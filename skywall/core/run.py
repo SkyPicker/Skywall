@@ -3,7 +3,11 @@ import argparse
 from skywall.core.config import config
 from skywall.core.modules import import_enabled_modules
 from skywall.core.commands import commands_registry
-from skywall.signals import before_command_run, after_command_run
+from skywall.core.signals import Signal
+
+
+before_command_run = Signal('before_command_run')
+after_command_run = Signal('after_command_run')
 
 
 def assert_virtualenv():
@@ -33,6 +37,8 @@ def run():
     import_enabled_modules()
     args = parse_args()
     command = commands_registry[args.command]
-    before_command_run.emit(command=command)
+    before_command_run.emit(command=command, args=args)
+    command.before_run.emit(command=command, args=args)
     command().run(args)
-    after_command_run.emit(command=command)
+    command.after_run.emit(command=command, args=args)
+    after_command_run.emit(command=command, args=args)

@@ -2,16 +2,26 @@ import asyncio
 from aiohttp import ClientSession, WSCloseCode, WSMsgType, ClientConnectionError, WSServerHandshakeError
 from skywall.core.constants import ACTION_CONFIRM_TIMEOUT, CLIENT_RECONECT_INTERVAL
 from skywall.core.config import config
+from skywall.core.signals import Signal
 from skywall.core.actions import parse_client_action
 from skywall.core.reports import collect_report
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER
 from skywall.actions.reports import SaveReportServerAction
 from skywall.actions.labels import SaveLabelServerAction
-from skywall.signals import (
-        before_client_start, after_client_start, before_client_stop, after_client_stop,
-        before_server_action_send, after_server_action_send, after_server_action_confirm,
-        before_client_action_receive, after_client_action_receive
-        )
+
+
+before_client_start = Signal('before_client_start')
+after_client_start = Signal('after_client_start')
+before_client_stop = Signal('before_client_stop')
+after_client_stop = Signal('after_client_stop')
+
+before_client_action_receive = Signal('before_client_action_receive')
+after_client_action_receive = Signal('after_client_action_receive')
+
+before_server_action_send = Signal('before_server_action_send')
+after_server_action_send = Signal('after_server_action_send')
+after_server_action_confirm = Signal('after_server_action_confirm')
+
 
 class WebsocketClient:
 
@@ -56,6 +66,7 @@ class WebsocketClient:
     def _process_confirm(self, action):
         try:
             print('Received confirmation of action "{}" with payload: {}'.format(action.name, action.payload))
+            action.after_confirm.emit(client=self, action=action)
             after_server_action_confirm.emit(client=self, action=action)
         except Exception as e:
             print('Processing confirmation of action "{}" failed: {}'.format(action.name, e))
@@ -64,7 +75,9 @@ class WebsocketClient:
         try:
             print('Received action "{}" with payload: {}'.format(action.name, action.payload))
             before_client_action_receive.emit(client=self, action=action)
+            action.before_receive.emit(client=self, action=action)
             action.execute(self)
+            action.after_receive.emit(client=self, action=action)
             after_client_action_receive.emit(client=self, action=action)
             self.socket.send_json(action.send_confirm())
         except Exception as e:
@@ -91,7 +104,9 @@ class WebsocketClient:
 
     def send_action(self, action):
         before_server_action_send.emit(client=self, action=action)
+        action.before_send.emit(client=self, action=action)
         self.socket.send_json(action.send())
+        action.after_send.emit(client=self, action=action)
         after_server_action_send.emit(client=self, action=action)
 
     async def check_send_action(self, action):

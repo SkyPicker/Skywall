@@ -1,4 +1,5 @@
 from skywall.core.config import config
+from skywall.core.signals import Signal
 from skywall.core.settings import settings_registry
 from skywall.core.commands import AbstractCommand, register_command
 
@@ -17,6 +18,8 @@ def _setting_matches_args(name, args):
 class GetCommand(AbstractCommand):
     name = 'get'
     help = 'Get config settings'
+    before_run = Signal('GetCommand.before_run')
+    after_run = Signal('GetCommand.after_run')
 
     @staticmethod
     def arguments(parser):
@@ -34,6 +37,8 @@ class GetCommand(AbstractCommand):
 class SetCommand(AbstractCommand):
     name = 'set'
     help = 'Set config settings'
+    before_run = Signal('SetCommand.before_run')
+    after_run = Signal('SetCommand.after_run')
 
     @staticmethod
     def arguments(parser):
@@ -62,6 +67,8 @@ class SetCommand(AbstractCommand):
 class UnsetCommand(AbstractCommand):
     name = 'unset'
     help = 'Unset config settings'
+    before_run = Signal('UnsetCommand.before_run')
+    after_run = Signal('UnsetCommand.after_run')
 
     @staticmethod
     def arguments(parser):

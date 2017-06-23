@@ -2,6 +2,13 @@ from sqlalchemy import Column, Integer, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import current_timestamp
 from skywall.core.database import Model
+from skywall.core.signals import Signal
+
+
+before_connection_create = Signal('before_connection_create')
+after_connection_create = Signal('after_connection_create')
+before_connection_update = Signal('before_connection_update')
+after_connection_update = Signal('after_connection_update')
 
 
 class Connection(Model):

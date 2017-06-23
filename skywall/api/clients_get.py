@@ -1,6 +1,7 @@
 from aiohttp.web import json_response
 from sqlalchemy import desc
 from skywall.core.api import register_api
+from skywall.core.signals import Signal
 from skywall.core.database import create_session
 from skywall.core.reports import reports_registry
 from skywall.core.server import get_server
@@ -8,6 +9,10 @@ from skywall.models.clients import Client
 from skywall.models.groups import Group
 from skywall.models.connections import Connection
 from skywall.models.reports import Report, ReportValue
+
+
+before_get_clients = Signal('before_get_clients')
+after_get_clients = Signal('before_get_clients')
 
 
 def _client_response(client):
@@ -76,7 +81,7 @@ def _fields_response(fields):
     return [_field_response(field) for field in fields]
 
 
-@register_api('GET', '/clients')
+@register_api('GET', '/clients', before_get_clients, after_get_clients)
 async def get_clients(request):
     """
     ---

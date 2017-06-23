@@ -2,6 +2,13 @@ from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import current_timestamp
 from skywall.core.database import Model
+from skywall.core.signals import Signal
+
+
+before_client_create = Signal('before_client_create')
+after_client_create = Signal('after_client_create')
+before_client_update = Signal('before_client_update')
+after_client_update = Signal('after_client_update')
 
 
 class Client(Model):

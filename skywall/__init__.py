@@ -5,7 +5,6 @@ import skywall.commands
 import skywall.models
 import skywall.reports
 import skywall.settings
-import skywall.signals
 
 
 def run_skywall():

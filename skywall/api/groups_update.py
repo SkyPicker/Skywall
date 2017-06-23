@@ -1,12 +1,17 @@
 import re
 from aiohttp.web import json_response, HTTPBadRequest
 from sqlalchemy.exc import IntegrityError
+from skywall.core.signals import Signal
 from skywall.core.api import register_api, parse_json_body, parse_obj_path_param, assert_request_param_is_string
 from skywall.core.database import create_session
-from skywall.models.groups import Group
+from skywall.models.groups import Group, before_group_update, after_group_update
 
 
-@register_api('PUT', '/groups/{groupId}')
+before_update_group = Signal('before_update_group')
+after_update_group = Signal('before_update_group')
+
+
+@register_api('PUT', '/groups/{groupId}', before_update_group, after_update_group)
 async def update_group(request):
     """
     ---
@@ -66,6 +71,9 @@ async def update_group(request):
                 description = assert_request_param_is_string('description', body)
                 group.description = description
 
+            before_group_update.emit(session=session, group=group)
+            session.flush()
+            after_group_update.emit(session=session, group=group)
             return json_response({'ok': True})
 
     except IntegrityError as e:

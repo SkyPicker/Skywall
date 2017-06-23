@@ -1,8 +1,11 @@
 import inspect
-from skywall.signals import before_report_collect, after_report_collect
+from skywall.core.signals import Signal
 
 
 reports_registry = {}
+
+before_report_collect = Signal('before_report_collect')
+after_report_collect = Signal('after_report_collect')
 
 
 def register_report(report):

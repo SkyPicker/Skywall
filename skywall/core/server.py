@@ -7,22 +7,38 @@ from aiohttp_swagger import setup_swagger
 from sqlalchemy.sql.functions import current_timestamp
 from skywall.core.constants import ACTION_CONFIRM_TIMEOUT
 from skywall.core.config import config
+from skywall.core.signals import Signal
 from skywall.core.api import api_registry
 from skywall.core.database import create_session
 from skywall.core.actions import parse_server_action
 from skywall.core.constants import CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER, API_ROUTE, BUILD_ROUTE
 from skywall.core.frontend import get_frontend, run_webpack
 from skywall.core.utils import randomstring
-from skywall.models.clients import Client
-from skywall.models.connections import Connection
-from skywall.actions.clientid import SetIdClientAction
-from skywall.signals import (
-        before_server_start, after_server_start, before_server_stop, after_server_stop,
-        before_server_connection_open, after_server_connection_open,
-        before_server_connection_close, after_server_connection_close, after_server_connection_ended,
-        before_client_action_send, after_client_action_send, after_client_action_confirm,
-        before_server_action_receive, after_server_action_receive,
+from skywall.models.clients import Client, before_client_create, after_client_create
+from skywall.models.connections import (
+        Connection, before_connection_create, after_connection_create, before_connection_update,
+        after_connection_update
         )
+from skywall.actions.clientid import SetIdClientAction
+
+
+before_server_start = Signal('before_server_start')
+after_server_start = Signal('after_server_start')
+before_server_stop = Signal('before_server_stop')
+after_server_stop = Signal('after_server_stop')
+
+before_server_connection_open = Signal('before_server_connection_open')
+after_server_connection_open = Signal('after_server_connection_open')
+before_server_connection_close = Signal('before_server_connection_close')
+after_server_connection_close = Signal('after_server_connection_close')
+after_server_connection_ended = Signal('after_server_connection_ended')
+
+before_client_action_send = Signal('before_client_action_send')
+after_client_action_send = Signal('after_client_action_send')
+after_client_action_confirm = Signal('after_client_action_confirm')
+
+before_server_action_receive = Signal('before_server_action_receive')
+after_server_action_receive = Signal('after_server_action_receive')
 
 
 class WebsocketConnection:
@@ -44,8 +60,10 @@ class WebsocketConnection:
         with create_session() as session:
             if client_id == 'None':
                 client = Client(token=randomstring(32))
+                before_client_create.emit(session=session, client=client)
                 session.add(client)
                 session.flush()
+                after_client_create.emit(session=session, client=client)
             else:
                 client = session.query(Client).filter(Client.id == client_id).first()
                 if not client or client.token != client_token:
@@ -55,23 +73,32 @@ class WebsocketConnection:
     def _get_request_connection_id(self, client_id):
         with create_session() as session:
             connection = Connection(client_id=client_id)
+            before_connection_create.emit(session=session, connection=connection)
             session.add(connection)
             session.flush()
+            after_connection_create.emit(session=session, connection=connection)
             return connection.id
 
     def _save_connection_last_activity(self):
         with create_session() as session:
             connection = session.query(Connection).filter(Connection.id == self.connection_id).first()
             connection.last_activity = current_timestamp()
+            before_connection_update.emit(session=session, connection=connection)
+            session.flush()
+            after_connection_update.emit(session=session, connection=connection)
 
     def _save_connection_closed(self):
         with create_session() as session:
             connection = session.query(Connection).filter(Connection.id == self.connection_id).first()
             connection.closed = current_timestamp()
+            before_connection_update.emit(session=session, connection=connection)
+            session.flush()
+            after_connection_update.emit(session=session, connection=connection)
 
     def _process_confirm(self, action):
         try:
             print('Received confirmation of action "{}" with payload: {}'.format(action.name, action.payload))
+            action.after_confirm.emit(connection=self, action=action)
             after_client_action_confirm.emit(connection=self, action=action)
         except Exception as e:
             print('Processing confirmation of action "{}" failed: {}'.format(action.name, e))
@@ -80,7 +107,9 @@ class WebsocketConnection:
         try:
             print('Received action "{}" with payload: {}'.format(action.name, action.payload))
             before_server_action_receive.emit(connection=self, action=action)
+            action.before_receive.emit(connection=self, action=action)
             action.execute(self)
+            action.after_receive.emit(connection=self, action=action)
             after_server_action_receive.emit(connection=self, action=action)
             self.socket.send_json(action.send_confirm())
         except Exception as e:
@@ -118,7 +147,9 @@ class WebsocketConnection:
 
     def send_action(self, action):
         before_client_action_send.emit(connection=self, action=action)
+        action.before_send.emit(connection=self, action=action)
         self.socket.send_json(action.send())
+        action.after_send.emit(connection=self, action=action)
         after_client_action_send.emit(connection=self, action=action)
 
     async def check_send_action(self, action):

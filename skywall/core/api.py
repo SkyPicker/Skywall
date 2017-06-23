@@ -1,23 +1,30 @@
 from functools import wraps
 from collections import namedtuple
 from aiohttp.web import HTTPBadRequest, HTTPNotFound
-from skywall.signals import before_api_handler, after_api_handler
+from skywall.core.signals import Signal
 
 
 Api = namedtuple('Api', ['method', 'path', 'handler'])
 api_registry = []
 
-def register_api(method, path):
+before_api_call = Signal('before_api_call')
+after_api_call = Signal('after_api_call')
+
+
+def register_api(method, path, before_call, after_call):
     def decorator(handler):
         @wraps(handler)
         async def signaled_handler(request):
-            before_api_handler.emit(api=api, request=request)
+            before_api_call.emit(api=api, request=request)
+            before_call.emit(api=api, request=request)
             try:
                 response = await handler(request)
-                after_api_handler.emit(api=api, request=request, response=response)
+                after_call.emit(api=api, request=request, response=response, exception=None)
+                after_api_call.emit(api=api, request=request, response=response, exception=None)
                 return response
             except Exception as e:
-                after_api_handler.emit(api=api, request=request, exception=e)
+                after_call.emit(api=api, request=request, response=None, exception=e)
+                after_api_call.emit(api=api, request=request, response=None, exception=e)
                 raise
         api = Api(method, path, signaled_handler)
         api_registry.append(api)
