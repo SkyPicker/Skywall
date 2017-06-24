@@ -6,10 +6,9 @@ import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
 import thunk from 'redux-thunk'
 import {createLogger} from 'redux-logger'
-import {Router, browserHistory} from 'react-router'
 import config from './config'
 import reducer from './reducers'
-import routes from './routes'
+import Router from './components/Router'
 import {dummyMiddleware} from './utils'
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -22,9 +21,7 @@ setTimeout(() => {
 
   return render(
     <Provider store={store}>
-      <Router history={browserHistory}>
-        {routes()}
-      </Router>
+      <Router />
     </Provider>,
     root,
   )

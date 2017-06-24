@@ -19,13 +19,3 @@ export class Signal {
     }
   }
 }
-
-export class FlowSignal extends Signal {
-  emit(arg) {
-    let res = arg
-    for (const listener of this.listeners) {
-      res = listener(res)
-    }
-    return res
-  }
-}
