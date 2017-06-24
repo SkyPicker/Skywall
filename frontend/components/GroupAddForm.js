@@ -7,14 +7,13 @@ import {connect} from 'react-redux'
 import * as routes from '../constants/routes'
 import {groupAdd} from '../actions/groups'
 import {GroupName, GroupDescription} from '../fields/groups'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import {Form} from '../utils/forms'
 import {resetButton, saveButton} from '../utils/buttons'
 
 
 /** @extends React.Component */
-class GroupAddForm extends Form {
+export class GroupAddFormComponent extends Form {
 
   static propTypes = {
     // Props from store
@@ -92,9 +91,7 @@ const mapDispatchToProps = {
   groupAdd,
 }
 
-export const groupAddFormRenderSignal = new RenderSignal('groupAddFormRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(groupAddFormRenderSignal),
-)(GroupAddForm)
+  applyOverlays,
+)(GroupAddFormComponent)

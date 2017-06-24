@@ -7,14 +7,13 @@ import PropTypes from 'prop-types'
 import {NBSP} from '../constants/symbols'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import Loading from './visual/Loading'
 import GroupDefaultForm from './GroupDefaultForm'
 import GroupDetailClientTable from './GroupDetailClientTable'
 
 
-class GroupDefault extends React.Component {
+export class GroupDefaultComponent extends React.Component {
 
   static propTypes = {
     // Props from store
@@ -59,9 +58,7 @@ const mapDispatchToProps = {
   renewClients,
 }
 
-export const groupDefaultRenderSignal = new RenderSignal('groupDefaultRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(groupDefaultRenderSignal),
-)(GroupDefault)
+  applyOverlays,
+)(GroupDefaultComponent)

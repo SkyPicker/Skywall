@@ -2,11 +2,10 @@ import React from 'react'
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {Link} from 'react-router'
 import {compose} from 'redux'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 
 
-class Header extends React.Component {
+export class HeaderComponent extends React.Component {
 
   static propTypes = {
   }
@@ -35,8 +34,6 @@ class Header extends React.Component {
   }
 }
 
-export const headerRenderSignal = new RenderSignal('headerRenderSignal')
-
 export default compose(
-  signalRender(headerRenderSignal),
-)(Header)
+  applyOverlays,
+)(HeaderComponent)

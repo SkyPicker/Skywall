@@ -8,12 +8,11 @@ import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {EMDASH, CHECK_MARK, CROSS_MARK} from '../constants/symbols'
 import * as routes from '../constants/routes'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import TdLink from './visual/TdLink'
 
 
-class GroupDetailClientTable extends React.Component {
+export class GroupDetailClientTableComponent extends React.Component {
 
   static propTypes = {
     // Props from parent element
@@ -82,9 +81,7 @@ const mapDispatchToProps = {
   // Empty
 }
 
-export const groupDetailClientTableRenderSignal = new RenderSignal('groupDetailClientTableRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(groupDetailClientTableRenderSignal),
-)(GroupDetailClientTable)
+  applyOverlays,
+)(GroupDetailClientTableComponent)

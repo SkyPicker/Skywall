@@ -7,8 +7,7 @@ import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as alerts from '../constants/alerts'
 import {alertsClose} from '../actions/alerts'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 
 
 const level2bsStyle = {
@@ -19,7 +18,7 @@ const level2bsStyle = {
   [alerts.DEBUG]: 'info',
 }
 
-class Alerts extends React.Component {
+export class AlertsComponent extends React.Component {
 
   static propTypes = {
     // Props from store
@@ -68,9 +67,7 @@ const mapDispatchToProps = {
   alertsClose,
 }
 
-export const alertsRenderSignal = new RenderSignal('alertsRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(alertsRenderSignal),
-)(Alerts)
+  applyOverlays,
+)(AlertsComponent)

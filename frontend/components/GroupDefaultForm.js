@@ -1,12 +1,11 @@
 import React from 'react'
 import {Row, Col, FormGroup, ControlLabel, FormControl} from 'react-bootstrap'
 import {compose} from 'redux'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import {defaultGroupLabel, defaultGroupDescription} from '../utils/humanize'
 
 
-class GroupDefaultForm extends React.Component {
+export class GroupDefaultFormComponent extends React.Component {
 
   static propTypes = {
     // Empty
@@ -35,8 +34,6 @@ class GroupDefaultForm extends React.Component {
   }
 }
 
-export const groupDefaultFormRenderSignal = new RenderSignal('groupDefaultFormRenderSignal')
-
 export default compose(
-  signalRender(groupDefaultFormRenderSignal),
-)(GroupDefaultForm)
+  applyOverlays,
+)(GroupDefaultFormComponent)

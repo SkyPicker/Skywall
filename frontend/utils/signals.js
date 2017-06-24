@@ -29,13 +29,3 @@ export class FlowSignal extends Signal {
     return res
   }
 }
-
-export class RenderSignal extends Signal {
-  emit(component, rendered) {
-    let res = rendered
-    for (const listener of this.listeners) {
-      res = listener(component, rendered)
-    }
-    return res
-  }
-}

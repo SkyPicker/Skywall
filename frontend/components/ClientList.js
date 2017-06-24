@@ -4,13 +4,12 @@ import PropTypes from 'prop-types'
 import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {getClients, renewClients} from '../actions/clients'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import Loading from './visual/Loading'
 import ClientListTable from './ClientListTable'
 
 
-class ClientList extends React.Component {
+export class ClientListComponent extends React.Component {
 
   static propTypes = {
     // Props from store
@@ -50,9 +49,7 @@ const mapDispatchToProps = {
   renewClients,
 }
 
-export const clientListRenderSignal = new RenderSignal('clientListRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(clientListRenderSignal),
-)(ClientList)
+  applyOverlays,
+)(ClientListComponent)

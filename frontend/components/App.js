@@ -5,14 +5,13 @@ import LoadingBar from 'react-loading-bar'
 import PropTypes from 'prop-types'
 import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import Alerts from './Alerts'
 import Header from './Header'
 import 'react-loading-bar/dist/index.css'
 
 
-class App extends React.Component {
+export class AppComponent extends React.Component {
 
   static propTypes = {
     // Props from store
@@ -45,9 +44,7 @@ const mapDispatchToProps = {
   // Empty
 }
 
-export const appRenderSignal = new RenderSignal('appRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(appRenderSignal),
-)(App)
+  applyOverlays,
+)(AppComponent)

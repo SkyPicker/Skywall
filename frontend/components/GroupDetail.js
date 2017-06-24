@@ -9,15 +9,14 @@ import {NBSP} from '../constants/symbols'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import Loading from './visual/Loading'
 import NotFound from './NotFound'
 import GroupDetailForm from './GroupDetailForm'
 import GroupDetailClientTable from './GroupDetailClientTable'
 
 
-class GroupDetail extends React.Component {
+export class GroupDetailComponent extends React.Component {
 
   static propTypes = {
     // Props from router
@@ -73,10 +72,8 @@ const mapDispatchToProps = {
   renewClients,
 }
 
-export const groupDetailRenderSignal = new RenderSignal('groupDetailRenderSignal')
-
 export default compose(
   confirmDirty,
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(groupDetailRenderSignal),
-)(GroupDetail)
+  applyOverlays,
+)(GroupDetailComponent)

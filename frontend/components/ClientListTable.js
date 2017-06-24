@@ -9,14 +9,13 @@ import {connect} from 'react-redux'
 import {EMDASH, CHECK_MARK, CROSS_MARK} from '../constants/symbols'
 import * as routes from '../constants/routes'
 import reportFormaters from '../reports/formaters'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import {groupLabel} from '../utils/humanize'
 import Moment from './visual/Moment'
 import TdLink from './visual/TdLink'
 
 
-class ClientListTable extends React.Component {
+export class ClientListTableComponent extends React.Component {
 
   static propTypes = {
     // Props from store
@@ -142,9 +141,7 @@ const mapDispatchToProps = {
   // Empty
 }
 
-export const clientListTableRenderSignal = new RenderSignal('clientListTableRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(clientListTableRenderSignal),
-)(ClientListTable)
+  applyOverlays,
+)(ClientListTableComponent)

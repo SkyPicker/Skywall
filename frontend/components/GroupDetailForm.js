@@ -6,15 +6,14 @@ import {connect} from 'react-redux'
 import * as routes from '../constants/routes'
 import {groupUpdate, groupDelete} from '../actions/groups'
 import {GroupName, GroupDescription} from '../fields/groups'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import {Form} from '../utils/forms'
 import {cancelButton, saveButton, editButton} from '../utils/buttons'
 import {groupLabel} from '../utils/humanize'
 
 
 /** @extends React.Component */
-class GroupDetailForm extends Form {
+export class GroupDetailFormComponent extends Form {
 
   static propTypes = {
     // Props from parent element
@@ -116,9 +115,7 @@ const mapDispatchToProps = {
   groupDelete,
 }
 
-export const groupDetailFormRenderSignal = new RenderSignal('groupDetailFormRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(groupDetailFormRenderSignal),
-)(GroupDetailForm)
+  applyOverlays,
+)(GroupDetailFormComponent)

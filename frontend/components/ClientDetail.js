@@ -9,14 +9,13 @@ import {NBSP} from '../constants/symbols'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import Loading from './visual/Loading'
 import NotFound from './NotFound'
 import ClientDetailForm from './ClientDetailForm'
 
 
-class ClientDetail extends React.Component {
+export class ClientDetailComponent extends React.Component {
 
   static propTypes = {
     // Props from router
@@ -71,10 +70,8 @@ const mapDispatchToProps = {
   renewClients,
 }
 
-export const clientDetailRenderSignal = new RenderSignal('clientDetailRenderSignal')
-
 export default compose(
   confirmDirty,
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(clientDetailRenderSignal),
-)(ClientDetail)
+  applyOverlays,
+)(ClientDetailComponent)

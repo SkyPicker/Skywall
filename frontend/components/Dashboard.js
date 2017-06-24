@@ -1,11 +1,10 @@
 import React from 'react'
 import {Row, Col} from 'react-bootstrap'
 import {compose} from 'redux'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 
 
-class Dashboard extends React.Component {
+export class DashboardComponent extends React.Component {
 
   static propTypes = {
   }
@@ -23,8 +22,6 @@ class Dashboard extends React.Component {
   }
 }
 
-export const dashboardRenderSignal = new RenderSignal('dashboardRenderSignal')
-
 export default compose(
-  signalRender(dashboardRenderSignal),
-)(Dashboard)
+  applyOverlays,
+)(DashboardComponent)

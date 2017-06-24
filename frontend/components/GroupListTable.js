@@ -9,13 +9,12 @@ import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {EMDASH} from '../constants/symbols'
 import * as routes from '../constants/routes'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import {defaultGroupLabel, defaultGroupDescription} from '../utils/humanize'
 import TdLink from './visual/TdLink'
 
 
-class GroupListTable extends React.Component {
+export class GroupListTableComponent extends React.Component {
 
   static propTypes = {
     // Props from store
@@ -92,9 +91,7 @@ const mapDispatchToProps = {
   // Empty
 }
 
-export const groupListTableRenderSignal = new RenderSignal('groupListTableRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(groupListTableRenderSignal),
-)(GroupListTable)
+  applyOverlays,
+)(GroupListTableComponent)

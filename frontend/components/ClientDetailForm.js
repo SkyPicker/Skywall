@@ -8,8 +8,7 @@ import {connect} from 'react-redux'
 import {clientUpdate} from '../actions/clients'
 import {ClientLabel} from '../fields/clients'
 import {SelectGroup} from '../fields/common'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import {Form} from '../utils/forms'
 import {cancelButton, saveButton, editButton} from '../utils/buttons'
 import {clientLabel} from '../utils/humanize'
@@ -17,7 +16,7 @@ import Moment from '../components/visual/Moment'
 
 
 /** @extends React.Component */
-class ClientDetailForm extends Form {
+export class ClientDetailFormComponent extends Form {
 
   static propTypes = {
     // Props from parent element
@@ -159,9 +158,7 @@ const mapDispatchToProps = {
   clientUpdate,
 }
 
-export const clientDetailFormRenderSignal = new RenderSignal('clientDetailFormRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(clientDetailFormRenderSignal),
-)(ClientDetailForm)
+  applyOverlays,
+)(ClientDetailFormComponent)

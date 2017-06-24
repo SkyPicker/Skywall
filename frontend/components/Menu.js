@@ -3,11 +3,10 @@ import {Nav, NavItem, Col} from 'react-bootstrap'
 import {LinkContainer, IndexLinkContainer} from 'react-router-bootstrap'
 import {compose} from 'redux'
 import * as routes from '../constants/routes'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 
 
-class Menu extends React.Component {
+export class MenuComponent extends React.Component {
 
   static propTypes = {
   }
@@ -31,8 +30,6 @@ class Menu extends React.Component {
   }
 }
 
-export const menuRenderSignal = new RenderSignal('menuRenderSignal')
-
 export default compose(
-  signalRender(menuRenderSignal),
-)(Menu)
+  applyOverlays,
+)(MenuComponent)

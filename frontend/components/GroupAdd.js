@@ -8,13 +8,12 @@ import {NBSP} from '../constants/symbols'
 import * as routes from '../constants/routes'
 import {getClients, renewClients} from '../actions/clients'
 import confirmDirty from '../hocs/confirmDirty'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import Loading from './visual/Loading'
 import GroupAddForm from './GroupAddForm'
 
 
-class GroupAdd extends React.Component {
+export class GroupAddComponent extends React.Component {
 
   static propTypes = {
     // Props from store
@@ -61,10 +60,8 @@ const mapDispatchToProps = {
   renewClients,
 }
 
-export const groupAddRenderSignal = new RenderSignal('groupAddRenderSignal')
-
 export default compose(
   confirmDirty,
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(groupAddRenderSignal),
-)(GroupAdd)
+  applyOverlays,
+)(GroupAddComponent)

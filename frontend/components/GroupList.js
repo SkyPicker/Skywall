@@ -5,13 +5,12 @@ import {compose, bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {NBSP} from '../constants/symbols'
 import {getClients, renewClients} from '../actions/clients'
-import signalRender from '../hocs/signalRender'
-import {RenderSignal} from '../utils/signals'
+import {applyOverlays} from '../utils/overlays'
 import Loading from './visual/Loading'
 import GroupListTable from './GroupListTable'
 
 
-class GroupList extends React.Component {
+export class GroupListComponent extends React.Component {
 
   static propTypes = {
     // Props from store
@@ -52,9 +51,7 @@ const mapDispatchToProps = {
   renewClients,
 }
 
-export const groupListRenderSignal = new RenderSignal('groupListRenderSignal')
-
 export default compose(
   connect(mapStateToProps, (dispatch) => bindActionCreators(mapDispatchToProps, dispatch)),
-  signalRender(groupListRenderSignal),
-)(GroupList)
+  applyOverlays,
+)(GroupListComponent)
