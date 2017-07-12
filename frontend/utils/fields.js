@@ -12,6 +12,7 @@ export class TextField extends Field {
   constructor(opts = {}) {
     super(opts)
     this.opts.type = opts.type || 'text'
+    this.opts.placeholder = opts.placeholder || null
   }
   render() {
     return (
@@ -25,6 +26,7 @@ export class TextField extends Field {
         <FormControl
             type={this.opts.type}
             value={this.value() || ''}
+            placeholder={this.opts.placeholder}
             onChange={this.handleChange}
             disabled={!this.isEditing()}
         />
