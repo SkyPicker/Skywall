@@ -44,12 +44,24 @@ To install Skywall server you need:
 
 ### Installation
 
+First you need to create a system user for the application:
+
 ```
-$ cd skywall
+# useradd -r -s /bin/false -d /opt/skywall skywall
+# mkdir /opt/skywall
+# chown skywall:skywall /opt/skywall
+# sudo -H -u skywall bash
+```
+
+Now, as `skywall` user, you can install the application to `/opt/skywall`
+
+```
+$ cd /opt/skywall
 $ virtualenv --python=/usr/bin/python3 env
 $ . env/bin/activate
 (env) $ pip install git+https://github.com/SkyPicker/Skywall.git
 (env) $ nodeenv -p --node=7.7.4
+(env) $ skywall install
 ```
 
 ### Configuration
@@ -160,8 +172,19 @@ To install Skywall client you need:
 
 ### Installation
 
+First you need to create a system user for the application:
+
 ```
-$ cd skywall
+# useradd -r -s /bin/false -d /opt/skywall skywall
+# mkdir /opt/skywall
+# chown skywall:skywall /opt/skywall
+# sudo -H -u skywall bash
+```
+
+Now, as `skywall` user, you can install the application to `/opt/skywall`
+
+```
+$ cd /opt/skywall
 $ virtualenv --python=/usr/bin/python3 env
 $ . env/bin/activate
 (env) $ pip install git+https://github.com/SkyPicker/Skywall.git
