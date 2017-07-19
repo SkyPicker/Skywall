@@ -1,8 +1,8 @@
-from skywall.core.settings import ListSetting, register_setting
+from skywall.core.settings import IdentifierListSetting, register_setting
 
 
 @register_setting
-class ModulesSetting(ListSetting):
+class ModulesSetting(IdentifierListSetting):
     name = 'modules'
     help = (
         'Enable a Skywall module. Separate modules with a comma or use multiple options '

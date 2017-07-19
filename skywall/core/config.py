@@ -1,3 +1,5 @@
+import os
+import re
 from ruamel import yaml
 from skywall.core.settings import settings_registry
 from skywall.core.signals import Signal
@@ -39,7 +41,12 @@ class Config:
         parts = name.split('.')
         for part in parts:
             if not isinstance(data, dict) or part not in data:
-                return setting.default()
+                try:
+                    envname = re.sub(r'\W', '_', 'skywall.' + name)
+                    value = os.environ[envname]
+                    return setting.coerce(None, value)
+                except KeyError:
+                    return setting.default()
             data = data[part]
         return data
 

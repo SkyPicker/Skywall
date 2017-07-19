@@ -115,8 +115,22 @@ port set:
 
 #### Configuration file
 
-Alternatively, you can manually edit the configuration file `config.yaml` automatically created in
-your main directory.
+All settings are saved to configuration file `config.yaml` automatically created in your main
+directory. You can manually edit it.
+
+#### Using environment variables
+
+Alternatively, you may pass settings to the application using environment variables. All skywall
+environment variables are prefixed with `skywall_` and have all dots `.` replaced with underscores
+`_` in their names. Such as:
+
+```
+(env) $ skywall_server_host=1047 skywall get
+```
+
+Note that settings passed using environment variables are not saved to `config.yaml` and settings
+configured in `config.yaml` takes precedence over environment variables.
+
 
 ### Extending with modules
 
@@ -224,8 +238,21 @@ the following commandline setting.
 
 #### Configuration file
 
-Alternatively, you can manually edit the configuration file `config.yaml` automatically created in
-your main directory.
+All settings are saved to configuration file `config.yaml` automatically created in your main
+directory. You can manually edit it.
+
+#### Using environment variables
+
+Alternatively, you may pass settings to the application using environment variables. All skywall
+environment variables are prefixed with `skywall_` and have all dots `.` replaced with underscores
+`_` in their names. Such as:
+
+```
+(env) $ skywall_server_host=1047 skywall get
+```
+
+Note that settings passed using environment variables are not saved to `config.yaml` and settings
+configured in `config.yaml` takes precedence over environment variables.
 
 
 ### Extending with modules

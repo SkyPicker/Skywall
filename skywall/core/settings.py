@@ -26,16 +26,26 @@ class AbstractSetting:
 class IntegerSetting(AbstractSetting):
 
     def coerce(self, old_value, value):
-        return int(value)
+        try:
+            return int(value)
+        except ValueError:
+            raise ValueError('Setting "{}" must be an integer'.format(self.name))
 
 
 class BooleanSetting(AbstractSetting):
+    true_choices = ['true', 'yes']
+    false_choices = ['false', 'no']
+    all_choices = true_choices + false_choices
 
     def add_argument_params(self):
-        return dict(choices=['true', 'false', 'yes', 'no'], type=str.lower)
+        return dict(choices=self.all_choices, type=str.lower)
 
     def coerce(self, old_value, value):
-        return value in ['true', 'yes']
+        if value.lower() in self.true_choices:
+            return True
+        if value.lower() in self.false_choices:
+            return False
+        raise ValueError('Setting "{}" must be one of: {}'.format(self.name, self.all_choices))
 
 
 class ListSetting(AbstractSetting):
@@ -45,6 +55,8 @@ class ListSetting(AbstractSetting):
 
     def coerce(self, old_value, value):
         items = list(old_value or [])
+        if isinstance(value, str):
+            value = [value]
         for group in value:
             for item in group.split(','):
                 item = item.strip()
@@ -53,4 +65,13 @@ class ListSetting(AbstractSetting):
                         items.remove(item[1:])
                 elif item and item not in items:
                     items.append(item)
+        return items
+
+class IdentifierListSetting(ListSetting):
+
+    def coerce(self, old_value, value):
+        items = super().coerce(old_value, value)
+        for item in items:
+            if not item.isidentifier():
+                raise ValueError('Setting "{}" may contain only identifiers'.format(self.name))
         return items
