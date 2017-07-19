@@ -88,7 +88,7 @@ To run skywall server you need to configure your database connection string:
 
 #### Server host and port
 
-By default the server listens on localhost on port 9000. To configure custom server host and port
+By default the server listens on 0.0.0.0 on port 9000. To configure custom server host and port
 run:
 
 ```
@@ -106,7 +106,7 @@ server host and port for some reason, you may need to configure public websocket
 
 Webserver and websocket servers for client systems are running on different ports. This way the
 system admin can better configure who may access the webserver and who the websocket server. By
-default the webserver listens on localhost on port 8080. To configure custom webserver host and
+default the webserver listens on 0.0.0.0 on port 8080. To configure custom webserver host and
 port set:
 
 ```
@@ -172,7 +172,7 @@ And then you can run the server:
 ```
 
 To see Skywall frontend open `http://HOST:PORT/` in your browser, where HOST and PORT are
-webserver host and port you configured. [http://localhost:8080/](http://localhost:8080/)
+webserver host and port you configured. [http://0.0.0.0:8080/](http://0.0.0.0:8080/)
 by default.
 
 ## Skywall Client
@@ -387,4 +387,4 @@ Before commiting your code it's a good babit to lint it:
 
 To see the frontend API documentation run the server and open `http://HOST:PORT/api` in your
 browser, where HOST and PORT are webserver host and port you configured.
-[http://localhost:8080/api](http://localhost:8080/api) by default.
+[http://0.0.0.0:8080/api](http://0.0.0.0:8080/api) by default.

@@ -5,7 +5,7 @@ from skywall.core.constants import SERVER_MODE
 @register_setting
 class DatabaseSetting(AbstractSetting):
     name = 'server.database'
-    help = 'Database conection string, e.g. "postgres://user:password@localhost/skywall" (Required)'
+    help = 'Database conection string, e.g. "postgres://user:password@host/skywall" (Required)'
 
     def default(self):
         return None
@@ -17,5 +17,5 @@ class DatabaseSetting(AbstractSetting):
                 '\n'
                 'Please configure your database conection string to run the server. E.g.:\n'
                 '\n'
-                '    $ skywall set --server.database "postgres://user:password@localhost/skywall"\n'
+                '    $ skywall set --server.database "postgres://user:password@host/skywall"\n'
                 )

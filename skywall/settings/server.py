@@ -5,10 +5,10 @@ from skywall.core.settings import AbstractSetting, IntegerSetting, register_sett
 @register_setting
 class ServerHostSetting(AbstractSetting):
     name = 'server.host'
-    help = 'Host name the websocket server listens on (default: localhost)'
+    help = 'Host name the websocket server listens on (default: 0.0.0.0)'
 
     def default(self):
-        return 'localhost'
+        return '0.0.0.0'
 
 @register_setting
 class ServerPortSetting(IntegerSetting):
