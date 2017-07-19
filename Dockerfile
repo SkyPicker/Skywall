@@ -10,12 +10,16 @@
 #   docker run -p 8080:8080 -p 9000:9000 -e skywall_server_database=postgres://USER:PASSWORD@HOST/DATABASE skywall
 
 FROM ubuntu:16.04
+RUN apt-get update
+RUN apt-get install -y build-essential python3-dev libpq-dev virtualenv git
+
 WORKDIR /opt/skywall
+RUN useradd -r -s /bin/false -d /opt/skywall skywall
+RUN chown skywall:skywall /opt/skywall
+USER skywall:skywall
 
 ENV skywall_modules skywall_iptables
 
-RUN apt-get update
-RUN apt-get install -y build-essential python3-dev libpq-dev virtualenv git
 RUN virtualenv --python=/usr/bin/python3 env
 RUN bash -c "source env/bin/activate && pip install git+https://github.com/SkyPicker/Skywall.git"
 RUN bash -c "source env/bin/activate && pip install git+https://github.com/SkyPicker/Skywall-iptables.git"
