@@ -37,10 +37,12 @@ by IP's of servers in groups ( you can generate rules based on all servers in gr
 ### Requirements
 
 To install Skywall server you need:
+* Build essential (Ubuntu package `build-essential`)
 * Python 3 (tested on 3.5.2)
 * Python 3 header files (Ubuntu package `python3-dev`)
 * [python virtualenv](https://pypi.python.org/pypi/virtualenv) (Ubuntu package `virtualenv`)
 * PostgreSQL database server (tested on 9.5.6)
+* PostgreSQL header files (Ubuntu package `libpq-dev`)
 
 ### Installation
 
@@ -180,6 +182,7 @@ by default.
 ### Requirements
 
 To install Skywall client you need:
+* Build essential (Ubuntu package `build-essential`)
 * Python 3 (tested on 3.5.2)
 * Python 3 header files (Ubuntu package `python3-dev`)
 * [python virtualenv](https://pypi.python.org/pypi/virtualenv) (Ubuntu package `virtualenv`)
