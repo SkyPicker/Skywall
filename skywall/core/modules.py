@@ -8,7 +8,7 @@ def import_modules(modules):
         try:
             res.append(importlib.import_module(module))
         except ImportError as e:
-            print('Warning: Importing module "{}" failed: {}'.format(module, e))
+            print('Warning: Importing module "{}" failed: {}'.format(module, e), flush=True)
     return res
 
 def import_enabled_modules():

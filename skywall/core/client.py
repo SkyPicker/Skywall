@@ -65,15 +65,16 @@ class WebsocketClient:
 
     def _process_confirm(self, action):
         try:
-            print('Received confirmation of action "{}" with payload: {}'.format(action.name, action.payload))
+            print('Received confirmation of action "{}" with payload: {}'.format(action.name, action.payload),
+                    flush=True)
             action.after_confirm.emit(client=self, action=action)
             after_server_action_confirm.emit(client=self, action=action)
         except Exception as e:
-            print('Processing confirmation of action "{}" failed: {}'.format(action.name, e))
+            print('Processing confirmation of action "{}" failed: {}'.format(action.name, e), flush=True)
 
     def _process_action(self, action):
         try:
-            print('Received action "{}" with payload: {}'.format(action.name, action.payload))
+            print('Received action "{}" with payload: {}'.format(action.name, action.payload), flush=True)
             before_client_action_receive.emit(client=self, action=action)
             action.before_receive.emit(client=self, action=action)
             action.execute(self)
@@ -81,7 +82,7 @@ class WebsocketClient:
             after_client_action_receive.emit(client=self, action=action)
             self.socket.send_json(action.send_confirm())
         except Exception as e:
-            print('Executing action "{}" failed: {}'.format(action.name, e))
+            print('Executing action "{}" failed: {}'.format(action.name, e), flush=True)
 
     def _process_message(self, msg):
         if msg.type != WSMsgType.TEXT:
@@ -89,7 +90,7 @@ class WebsocketClient:
         try:
             action = parse_client_action(msg.data)
         except Exception as e:
-            print('Invalid message received: {}; Error: {}'.format(msg.data, e))
+            print('Invalid message received: {}; Error: {}'.format(msg.data, e), flush=True)
             return
         if action.confirm:
             self._process_confirm(action)
@@ -149,11 +150,11 @@ def run_client():
                 with WebsocketClient(loop) as _client:
                     loop.run_until_complete(_client.connect())
             except ClientConnectionError as e:
-                print('Connection to server failed: {}'.format(e))
+                print('Connection to server failed: {}'.format(e), flush=True)
             except WSServerHandshakeError as e:
-                print('Connection to server failed: {}'.format(e))
+                print('Connection to server failed: {}'.format(e), flush=True)
             else:
-                print('Connection to server failed: Connection closed by server.')
+                print('Connection to server failed: Connection closed by server.', flush=True)
             finally:
                 _client = None
             loop.run_until_complete(asyncio.sleep(CLIENT_RECONECT_INTERVAL))

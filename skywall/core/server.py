@@ -97,15 +97,16 @@ class WebsocketConnection:
 
     def _process_confirm(self, action):
         try:
-            print('Received confirmation of action "{}" with payload: {}'.format(action.name, action.payload))
+            print('Received confirmation of action "{}" with payload: {}'.format(action.name, action.payload),
+                    flush=True)
             action.after_confirm.emit(connection=self, action=action)
             after_client_action_confirm.emit(connection=self, action=action)
         except Exception as e:
-            print('Processing confirmation of action "{}" failed: {}'.format(action.name, e))
+            print('Processing confirmation of action "{}" failed: {}'.format(action.name, e), flush=True)
 
     def _process_action(self, action):
         try:
-            print('Received action "{}" with payload: {}'.format(action.name, action.payload))
+            print('Received action "{}" with payload: {}'.format(action.name, action.payload), flush=True)
             before_server_action_receive.emit(connection=self, action=action)
             action.before_receive.emit(connection=self, action=action)
             action.execute(self)
@@ -113,7 +114,7 @@ class WebsocketConnection:
             after_server_action_receive.emit(connection=self, action=action)
             self.socket.send_json(action.send_confirm())
         except Exception as e:
-            print('Executing action "{}" failed: {}'.format(action.name, e))
+            print('Executing action "{}" failed: {}'.format(action.name, e), flush=True)
 
     def _process_message(self, msg):
         if msg.type != WSMsgType.TEXT:
@@ -121,7 +122,7 @@ class WebsocketConnection:
         try:
             action = parse_server_action(msg.data)
         except Exception as e:
-            print('Invalid message received: {}; Error: {}'.format(msg.data, e))
+            print('Invalid message received: {}; Error: {}'.format(msg.data, e), flush=True)
             return
         if action.confirm:
             self._process_confirm(action)
@@ -197,7 +198,7 @@ class WebsocketServer:
         self.loop.run_until_complete(self.app.startup())
         self.server = self.loop.run_until_complete(self.loop.create_server(self.handler, self.host, self.port))
 
-        print('Websocket server listening on http://{}:{}'.format(self.host, self.port))
+        print('Websocket server listening on http://{}:{}'.format(self.host, self.port), flush=True)
         after_server_start.emit(server=self)
         return self
 
@@ -260,7 +261,7 @@ class WebServer:
         self.loop.run_until_complete(self.app.startup())
         self.server = self.loop.run_until_complete(self.loop.create_server(self.handler, self.host, self.port))
 
-        print('Web server listening on http://{}:{}'.format(self.host, self.port))
+        print('Web server listening on http://{}:{}'.format(self.host, self.port), flush=True)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):

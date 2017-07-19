@@ -25,7 +25,7 @@ def collect_report():
             res[name] = report.collect()
             after_report_collect.emit(report=report, value=res[name])
         except Exception as e:
-            print('Collecting report "{}" failed: {}'.format(name, e))
+            print('Collecting report "{}" failed: {}'.format(name, e), flush=True)
     return res
 
 
