@@ -8,7 +8,7 @@ from skywall.models.groups import Group, before_group_update, after_group_update
 
 
 before_update_group = Signal('before_update_group')
-after_update_group = Signal('before_update_group')
+after_update_group = Signal('after_update_group')
 
 
 @register_api('PUT', '/groups/{groupId}', before_update_group, after_update_group)

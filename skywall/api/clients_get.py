@@ -12,7 +12,7 @@ from skywall.models.reports import Report, ReportValue
 
 
 before_get_clients = Signal('before_get_clients')
-after_get_clients = Signal('before_get_clients')
+after_get_clients = Signal('after_get_clients')
 
 
 def _client_response(client):

@@ -13,7 +13,7 @@ from skywall.actions.labels import SetLabelClientAction
 
 
 before_update_client = Signal('before_update_client')
-after_update_client = Signal('before_update_client')
+after_update_client = Signal('after_update_client')
 
 
 async def _send_label_to_client(client_id, label):

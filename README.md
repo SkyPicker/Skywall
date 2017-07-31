@@ -379,7 +379,7 @@ Client has no developement mode yet. Just run:
 
 ### Pylint and Eslint
 
-Before commiting your code it's a good babit to lint it:
+Before commiting your code it's a good habit to lint it:
 
 ```
 (env) $ npm run eslint

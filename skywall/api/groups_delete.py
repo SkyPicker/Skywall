@@ -6,7 +6,7 @@ from skywall.models.groups import Group, before_group_delete, after_group_delete
 
 
 before_delete_group = Signal('before_delete_group')
-after_delete_group = Signal('before_delete_group')
+after_delete_group = Signal('after_delete_group')
 
 
 @register_api('DELETE', '/groups/{groupId}', before_delete_group, after_delete_group)
